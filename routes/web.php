@@ -13,7 +13,11 @@ Route::get('/', function () {
     // ]);
 
     return Inertia::render('Home');
-});
+})->name('home');
+
+Route::get('/catalog', function () {
+    return Inertia::render('Catalog');
+})->name('catalog');
 
 Route::middleware([
     'auth:sanctum',

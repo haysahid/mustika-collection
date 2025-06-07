@@ -19,7 +19,7 @@ const logout = () => {
                 <div class="flex justify-between w-full">
                     <!-- Logo -->
                     <div class="shrink-0 flex items-center">
-                        <Link :href="route('dashboard')">
+                        <Link :href="route('home')">
                             <img
                                 src="/storage/logo_white.png"
                                 alt="Logo"
@@ -37,7 +37,7 @@ const logout = () => {
                             Tentang Kami
                         </NavLink>
                         <NavLink
-                            :href="route('dashboard')"
+                            :href="route('catalog')"
                             :active="route().current('dashboard')"
                         >
                             Katalog
@@ -103,13 +103,13 @@ const logout = () => {
             <div class="pt-2 pb-3 space-y-1">
                 <ResponsiveNavLink
                     :href="route('dashboard')"
-                    :active="route().current('dashboard')"
+                    :active="route().current('home')"
                 >
                     Tentang Kami
                 </ResponsiveNavLink>
                 <ResponsiveNavLink
-                    :href="route('dashboard')"
-                    :active="route().current('dashboard')"
+                    :href="route('catalog')"
+                    :active="route().current('catalog')"
                 >
                     Katalog
                 </ResponsiveNavLink>

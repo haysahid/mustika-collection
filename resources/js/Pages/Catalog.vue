@@ -1,0 +1,160 @@
+<script setup>
+import LandingLayout from "@/Layouts/LandingLayout.vue";
+import LandingSection from "@/Components/LandingSection.vue";
+import ProductCard from "@/Components/ProductCard.vue";
+import Checkbox from "@/Components/Checkbox.vue";
+import JoinUs from "@/Components/JoinUs.vue";
+import CatalogFilter from "@/Components/CatalogFilter.vue";
+</script>
+
+<template>
+    <LandingLayout>
+        <!-- Search -->
+        <LandingSection
+            class="bg-gradient-to-b from-[#E0BEFF80] from-80% to-white min-h-[40vh] px-6 sm:px-12 md:px-[100px]"
+        >
+            <div
+                class="w-full flex flex-col items-center text-center py-12 gap-9"
+            >
+                <div>
+                    <h1 class="text-4xl font-bold text-center mb-4">
+                        Katalog Produk
+                    </h1>
+                    <p>Silahkan cari produk disini.</p>
+                </div>
+                <div class="max-w-2xl mx-auto w-full">
+                    <form
+                        action="#"
+                        method="GET"
+                        class="flex items-center space-x-4"
+                    >
+                        <label
+                            for="search"
+                            class="w-full flex items-center space-x-4 relative"
+                        >
+                            <input
+                                id="search"
+                                type="text"
+                                name="search"
+                                placeholder="Cari produk..."
+                                class="w-full pl-8 pr-24 py-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 overflow-ellipsis"
+                            />
+                            <button
+                                type="submit"
+                                class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition duration-200 absolute right-3 flex items-center justify-center"
+                            >
+                                Cari
+                            </button>
+                        </label>
+                    </form>
+                </div>
+            </div>
+        </LandingSection>
+
+        <!-- Content -->
+        <div class="p-6 sm:p-12 md:p-[100px] flex flex-col gap-12 lg:gap-20">
+            <LandingSection>
+                <div
+                    class="flex flex-col sm:flex-row items-start justify-center gap-14 max-w-7xl mx-auto"
+                >
+                    <!-- Filter -->
+                    <CatalogFilter class="w-full sm:w-1/3" />
+
+                    <!-- Products -->
+                    <div class="flex flex-col gap-12 items-start">
+                        <div
+                            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full"
+                        >
+                            <ProductCard
+                                name="Produk 1"
+                                description="Deskripsi produk 1"
+                                image="/storage/product/product_1.png"
+                                :price="100000"
+                                :discount="20"
+                            />
+                            <ProductCard
+                                name="Produk 1"
+                                description="Deskripsi produk 1"
+                                image="/storage/product/product_1.png"
+                                :price="100000"
+                                :discount="20"
+                            />
+                            <ProductCard
+                                name="Produk 1"
+                                description="Deskripsi produk 1"
+                                image="/storage/product/product_1.png"
+                                :price="100000"
+                                :discount="20"
+                            />
+                            <ProductCard
+                                name="Produk 1"
+                                description="Deskripsi produk 1"
+                                image="/storage/product/product_1.png"
+                                :price="100000"
+                                :discount="20"
+                            />
+                            <ProductCard
+                                name="Produk 1"
+                                description="Deskripsi produk 1"
+                                image="/storage/product/product_1.png"
+                                :price="100000"
+                                :discount="20"
+                            />
+                            <ProductCard
+                                name="Produk 1"
+                                description="Deskripsi produk 1"
+                                image="/storage/product/product_1.png"
+                                :price="100000"
+                                :discount="20"
+                            />
+                            <ProductCard
+                                name="Produk 1"
+                                description="Deskripsi produk 1"
+                                image="/storage/product/product_1.png"
+                                :price="100000"
+                                :discount="20"
+                            />
+                        </div>
+
+                        <!-- Pagination -->
+                        <div class="flex justify-center mt-6">
+                            <nav class="flex items-center gap-4 text-gray-600">
+                                <a
+                                    href="#"
+                                    class="px-6 aspect-square flex items-center justify-center bg-primary text-white border border-gray-300 rounded-lg transition duration-200"
+                                    >1</a
+                                >
+                                <a
+                                    href="#"
+                                    class="px-6 aspect-square flex items-center justify-center bg-[#E4CFF6] text-primary rounded-lg hover:bg-[#E4CFF6]/80 transition duration-300 font-semibold"
+                                    >2</a
+                                >
+                                <a
+                                    href="#"
+                                    class="px-6 aspect-square flex items-center justify-center bg-[#E4CFF6] text-primary rounded-lg hover:bg-[#E4CFF6]/80 transition duration-300 font-semibold"
+                                    >3</a
+                                >
+                                <span>...</span>
+                                <a
+                                    href="#"
+                                    class="px-6 aspect-square flex items-center justify-center bg-[#E4CFF6] text-primary rounded-lg hover:bg-[#E4CFF6]/80 transition duration-300 font-semibold"
+                                    >6</a
+                                >
+                                <a
+                                    href="#"
+                                    class="px-6 aspect-square flex items-center justify-center bg-[#E4CFF6] text-primary rounded-lg hover:bg-[#E4CFF6]/80 transition duration-300 font-semibold"
+                                    >{{ ">" }}</a
+                                >
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </LandingSection>
+
+            <!-- Join Us -->
+            <LandingSection id="join">
+                <JoinUs />
+            </LandingSection>
+        </div>
+    </LandingLayout>
+</template>
