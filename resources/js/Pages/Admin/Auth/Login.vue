@@ -23,7 +23,7 @@ const submit = () => {
     form.transform((data) => ({
         ...data,
         remember: form.remember ? "on" : "",
-    })).post(route("login"), {
+    })).post(route("admin.login"), {
         onFinish: () => form.reset("password"),
     });
 };
@@ -38,11 +38,12 @@ const submit = () => {
                 class="flex flex-col sm:flex-row items-center justify-center gap-2 mb-6"
             >
                 <p class="hidden sm:block text-lg text-gray-700">Welcome to</p>
-                <img
-                    src="/storage/logo_black.png"
-                    alt="Logo"
-                    class="h-16 w-auto"
-                />
+                <Link :href="route('home')">
+                    <img
+                        src="/storage/logo_black.png"
+                        alt="Logo"
+                        class="h-16 w-auto"
+                /></Link>
             </div>
         </template>
 
@@ -59,8 +60,10 @@ const submit = () => {
                     placeholder="Masukkan username"
                     class="mt-1 block w-full"
                     required
-                    autofocus
+                    :autofocus="true"
                     autocomplete="username"
+                    :error="form.errors.username"
+                    @update:modelValue="form.errors.username = null"
                 >
                     <template #prefix>
                         <svg
@@ -79,7 +82,6 @@ const submit = () => {
                         </svg>
                     </template>
                 </TextInput>
-                <InputError class="mt-2" :message="form.errors.username" />
             </div>
 
             <div class="mt-4">
@@ -106,7 +108,6 @@ const submit = () => {
                         </svg>
                     </template>
                 </TextInput>
-                <InputError class="mt-2" :message="form.errors.password" />
             </div>
 
             <div class="flex items-center justify-center mt-8">

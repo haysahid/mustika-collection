@@ -25,6 +25,8 @@ Route::get('/admin/login', [AdminController::class, 'login'])
     ->middleware('guest')
     ->name('admin.login');
 
+Route::post('/admin/login', [AdminController::class, 'loginProcess']);
+
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),

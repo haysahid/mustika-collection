@@ -1,8 +1,9 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { useSlots } from "vue";
+import InputError from "@/Components/InputError.vue";
 
-defineProps({
+const props = defineProps({
     id: {
         type: String,
         default: null,
@@ -23,15 +24,31 @@ defineProps({
         type: Boolean,
         default: false,
     },
+    autocomplete: {
+        type: String,
+        default: null,
+    },
+    required: {
+        type: Boolean,
+        default: false,
+    },
+    error: {
+        type: String,
+        default: null,
+    },
     modelValue: String,
 });
 
-defineEmits(["update:modelValue"]);
+const emit = defineEmits(["update:modelValue"]);
 
 const input = ref(null);
 
 const slots = useSlots();
 const hasPrefix = !!slots.prefix;
+
+function updateValue(value) {
+    emit("update:modelValue", value);
+}
 
 onMounted(() => {
     if (input.value.hasAttribute("autofocus")) {
@@ -43,21 +60,27 @@ defineExpose({ focus: () => input.value.focus() });
 </script>
 
 <template>
-    <label :for="id" class="relative border-none p-0 flex items-center">
-        <slot name="prefix"></slot>
-        <input
-            ref="input"
-            :id="id"
-            :name="name"
-            :placeholder="placeholder"
-            :type="type"
-            :autofocus="autofocus"
-            class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-full shadow-sm w-full"
-            :class="{
-                'pl-11': hasPrefix,
-            }"
-            :value="modelValue"
-            @input="$emit('update:modelValue', $event.target.value)"
-        />
-    </label>
+    <div>
+        <label :for="id" class="relative border-none p-0 flex items-center">
+            <slot name="prefix"></slot>
+            <input
+                ref="input"
+                :id="props.id"
+                :name="props.name"
+                :placeholder="props.placeholder"
+                :type="props.type"
+                :autofocus="props.autofocus ? true : false"
+                :autocomplete="props.autocomplete"
+                class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-full shadow-sm w-full"
+                :class="{
+                    'pl-11': hasPrefix,
+                    'border-red-500 focus:border-red-500 focus:ring-red-500':
+                        props.error,
+                }"
+                :value="props.modelValue"
+                @input="updateValue($event.target.value)"
+            />
+        </label>
+        <InputError class="mt-1" :message="props.error" />
+    </div>
 </template>
