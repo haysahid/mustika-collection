@@ -12,7 +12,7 @@ import { Link } from "@inertiajs/vue3";
                 <div
                     class="text-center md:text-start w-full sm:2/3 md:w-1/3 flex flex-col items-center sm:items-start"
                 >
-                    <Link :href="route('dashboard')">
+                    <Link :href="route('home')">
                         <img
                             src="/storage/logo_yellow.png"
                             alt="Logo"
@@ -61,7 +61,7 @@ import { Link } from "@inertiajs/vue3";
                             </li>
                             <li>
                                 <Link
-                                    :href="route('dashboard')"
+                                    :href="route('home')"
                                     class="text-gray-100 hover:text-white"
                                 >
                                     Katalog
@@ -92,7 +92,7 @@ import { Link } from "@inertiajs/vue3";
                             </li>
                             <li>
                                 <Link
-                                    :href="route('dashboard')"
+                                    :href="route('home')"
                                     class="text-gray-100 hover:text-white"
                                 >
                                     Katalog
@@ -123,7 +123,7 @@ import { Link } from "@inertiajs/vue3";
                             </li>
                             <li>
                                 <Link
-                                    :href="route('dashboard')"
+                                    :href="route('home')"
                                     class="text-gray-100 hover:text-white"
                                 >
                                     Katalog

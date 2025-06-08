@@ -47,8 +47,18 @@ const submit = () => {
             </div>
         </template>
 
-        <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
+        <div
+            v-if="status"
+            class="mb-4 font-medium text-sm text-green-600 text-center"
+        >
             {{ status }}
+        </div>
+
+        <div
+            v-if="form.errors.access"
+            class="mb-4 font-medium text-sm text-red-600 text-center"
+        >
+            {{ form.errors.access }}
         </div>
 
         <form @submit.prevent="submit">

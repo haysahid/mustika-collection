@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProductController;
+use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -21,18 +22,30 @@ Route::get('/catalog',  fn() => Inertia::render('Catalog'))->name('catalog');
 
 Route::get('/product/{slug}', [ProductController::class, 'show'])->name('product.show');
 
-Route::get('/admin/login', [AdminController::class, 'login'])
-    ->middleware('guest')
-    ->name('admin.login');
+Route::prefix('admin')->group(function () {
+    Route::get('/login', [AdminController::class, 'login'])
+        ->middleware('guest')
+        ->name('admin.login');
 
-Route::post('/admin/login', [AdminController::class, 'loginProcess']);
+    Route::post('/login', [AdminController::class, 'loginProcess']);
 
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
-])->group(function () {
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
+    // Route::get('/dashboard', function () {
+    //     return Inertia::render('Admin/Dashboard');
+    // })->name('admin.dashboard');
+
+    Route::middleware(AdminMiddleware::class)->group(function () {
+        Route::get('/dashboard', function () {
+            return Inertia::render('Admin/Dashboard');
+        })->name('admin.dashboard');
+    });
 });
+
+// Route::middleware([
+//     'auth:sanctum',
+//     config('jetstream.auth_session'),
+//     'verified',
+// ])->group(function () {
+//     Route::get('/dashboard', function () {
+//         return Inertia::render('Dashboard');
+//     })->name('dashboard');
+// });

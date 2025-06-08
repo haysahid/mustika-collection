@@ -76,4 +76,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Role::class);
     }
+
+    public function isAdmin(): bool
+    {
+        return $this->role->slug === 'super-admin' || $this->role->slug === 'admin';
+    }
 }

@@ -102,7 +102,7 @@ const logout = () => {
         >
             <div class="pt-2 pb-3 space-y-1">
                 <ResponsiveNavLink
-                    :href="route('dashboard')"
+                    :href="route('home')"
                     :active="route().current('home')"
                 >
                     Tentang Kami
@@ -114,7 +114,7 @@ const logout = () => {
                     Katalog
                 </ResponsiveNavLink>
                 <ResponsiveNavLink
-                    :href="route('dashboard')"
+                    :href="route('home')"
                     :active="route().current('dashboard')"
                 >
                     Gabung

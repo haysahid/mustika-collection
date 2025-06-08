@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -18,17 +19,25 @@ class AdminController extends Controller
         ]);
     }
 
-    // login process usernmae and password
     public function loginProcess(Request $request)
     {
         $credentials = $request->only('username', 'password');
 
         if (Auth::attempt($credentials)) {
+            $user = User::find(Auth::id());
+
+            if (!$user->isAdmin()) {
+                Auth::logout();
+                return redirect()->route('admin.login')->withErrors([
+                    'access' => 'Anda tidak memiliki akses ke halaman ini.',
+                ]);
+            }
+
             return redirect()->route('admin.dashboard');
         }
 
         return redirect()->back()->withErrors([
-            'username' => 'Username atau password salah.',
+            'access' => 'Username atau password salah.',
         ]);
     }
 }
