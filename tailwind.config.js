@@ -20,7 +20,7 @@ export default {
             colors: {
                 primary: '#7E49B0',
                 'primary-dark': '#6A3F9A',
-                secondary: '#F3F4F6',
+                secondary: '#F0E0FF',
             },
         },
     },
