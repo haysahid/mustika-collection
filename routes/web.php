@@ -19,6 +19,10 @@ Route::get('/catalog', function () {
     return Inertia::render('Catalog');
 })->name('catalog');
 
+Route::get('/product/{slug}', function () {
+    return Inertia::render('ProductDetail');
+})->name('product.detail');
+
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
