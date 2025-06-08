@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -15,13 +17,13 @@ Route::get('/', function () {
     return Inertia::render('Home');
 })->name('home');
 
-Route::get('/catalog', function () {
-    return Inertia::render('Catalog');
-})->name('catalog');
+Route::get('/catalog',  fn() => Inertia::render('Catalog'))->name('catalog');
 
-Route::get('/product/{slug}', function () {
-    return Inertia::render('ProductDetail');
-})->name('product.detail');
+Route::get('/product/{slug}', [ProductController::class, 'show'])->name('product.show');
+
+Route::get('/admin/login', [AdminController::class, 'login'])
+    ->middleware('guest')
+    ->name('admin.login');
 
 Route::middleware([
     'auth:sanctum',

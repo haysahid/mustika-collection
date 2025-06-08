@@ -18,7 +18,7 @@ const props = defineProps({
 </script>
 
 <template>
-    <Link :href="route('product.detail', { slug: props.slug })">
+    <Link :href="route('product.show', { slug: props.slug })">
         <div
             class="bg-white shadow-md rounded-lg outline outline-1 outline-gray-100 hover:outline-[#F8E4F3] hover:outline-2 transition duration-300 cursor-pointer"
         >
