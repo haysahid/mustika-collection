@@ -5,7 +5,15 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    {{-- Custom Meta --}}
+    <meta name="description" content="Website Resmi Mustika Collection">
+    <meta property="og:image" content="{{ asset('storage/promotion_banner.png') }}">
+
+
     <title inertia>{{ config('app.name', 'Laravel') }}</title>
+
+    {{-- Icon --}}
+    <link rel="icon" href="{{ asset('storage/logo_black.png') }}" type="image/x-icon">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
