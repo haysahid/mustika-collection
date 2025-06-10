@@ -22,37 +22,37 @@ const logout = () => {
 
 <template>
     <nav
-        class="bg-secondary z-50 w-full py-1 h-auto sm:h-[72px]"
+        class="bg-secondary z-50 w-full py-1 h-auto sm:h-[72px] fixed top-0"
         :class="{
             '!h-auto': showingNavigationDropdown,
         }"
     >
         <!-- Primary Navigation Menu -->
         <div
-            class="mx-auto px-4 sm:px-6 lg:px-8 transition-all duration-300 ease-in-out"
+            class="px-4 mx-auto transition-all duration-300 ease-in-out sm:px-6 lg:px-8"
         >
             <div class="flex items-center justify-between h-16">
                 <Link :href="route('home')">
                     <img
                         src="/storage/logo_black.png"
                         alt="Logo"
-                        class="h-12 sm:h-16 w-auto"
+                        class="w-auto h-12 sm:h-16"
                     />
                 </Link>
 
                 <div class="hidden md:flex sm:items-center sm:ms-6">
                     <!-- Settings Dropdown -->
-                    <div class="ms-3 relative">
+                    <div class="relative ms-3">
                         <Dropdown align="right" width="48">
                             <template #trigger>
                                 <span class="inline-flex rounded-md">
                                     <button
                                         type="button"
-                                        class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-secondary hover:text-gray-700 focus:outline-none focus:bg-secondary/80 active:bg-secondary/90 transition ease-in-out duration-150"
+                                        class="inline-flex items-center px-3 py-2 text-sm font-medium leading-4 text-gray-500 transition duration-150 ease-in-out border border-transparent rounded-md bg-secondary hover:text-gray-700 focus:outline-none focus:bg-secondary/80 active:bg-secondary/90"
                                     >
                                         <img
                                             v-if="$page.props.auth.user.avatar"
-                                            class="size-8 rounded-full object-cover me-2"
+                                            class="object-cover rounded-full size-8 me-2"
                                             :src="$page.props.auth.user.avatar"
                                             :alt="$page.props.auth.user.name"
                                         />
@@ -110,9 +110,9 @@ const logout = () => {
                 </div>
 
                 <!-- Hamburger -->
-                <div class="-me-2 flex items-center md:hidden">
+                <div class="flex items-center -me-2 md:hidden">
                     <button
-                        class="inline-flex items-center justify-center p-2 rounded-md text-primary/80 hover:text-primary hover:bg-white/50 focus:outline-none focus:bg-white/60 focus:text-primary/90 transition duration-150 ease-in-out"
+                        class="inline-flex items-center justify-center p-2 transition duration-150 ease-in-out rounded-md text-primary/80 hover:text-primary hover:bg-white/50 focus:outline-none focus:bg-white/60 focus:text-primary/90"
                         @click="
                             showingNavigationDropdown =
                                 !showingNavigationDropdown
@@ -163,7 +163,7 @@ const logout = () => {
                 <div class="flex items-center px-4">
                     <img
                         v-if="$page.props.auth.user.avatar"
-                        class="size-12 rounded-full object-cover me-3"
+                        class="object-cover rounded-full size-12 me-3"
                         :src="$page.props.auth.user.avatar"
                         :alt="$page.props.auth.user.name"
                     />
@@ -183,10 +183,10 @@ const logout = () => {
                     </svg>
 
                     <div>
-                        <div class="font-medium text-base text-gray-200">
+                        <div class="text-base font-medium text-gray-200">
                             {{ $page.props.auth.user.name }}
                         </div>
-                        <div class="font-medium text-sm text-gray-300">
+                        <div class="text-sm font-medium text-gray-300">
                             {{ $page.props.auth.user.email }}
                         </div>
                     </div>
@@ -195,7 +195,7 @@ const logout = () => {
                 <AdminSidebar :responsive="true">
                     <template #extra>
                         <!-- divider -->
-                        <div class="border-t border-secondary/20 my-2 mx-6" />
+                        <div class="mx-6 my-2 border-t border-secondary/20" />
 
                         <div class="space-y-0.5 bg-primary">
                             <ResponsiveNavLink

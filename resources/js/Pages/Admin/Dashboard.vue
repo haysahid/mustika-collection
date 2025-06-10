@@ -1,15 +1,14 @@
 <script setup>
 import AdminLayout from "@/Layouts/AdminLayout.vue";
-import Welcome from "@/Components/Welcome.vue";
 import SummaryCard from "@/Components/SummaryCard.vue";
 </script>
 
 <template>
     <AdminLayout title="Dashboard">
-        <div class="max-w-7xl mx-auto">
+        <div class="">
             <div class="flex flex-col gap-4">
                 <div
-                    class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+                    class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
                 >
                     <SummaryCard title="Total Produk" value="240">
                         <template #icon>

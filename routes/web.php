@@ -37,6 +37,18 @@ Route::prefix('admin')->group(function () {
         Route::get('/store-info', function () {
             return Inertia::render('Admin/StoreInfo');
         })->name('admin.store.info');
+
+        Route::get('/certificate', function () {
+            return Inertia::render('Admin/Certificate');
+        })->name('admin.certificate');
+
+        Route::get('/certificate/add', function () {
+            return Inertia::render('Admin/Certificate/AddCertificate');
+        })->name('admin.certificate.add');
+
+        Route::get('/certificate/{id}', function () {
+            return Inertia::render('Admin/Certificate/EditCertificate');
+        })->name('admin.certificate.edit');
     });
 });
 

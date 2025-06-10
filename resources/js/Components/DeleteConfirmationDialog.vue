@@ -1,0 +1,50 @@
+<script setup>
+import DialogModal from "@/Components/DialogModal.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+import SecondaryButton from "@/Components/SecondaryButton.vue";
+
+const props = defineProps({
+    title: {
+        type: String,
+        default: "Anda Yakin Menghapus Data Ini?",
+    },
+    positiveButtonText: {
+        type: String,
+        default: "Hapus Data",
+    },
+    negativeButtonText: {
+        type: String,
+        default: "Batalkan",
+    },
+    show: {
+        type: Boolean,
+        default: false,
+    },
+});
+
+const emit = defineEmits(["close", "delete"]);
+
+const close = () => {
+    emit("close");
+};
+</script>
+<template>
+    <DialogModal :show="props.show" @close="close" maxWidth="sm">
+        <template #title>{{ props.title }}</template>
+        <slot />
+        <template #footer>
+            <div class="flex gap-4 text-base">
+                <PrimaryButton
+                    type="button"
+                    class="bg-red-500 hover:bg-red-500/80 active:bg-red-500/90 focus:bg-red-500 focus:ring-red-500"
+                    @click="emit('delete')"
+                >
+                    Hapus Data
+                </PrimaryButton>
+                <SecondaryButton type="button" class="" @click="emit('close')">
+                    Batalkan
+                </SecondaryButton>
+            </div>
+        </template>
+    </DialogModal>
+</template>

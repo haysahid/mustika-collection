@@ -74,17 +74,19 @@ const submit = () => {
             </svg>
         </template>
 
-        <div class="mx-auto md:px-11 max-w-7xl">
+        <div class="md:px-11">
             <form action="" class="max-w-3xl">
                 <div class="flex flex-col items-start gap-4">
                     <!-- Name -->
-                    <div class="flex items-center w-full gap-4">
+                    <div
+                        class="flex flex-col w-full gap-y-1 gap-x-4 sm:items-center sm:flex-row"
+                    >
                         <InputLabel
                             for="name"
                             value="Nama Toko"
                             class="w-[100px] sm:w-1/5 text-lg font-bold"
                         />
-                        :
+                        <span class="hidden sm:block">:</span>
                         <TextInput
                             id="name"
                             v-model="form.name"
@@ -100,13 +102,15 @@ const submit = () => {
                     </div>
 
                     <!-- Phone -->
-                    <div class="flex items-center w-full gap-4">
+                    <div
+                        class="flex flex-col w-full gap-y-1 gap-x-4 sm:items-center sm:flex-row"
+                    >
                         <InputLabel
                             for="phone"
                             value="No. WhatsApp"
                             class="w-[100px] sm:w-1/5 text-lg font-bold"
                         />
-                        :
+                        <span class="hidden sm:block">:</span>
                         <TextInput
                             id="phone"
                             v-model="form.phone"
@@ -121,13 +125,15 @@ const submit = () => {
                     </div>
 
                     <!-- Email -->
-                    <div class="flex items-center w-full gap-4">
+                    <div
+                        class="flex flex-col w-full gap-y-1 gap-x-4 sm:items-center sm:flex-row"
+                    >
                         <InputLabel
                             for="email"
                             value="Email"
                             class="w-[100px] sm:w-1/5 text-lg font-bold"
                         />
-                        :
+                        <span class="hidden sm:block">:</span>
                         <TextInput
                             id="email"
                             v-model="form.email"
@@ -142,13 +148,15 @@ const submit = () => {
                     </div>
 
                     <!-- Address -->
-                    <div class="flex items-center w-full gap-4">
+                    <div
+                        class="flex flex-col w-full gap-y-1 gap-x-4 sm:items-center sm:flex-row"
+                    >
                         <InputLabel
                             for="address"
                             value="Alamat Toko"
                             class="w-[100px] sm:w-1/5 text-lg font-bold"
                         />
-                        :
+                        <span class="hidden sm:block">:</span>
                         <TextInput
                             id="address"
                             v-model="form.address"
@@ -164,9 +172,12 @@ const submit = () => {
 
                     <!-- Advantages -->
                     <div class="w-full">
-                        <InputLabel value="Keunggulan Toko" class="mb-4" />
+                        <InputLabel
+                            value="Keunggulan Toko"
+                            class="mb-2.5 sm:mb-4"
+                        />
                         <div
-                            class="grid grid-cols-1 gap-6 p-4 rounded-2xl sm:grid-cols-2 outline-dashed outline-1 outline-gray-300"
+                            class="grid grid-cols-1 p-4 gap-x-6 gap-y-4 rounded-2xl sm:grid-cols-2 border-dashed-default"
                         >
                             <div
                                 v-for="(advantage, index) in form.advantages"
@@ -220,11 +231,13 @@ const submit = () => {
                     </div>
 
                     <!-- Description -->
-                    <div class="flex flex-col items-start w-full gap-2">
+                    <div
+                        class="flex flex-col items-start w-full gap-1 sm:gap-1.5"
+                    >
                         <InputLabel
                             for="description"
                             value="Deskripsi Toko"
-                            class="w-[100px] sm:w-1/5 text-lg font-bold"
+                            class="text-lg font-bold"
                         />
                         <TextAreaInput
                             id="description"

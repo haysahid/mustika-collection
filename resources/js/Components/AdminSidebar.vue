@@ -49,8 +49,8 @@ const menus = [
     },
     {
         name: "Sertifikat",
-        href: "/admin/certificate",
-        active: false,
+        href: route("admin.certificate"),
+        active: route().current("admin.certificate"),
         icon: `
             <svg 
                 xmlns="http://www.w3.org/2000/svg" 
@@ -86,25 +86,13 @@ const menus = [
 
 <template>
     <aside
-        class="absolute top-0 left-0 w-0 h-full overflow-y-hidden transition-all duration-300 ease-in-out md:w-64"
+        class="fixed top-0 left-0 w-0 h-screen overflow-y-hidden transition-all duration-300 ease-in-out md:w-64"
         :class="{
             '!static w-full': props.responsive,
         }"
     >
-        <div
-            v-if="!props.responsive"
-            class="bg-transparent w-full py-1 h-[72px] px-6 shrink-0 flex"
-        >
-            <Link :href="route('home')" class="opacity-0">
-                <img
-                    src="/storage/logo_black.png"
-                    alt="Logo"
-                    class="w-auto h-12 sm:h-16"
-                />
-            </Link>
-        </div>
         <nav
-            class="h-full py-6 bg-primary"
+            class="h-full py-6 bg-primary pt-[84px]"
             :class="{
                 '!py-4': props.responsive,
             }"

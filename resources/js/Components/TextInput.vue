@@ -61,7 +61,7 @@ defineExpose({ focus: () => input.value.focus() });
 
 <template>
     <div>
-        <label :for="id" class="relative border-none p-0 flex items-center">
+        <label :for="id" class="relative flex items-center p-0 border-none">
             <slot name="prefix"></slot>
             <input
                 ref="input"
@@ -71,7 +71,7 @@ defineExpose({ focus: () => input.value.focus() });
                 :type="props.type"
                 :autofocus="props.autofocus ? true : false"
                 :autocomplete="props.autocomplete"
-                class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-full shadow-sm w-full"
+                class="w-full px-3.5 border-gray-300 rounded-full shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                 :class="{
                     'pl-11': hasPrefix,
                     'border-red-500 focus:border-red-500 focus:ring-red-500':

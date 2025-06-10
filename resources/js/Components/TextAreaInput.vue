@@ -71,7 +71,7 @@ defineExpose({ focus: () => input.value.focus() });
                 :type="props.type"
                 :autofocus="props.autofocus ? true : false"
                 :autocomplete="props.autocomplete"
-                class="w-full border-gray-300 shadow-sm rounded-2xl focus:border-indigo-500 focus:ring-indigo-500"
+                class="w-full px-3.5 border-gray-300 shadow-sm rounded-2xl focus:border-indigo-500 focus:ring-indigo-500"
                 :class="{
                     'pl-11': hasPrefix,
                     'border-red-500 focus:border-red-500 focus:ring-red-500':

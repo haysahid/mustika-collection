@@ -13,7 +13,7 @@
     <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
     {{-- Icon --}}
-    <link rel="icon" href="{{ asset('storage/logo_black.png') }}" type="image/x-icon">
+    <link rel="icon" href="{{ asset('storage/favicon.png') }}" type="image/x-icon">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
