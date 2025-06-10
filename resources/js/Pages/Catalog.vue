@@ -2,7 +2,6 @@
 import LandingLayout from "@/Layouts/LandingLayout.vue";
 import LandingSection from "@/Components/LandingSection.vue";
 import ProductCard from "@/Components/ProductCard.vue";
-import Checkbox from "@/Components/Checkbox.vue";
 import JoinUs from "@/Components/JoinUs.vue";
 import CatalogFilter from "@/Components/CatalogFilter.vue";
 </script>
@@ -14,15 +13,15 @@ import CatalogFilter from "@/Components/CatalogFilter.vue";
             class="bg-gradient-to-b from-[#E0BEFF80] from-80% to-white min-h-[40vh] px-6 sm:px-12 md:px-[100px]"
         >
             <div
-                class="w-full flex flex-col items-center text-center py-12 gap-9"
+                class="flex flex-col items-center w-full py-12 text-center gap-9"
             >
                 <div>
-                    <h1 class="text-4xl font-bold text-center mb-4">
+                    <h1 class="mb-4 text-4xl font-bold text-center">
                         Katalog Produk
                     </h1>
                     <p>Silahkan cari produk disini.</p>
                 </div>
-                <div class="max-w-2xl mx-auto w-full">
+                <div class="w-full max-w-2xl mx-auto">
                     <form
                         action="#"
                         method="GET"
@@ -30,18 +29,18 @@ import CatalogFilter from "@/Components/CatalogFilter.vue";
                     >
                         <label
                             for="search"
-                            class="w-full flex items-center space-x-4 relative"
+                            class="relative flex items-center w-full space-x-4"
                         >
                             <input
                                 id="search"
                                 type="text"
                                 name="search"
                                 placeholder="Cari produk..."
-                                class="w-full pl-8 pr-24 py-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 overflow-ellipsis"
+                                class="w-full py-4 pl-8 pr-24 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 overflow-ellipsis"
                             />
                             <button
                                 type="submit"
-                                class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition duration-200 absolute right-3 flex items-center justify-center"
+                                class="absolute flex items-center justify-center px-4 py-2 text-white transition duration-200 bg-purple-600 rounded-lg hover:bg-purple-700 right-3"
                             >
                                 Cari
                             </button>
@@ -55,15 +54,15 @@ import CatalogFilter from "@/Components/CatalogFilter.vue";
         <div class="p-6 sm:p-12 md:p-[100px] flex flex-col gap-12 lg:gap-20">
             <LandingSection>
                 <div
-                    class="flex flex-col sm:flex-row items-start justify-center gap-14 max-w-7xl mx-auto"
+                    class="flex flex-col items-start justify-center mx-auto sm:flex-row gap-14 max-w-7xl"
                 >
                     <!-- Filter -->
                     <CatalogFilter class="w-full sm:w-1/3" />
 
                     <!-- Products -->
-                    <div class="flex flex-col gap-12 items-start">
+                    <div class="flex flex-col items-start gap-12">
                         <div
-                            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full"
+                            class="grid w-full grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3"
                         >
                             <ProductCard
                                 name="Produk 1"
@@ -121,7 +120,7 @@ import CatalogFilter from "@/Components/CatalogFilter.vue";
                             <nav class="flex items-center gap-4 text-gray-600">
                                 <a
                                     href="#"
-                                    class="px-6 aspect-square flex items-center justify-center bg-primary text-white border border-gray-300 rounded-lg transition duration-200"
+                                    class="flex items-center justify-center px-6 text-white transition duration-200 border border-gray-300 rounded-lg aspect-square bg-primary"
                                     >1</a
                                 >
                                 <a
