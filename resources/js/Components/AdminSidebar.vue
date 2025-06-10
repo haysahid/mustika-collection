@@ -31,8 +31,8 @@ const menus = [
     },
     {
         name: "Info Toko",
-        href: "/admin/store-info",
-        active: false,
+        href: route("admin.store.info"),
+        active: route().current("admin.store.info"),
         icon: `
             <svg 
                 xmlns="http://www.w3.org/2000/svg" 
@@ -86,7 +86,7 @@ const menus = [
 
 <template>
     <aside
-        class="absolute left-0 top-0 w-0 overflow-y-hidden h-full md:w-64 transition-all duration-300 ease-in-out"
+        class="absolute top-0 left-0 w-0 h-full overflow-y-hidden transition-all duration-300 ease-in-out md:w-64"
         :class="{
             '!static w-full': props.responsive,
         }"
@@ -99,7 +99,7 @@ const menus = [
                 <img
                     src="/storage/logo_black.png"
                     alt="Logo"
-                    class="h-12 sm:h-16 w-auto"
+                    class="w-auto h-12 sm:h-16"
                 />
             </Link>
         </div>
@@ -130,7 +130,7 @@ const menus = [
                             }"
                         ></span>
                         <p
-                            class="line-clamp-1 overflow-ellipsis font-bold"
+                            class="font-bold line-clamp-1 overflow-ellipsis"
                             :class="{
                                 'font-semibold text-sm': props.responsive,
                             }"

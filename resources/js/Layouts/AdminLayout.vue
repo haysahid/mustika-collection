@@ -12,6 +12,10 @@ import AdminSidebar from "@/Components/AdminSidebar.vue";
 
 defineProps({
     title: String,
+    showTitle: {
+        type: Boolean,
+        default: false,
+    },
 });
 </script>
 
@@ -30,16 +34,25 @@ defineProps({
                 <AdminSidebar />
 
                 <div
-                    class="flex-1 md:ml-64 transition-all duration-300 ease-in-out w-full"
+                    class="flex-1 w-full transition-all duration-300 ease-in-out md:ml-64"
                 >
                     <main class="p-6">
+                        <div
+                            v-if="showTitle"
+                            class="flex items-center gap-4 mb-6"
+                        >
+                            <slot name="icon" />
+                            <h1 class="text-xl font-bold">
+                                {{ title }}
+                            </h1>
+                        </div>
                         <slot />
                     </main>
 
                     <footer
-                        class="bg-secondary px-6 py-2 text-center absolute bottom-0 w-full md:w-[calc(100%-256px)]"
+                        class="bg-secondary px-6 py-2 text-center md:absolute bottom-0 w-full md:w-[calc(100%-256px)]"
                     >
-                        <p class="text-sm md:text-md text-gray-600">
+                        <p class="text-sm text-gray-600 md:text-md">
                             © 2000 - Company, Inc. All rights reserved.
                         </p>
                     </footer>
