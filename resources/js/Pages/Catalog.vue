@@ -7,7 +7,7 @@ import CatalogFilter from "@/Components/CatalogFilter.vue";
 </script>
 
 <template>
-    <LandingLayout>
+    <LandingLayout title="Katalog">
         <!-- Search -->
         <LandingSection
             class="bg-gradient-to-b from-[#E0BEFF80] from-80% to-white min-h-[40vh] px-6 sm:px-12 md:px-[100px]"

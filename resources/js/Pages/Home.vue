@@ -7,12 +7,12 @@ import JoinUs from "@/Components/JoinUs.vue";
 </script>
 
 <template>
-    <LandingLayout title="Home">
+    <LandingLayout title="Beranda">
         <!-- Banner -->
         <img
             src="/storage/promotion_banner.png"
             alt="Banner"
-            class="w-full object-cover"
+            class="object-cover w-full"
         />
 
         <!-- Brands -->
@@ -30,11 +30,11 @@ import JoinUs from "@/Components/JoinUs.vue";
             <!-- About Us -->
             <LandingSection id="about">
                 <div
-                    class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-14 max-w-7xl mx-auto"
+                    class="grid grid-cols-1 gap-8 mx-auto lg:grid-cols-2 lg:gap-14 max-w-7xl"
                 >
                     <img src="/storage/store.png" alt="" class="rounded-2xl" />
                     <div class="flex flex-col justify-center">
-                        <h1 class="text-2xl sm:text-3xl font-bold mb-4">
+                        <h1 class="mb-4 text-2xl font-bold sm:text-3xl">
                             Tentang Kami
                         </h1>
                         <p class="text-gray-700">
@@ -52,17 +52,17 @@ import JoinUs from "@/Components/JoinUs.vue";
             <!-- Store Advantages -->
             <LandingSection>
                 <div
-                    class="gap-8 lg:gap-14 grid grid-cols-1 xl:grid-cols-2 max-w-7xl mx-auto"
+                    class="grid grid-cols-1 gap-8 mx-auto lg:gap-14 xl:grid-cols-2 max-w-7xl"
                 >
                     <div class="flex flex-col justify-center">
-                        <h1 class="text-2xl sm:text-3xl font-bold mb-4">
+                        <h1 class="mb-4 text-2xl font-bold sm:text-3xl">
                             Kenapa memilih Kami?
                         </h1>
                         <p class="text-gray-700">
                             Kami memiliki keunggulan antara lain:
                         </p>
                     </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-9">
+                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-9">
                         <AdvantageCard
                             title="Produk Berkualitas"
                             description="Kami hanya bekerja sama dengan pengrajin yang memiliki standar kualitas tinggi, memastikan setiap produk yang Anda beli adalah karya terbaik."
@@ -86,7 +86,7 @@ import JoinUs from "@/Components/JoinUs.vue";
             <!-- Certificates -->
             <LandingSection>
                 <div
-                    class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-14 max-w-7xl mx-auto"
+                    class="grid grid-cols-1 gap-8 mx-auto lg:grid-cols-2 lg:gap-14 max-w-7xl"
                 >
                     <div class="flex flex-col items-start justify-center gap-4">
                         <img
@@ -95,7 +95,7 @@ import JoinUs from "@/Components/JoinUs.vue";
                             class="rounded-2xl"
                         />
                         <div class="flex items-center gap-4">
-                            <div class="w-8 h-4 bg-primary rounded-full"></div>
+                            <div class="w-8 h-4 rounded-full bg-primary"></div>
                             <div
                                 class="w-4 h-4 bg-[#F8E4F3] rounded-full"
                             ></div>
@@ -105,7 +105,7 @@ import JoinUs from "@/Components/JoinUs.vue";
                         </div>
                     </div>
                     <div class="flex flex-col justify-center">
-                        <h1 class="text-2xl sm:text-3xl font-bold mb-4">
+                        <h1 class="mb-4 text-2xl font-bold sm:text-3xl">
                             Terbukti Produk Original
                         </h1>
                         <p class="text-gray-700">
@@ -123,15 +123,15 @@ import JoinUs from "@/Components/JoinUs.vue";
             <!-- Best Seller Products -->
             <LandingSection>
                 <div
-                    class="flex flex-col items-start justify-center gap-4 max-w-7xl mx-auto"
+                    class="flex flex-col items-start justify-center gap-4 mx-auto max-w-7xl"
                 >
-                    <div class="flex items-center justify-between gap-4 w-full">
-                        <h1 class="text-2xl sm:text-3xl font-bold mb-4">
+                    <div class="flex items-center justify-between w-full gap-4">
+                        <h1 class="mb-4 text-2xl font-bold sm:text-3xl">
                             Produk Terlaris
                         </h1>
                         <a
                             href="#"
-                            class="text-primary hover:underline text-sm flex items-center justify-center gap-1"
+                            class="flex items-center justify-center gap-1 text-sm text-primary hover:underline"
                         >
                             <p>Selengkapnya</p>
                             <svg
@@ -151,7 +151,7 @@ import JoinUs from "@/Components/JoinUs.vue";
                         </a>
                     </div>
                     <div
-                        class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-9 w-full"
+                        class="grid w-full grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-4 sm:gap-9"
                     >
                         <ProductCard
                             name="Produk 1"
