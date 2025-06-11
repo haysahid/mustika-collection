@@ -65,8 +65,8 @@ const menus = [
     },
     {
         name: "Produk",
-        href: "/admin/product",
-        active: false,
+        href: route("admin.product"),
+        active: route().current("admin.product"),
         icon: `
             <svg 
                 xmlns="http://www.w3.org/2000/svg" 

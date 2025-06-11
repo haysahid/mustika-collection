@@ -84,14 +84,14 @@ const showSuccessDialog = ref(false);
         <div>
             <PrimaryButton
                 type="button"
-                class="bg-yellow-500 hover:bg-yellow-500/80 active:bg-yellow-500/90 focus:bg-yellow-500 focus:ring-yellow-500"
+                class="bg-yellow-500 hover:bg-yellow-500/80 active:bg-yellow-500/90 focus:bg-yellow-500 focus:ring-yellow-500 max-sm:text-xs max-sm:px-4 max-sm:py-2"
                 @click="$inertia.visit(route('admin.certificate.add'))"
             >
                 + Tambah Data</PrimaryButton
             >
 
             <!-- Table -->
-            <div class="mt-6 overflow-x-auto rounded-t-lg">
+            <div class="mt-4 overflow-x-auto rounded-t-lg sm:mt-6">
                 <table class="table-default">
                     <thead>
                         <tr>

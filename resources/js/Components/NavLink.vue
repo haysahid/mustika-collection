@@ -10,8 +10,8 @@ const props = defineProps({
 
 const classes = computed(() => {
     return props.active
-        ? "inline-flex items-center text-md font-medium leading-5 text-gray-900 focus:outline-none transition duration-150 ease-in-out text-center"
-        : "inline-flex items-center text-md font-medium leading-5 text-white/80 hover:text-white focus:outline-none focus:text-gray-700 transition duration-150 ease-in-out text-center";
+        ? "inline-flex items-center text-base font-medium leading-5 text-gray-900 outline-none transition duration-150 ease-in-out text-center"
+        : "inline-flex items-center text-base font-medium leading-5 text-white/80 hover:text-white focus:text-white outline-none focus:text-gray-700 transition duration-150 ease-in-out text-center";
 });
 </script>
 

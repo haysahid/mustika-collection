@@ -32,6 +32,10 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
+    readonly: {
+        type: Boolean,
+        default: false,
+    },
     error: {
         type: String,
         default: null,
@@ -71,6 +75,8 @@ defineExpose({ focus: () => input.value.focus() });
                 :type="props.type"
                 :autofocus="props.autofocus ? true : false"
                 :autocomplete="props.autocomplete"
+                :required="props.required"
+                :readonly="props.readonly"
                 class="w-full px-3.5 border-gray-300 rounded-full shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
                 :class="{
                     'pl-11': hasPrefix,
@@ -80,6 +86,7 @@ defineExpose({ focus: () => input.value.focus() });
                 :value="props.modelValue"
                 @input="updateValue($event.target.value)"
             />
+            <slot name="suffix"></slot>
         </label>
         <InputError class="mt-1" :message="props.error" />
     </div>

@@ -10,7 +10,7 @@ import CatalogFilter from "@/Components/CatalogFilter.vue";
     <LandingLayout title="Katalog">
         <!-- Search -->
         <LandingSection
-            class="bg-gradient-to-b from-[#E0BEFF80] from-80% to-white min-h-[40vh] px-6 sm:px-12 md:px-[100px]"
+            class="bg-gradient-to-b from-[#E0BEFF80] from-80% to-white !min-h-[40vh] px-6 sm:px-12 md:px-[100px]"
         >
             <div
                 class="flex flex-col items-center w-full py-12 text-center gap-9"
@@ -51,7 +51,9 @@ import CatalogFilter from "@/Components/CatalogFilter.vue";
         </LandingSection>
 
         <!-- Content -->
-        <div class="p-6 sm:p-12 md:p-[100px] flex flex-col gap-12 lg:gap-20">
+        <div
+            class="p-6 !pt-4 sm:p-12 md:p-[100px] flex flex-col gap-12 lg:gap-20"
+        >
             <LandingSection>
                 <div
                     class="flex flex-col items-start justify-center mx-auto sm:flex-row gap-14 max-w-7xl"
@@ -62,7 +64,7 @@ import CatalogFilter from "@/Components/CatalogFilter.vue";
                     <!-- Products -->
                     <div class="flex flex-col items-start gap-12">
                         <div
-                            class="grid w-full grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3"
+                            class="grid w-full grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
                         >
                             <ProductCard
                                 name="Produk 1"
@@ -120,28 +122,28 @@ import CatalogFilter from "@/Components/CatalogFilter.vue";
                             <nav class="flex items-center gap-4 text-gray-600">
                                 <a
                                     href="#"
-                                    class="flex items-center justify-center px-6 text-white transition duration-200 border border-gray-300 rounded-lg aspect-square bg-primary"
+                                    class="flex items-center justify-center text-white transition duration-200 rounded-lg size-12 aspect-square bg-primary"
                                     >1</a
                                 >
                                 <a
                                     href="#"
-                                    class="px-6 aspect-square flex items-center justify-center bg-[#E4CFF6] text-primary rounded-lg hover:bg-[#E4CFF6]/80 transition duration-300 font-semibold"
+                                    class="size-12 aspect-square flex items-center justify-center bg-[#E4CFF6] text-primary rounded-lg hover:bg-[#E4CFF6]/80 transition duration-300 font-semibold"
                                     >2</a
                                 >
                                 <a
                                     href="#"
-                                    class="px-6 aspect-square flex items-center justify-center bg-[#E4CFF6] text-primary rounded-lg hover:bg-[#E4CFF6]/80 transition duration-300 font-semibold"
+                                    class="size-12 aspect-square flex items-center justify-center bg-[#E4CFF6] text-primary rounded-lg hover:bg-[#E4CFF6]/80 transition duration-300 font-semibold"
                                     >3</a
                                 >
                                 <span>...</span>
                                 <a
                                     href="#"
-                                    class="px-6 aspect-square flex items-center justify-center bg-[#E4CFF6] text-primary rounded-lg hover:bg-[#E4CFF6]/80 transition duration-300 font-semibold"
+                                    class="size-12 aspect-square flex items-center justify-center bg-[#E4CFF6] text-primary rounded-lg hover:bg-[#E4CFF6]/80 transition duration-300 font-semibold"
                                     >6</a
                                 >
                                 <a
                                     href="#"
-                                    class="px-6 aspect-square flex items-center justify-center bg-[#E4CFF6] text-primary rounded-lg hover:bg-[#E4CFF6]/80 transition duration-300 font-semibold"
+                                    class="size-12 aspect-square flex items-center justify-center bg-[#E4CFF6] text-primary rounded-lg hover:bg-[#E4CFF6]/80 transition duration-300 font-semibold"
                                     >{{ ">" }}</a
                                 >
                             </nav>

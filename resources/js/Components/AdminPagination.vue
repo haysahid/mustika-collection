@@ -1,11 +1,11 @@
 <template>
     <div class="flex justify-start mt-6">
         <nav
-            class="flex items-center gap-2 p-2.5 text-primary bg-white border border-gray-100 rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
+            class="flex items-center gap-1.5 sm:gap-2 p-1.5 sm:p-2.5 text-primary bg-white border border-gray-100 rounded-xl sm:rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.05)]"
         >
             <a
                 href="#"
-                class="size-10 aspect-square flex items-center justify-center text-primary rounded-lg hover:bg-[#E4CFF6]/80 transition duration-300 font-semibold"
+                class="size-6 sm:size-10 aspect-square flex items-center justify-center text-primary rounded-md sm:rounded-lg hover:bg-[#E4CFF6]/80 transition duration-300 font-semibold"
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -23,29 +23,29 @@
             </a>
             <a
                 href="#"
-                class="flex items-center justify-center text-white transition duration-200 bg-yellow-500 size-10 rounded-xl aspect-square"
+                class="flex items-center justify-center text-sm text-white transition duration-200 bg-yellow-500 rounded-md size-6 sm:size-10 sm:rounded-lg aspect-square sm:text-base"
                 >1</a
             >
             <a
                 href="#"
-                class="size-10 aspect-square flex items-center justify-center text-primary rounded-lg hover:bg-[#E4CFF6]/80 transition duration-300 font-semibold"
+                class="size-6 sm:size-10 aspect-square flex items-center justify-center text-primary rounded-lg hover:bg-[#E4CFF6]/80 transition duration-300 font-semibold text-sm sm:text-base"
                 >2</a
             >
             <a
                 href="#"
-                class="size-10 aspect-square flex items-center justify-center text-primary rounded-lg hover:bg-[#E4CFF6]/80 transition duration-300 font-semibold"
+                class="size-6 sm:size-10 aspect-square flex items-center justify-center text-primary rounded-lg hover:bg-[#E4CFF6]/80 transition duration-300 font-semibold text-sm sm:text-base"
                 >3</a
             >
 
             <span>...</span>
             <a
                 href="#"
-                class="size-10 aspect-square flex items-center justify-center text-primary rounded-lg hover:bg-[#E4CFF6]/80 transition duration-300 font-semibold"
+                class="size-6 sm:size-10 aspect-square flex items-center justify-center text-primary rounded-lg hover:bg-[#E4CFF6]/80 transition duration-300 font-semibold text-sm sm:text-base"
                 >25</a
             >
             <a
                 href="#"
-                class="size-10 aspect-square flex items-center justify-center text-primary rounded-lg hover:bg-[#E4CFF6]/80 transition duration-300 font-semibold"
+                class="size-6 sm:size-10 aspect-square flex items-center justify-center text-primary rounded-md sm:rounded-lg hover:bg-[#E4CFF6]/80 transition duration-300 font-semibold"
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"

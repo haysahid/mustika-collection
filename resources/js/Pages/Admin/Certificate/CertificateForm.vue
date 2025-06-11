@@ -34,7 +34,7 @@ const submit = () => {
                     value="Nama Sertifikat"
                     class="w-[100px] sm:w-1/5 text-lg font-bold"
                 />
-                <span class="hidden sm:block">:</span>
+                <span class="hidden text-sm sm:block">:</span>
                 <TextInput
                     id="name"
                     v-model="form.name"
@@ -57,7 +57,7 @@ const submit = () => {
                     value="Gambar Sertifikat"
                     class="text-lg font-bold sm:w-1/5"
                 />
-                <span class="hidden sm:block">:</span>
+                <span class="hidden text-sm sm:block">:</span>
                 <ImageInput
                     id="image"
                     v-model="form.image"

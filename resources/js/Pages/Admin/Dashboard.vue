@@ -17,7 +17,7 @@ import SummaryCard from "@/Components/SummaryCard.vue";
                                 width="60"
                                 height="61"
                                 viewBox="0 0 60 61"
-                                class="size-12 sm:size-14"
+                                class="size-10 sm:size-12"
                             >
                                 <path
                                     opacity="0.21"
@@ -47,7 +47,7 @@ import SummaryCard from "@/Components/SummaryCard.vue";
                                 width="60"
                                 height="61"
                                 viewBox="0 0 60 61"
-                                class="size-12 sm:size-14"
+                                class="size-10 sm:size-12"
                             >
                                 <path
                                     opacity="0.21"

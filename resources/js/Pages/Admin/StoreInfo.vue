@@ -86,7 +86,7 @@ const submit = () => {
                             value="Nama Toko"
                             class="w-[100px] sm:w-1/5 text-lg font-bold"
                         />
-                        <span class="hidden sm:block">:</span>
+                        <span class="hidden text-sm sm:block">:</span>
                         <TextInput
                             id="name"
                             v-model="form.name"
@@ -110,7 +110,7 @@ const submit = () => {
                             value="No. WhatsApp"
                             class="w-[100px] sm:w-1/5 text-lg font-bold"
                         />
-                        <span class="hidden sm:block">:</span>
+                        <span class="hidden text-sm sm:block">:</span>
                         <TextInput
                             id="phone"
                             v-model="form.phone"
@@ -133,7 +133,7 @@ const submit = () => {
                             value="Email"
                             class="w-[100px] sm:w-1/5 text-lg font-bold"
                         />
-                        <span class="hidden sm:block">:</span>
+                        <span class="hidden text-sm sm:block">:</span>
                         <TextInput
                             id="email"
                             v-model="form.email"
@@ -156,7 +156,7 @@ const submit = () => {
                             value="Alamat Toko"
                             class="w-[100px] sm:w-1/5 text-lg font-bold"
                         />
-                        <span class="hidden sm:block">:</span>
+                        <span class="hidden text-sm sm:block">:</span>
                         <TextInput
                             id="address"
                             v-model="form.address"

@@ -1,10 +1,10 @@
 <script setup>
 import AdminLayout from "@/Layouts/AdminLayout.vue";
-import CertificateForm from "./CertificateForm.vue";
+import ProductForm from "./ProductForm.vue";
 </script>
 
 <template>
-    <AdminLayout title="Ubah Sertifikat" :showTitle="true">
+    <AdminLayout title="Ubah Produk" :showTitle="true">
         <template #icon>
             <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -21,7 +21,7 @@ import CertificateForm from "./CertificateForm.vue";
         </template>
 
         <div class="md:px-11 max-w-7xl">
-            <CertificateForm />
+            <ProductForm />
         </div>
     </AdminLayout>
 </template>

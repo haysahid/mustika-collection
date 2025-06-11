@@ -39,10 +39,10 @@ defineProps({
                     <main class="p-6 pb-16">
                         <div
                             v-if="showTitle"
-                            class="flex items-center gap-4 mb-6 max-w-7xl"
+                            class="flex items-center gap-2 mb-4 sm:mb-6 sm:gap-4 max-w-7xl"
                         >
                             <slot name="icon" />
-                            <h1 class="text-xl font-bold">
+                            <h1 class="text-lg font-bold sm:text-xl">
                                 {{ title }}
                             </h1>
                         </div>
@@ -52,7 +52,9 @@ defineProps({
                     <footer
                         class="bg-secondary px-6 py-2 text-center fixed bottom-0 w-full md:w-[calc(100%-256px)]"
                     >
-                        <p class="text-sm text-gray-600 md:text-md">
+                        <p
+                            class="text-xs text-gray-600 sm:text-sm md:text-base"
+                        >
                             © 2000 - Company, Inc. All rights reserved.
                         </p>
                     </footer>

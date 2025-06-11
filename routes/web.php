@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\StoreCertificateController;
 use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -20,7 +21,7 @@ Route::get('/', function () {
 
 Route::get('/catalog',  fn() => Inertia::render('Catalog'))->name('catalog');
 
-Route::get('/product/{slug}', [ProductController::class, 'show'])->name('product.show');
+Route::get('/product/{slug}', fn() => Inertia::render('ProductDetail'))->name('product.show');
 
 Route::prefix('admin')->group(function () {
     Route::get('/login', [AdminController::class, 'login'])
@@ -38,17 +39,26 @@ Route::prefix('admin')->group(function () {
             return Inertia::render('Admin/StoreInfo');
         })->name('admin.store.info');
 
-        Route::get('/certificate', function () {
-            return Inertia::render('Admin/Certificate');
-        })->name('admin.certificate');
+        Route::get('/certificate', [StoreCertificateController::class, 'index'])
+            ->name('admin.certificate');
 
-        Route::get('/certificate/add', function () {
-            return Inertia::render('Admin/Certificate/AddCertificate');
-        })->name('admin.certificate.add');
+        Route::get('/certificate/add', [StoreCertificateController::class, 'create'])
+            ->name('admin.certificate.add');
 
-        Route::get('/certificate/{id}', function () {
-            return Inertia::render('Admin/Certificate/EditCertificate');
-        })->name('admin.certificate.edit');
+        Route::get('/certificate/{id}', [StoreCertificateController::class, 'show'])
+            ->name('admin.certificate.edit');
+
+        Route::get('/product', function () {
+            return Inertia::render('Admin/Product');
+        })->name('admin.product');
+
+        Route::get('/product/add', function () {
+            return Inertia::render('Admin/Product/AddProduct');
+        })->name('admin.product.add');
+
+        Route::get('/product/{id}', function () {
+            return Inertia::render('Admin/Product/EditProduct');
+        })->name('admin.product.edit');
     });
 });
 
