@@ -64,6 +64,8 @@ onMounted(() => {
     if (input.value.hasAttribute("autofocus")) {
         input.value.focus();
     }
+
+    input.value.parentNode.dataset.clonedVal = props.modelValue;
 });
 
 defineExpose({ focus: () => input.value.focus() });

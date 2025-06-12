@@ -1,8 +1,47 @@
 <script setup>
+import { ref, computed } from "vue";
 import LandingLayout from "@/Layouts/LandingLayout.vue";
 import LandingSection from "@/Components/LandingSection.vue";
 import ProductCard from "@/Components/ProductCard.vue";
 import JoinUs from "@/Components/JoinUs.vue";
+
+const props = defineProps({
+    product: Object,
+    relatedProducts: Array,
+});
+
+const image = ref(props.product.images[0]);
+
+const fullDescription = ref(false);
+
+const imageIndex = ref(0);
+
+const changeImage = (index) => {
+    image.value = props.product.images[index];
+    imageIndex.value = index;
+};
+
+const canGoToPreviousImage = computed(() => {
+    return imageIndex.value > 0;
+});
+
+const canGoToNextImage = computed(() => {
+    return imageIndex.value < props.product.images.length - 1;
+});
+
+const goToPreviousImage = () => {
+    if (canGoToPreviousImage.value) {
+        imageIndex.value--;
+        image.value = props.product.images[imageIndex.value];
+    }
+};
+
+const goToNextImage = () => {
+    if (canGoToNextImage.value) {
+        imageIndex.value++;
+        image.value = props.product.images[imageIndex.value];
+    }
+};
 </script>
 
 <template>
@@ -13,44 +52,87 @@ import JoinUs from "@/Components/JoinUs.vue";
                 class="grid grid-cols-1 gap-8 mx-auto lg:grid-cols-2 lg:gap-14 max-w-7xl"
             >
                 <div class="flex flex-col items-start justify-start gap-4">
-                    <img
-                        src="/storage/product/product_1.png"
-                        alt=""
-                        class="object-cover rounded-2xl aspect-square"
-                    />
+                    <div
+                        class="relative flex items-center justify-center w-full overflow-hidden group"
+                    >
+                        <img
+                            :src="'/storage/' + image.image"
+                            :alt="props.product.name"
+                            class="object-cover rounded-2xl aspect-square"
+                        />
+                        <button
+                            v-if="canGoToPreviousImage"
+                            @click="goToPreviousImage"
+                            type="button"
+                            class="size-8 sm:size-12 opacity-0 aspect-square flex items-center justify-center text-primary hover:bg-[#E4CFF6]/80 font-semibold absolute -left-8 group-hover:bg-black/40 group-hover:opacity-100 group-hover:left-4 transition-all duration-300 ease-in-out rounded-full hover:scale-110"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="20"
+                                height="20"
+                                viewBox="0 0 20 20"
+                                class="fill-gray-200 size-5 sm:size-6"
+                            >
+                                <path
+                                    fill-rule="evenodd"
+                                    clip-rule="evenodd"
+                                    d="M11.7803 5.21967C12.0732 5.51256 12.0732 5.98744 11.7803 6.28033L8.06066 10L11.7803 13.7197C12.0732 14.0126 12.0732 14.4874 11.7803 14.7803C11.4874 15.0732 11.0126 15.0732 10.7197 14.7803L6.46967 10.5303C6.17678 10.2374 6.17678 9.76256 6.46967 9.46967L10.7197 5.21967C11.0126 4.92678 11.4874 4.92678 11.7803 5.21967Z"
+                                />
+                            </svg>
+                        </button>
+                        <button
+                            v-if="canGoToNextImage"
+                            @click="goToNextImage"
+                            type="button"
+                            class="size-8 sm:size-12 opacity-0 aspect-square flex items-center justify-center text-primary hover:bg-[#E4CFF6]/80 font-semibold absolute -right-8 group-hover:bg-black/40 group-hover:opacity-100 group-hover:right-4 transition-all duration-300 ease-in-out rounded-full hover:scale-110"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="20"
+                                height="20"
+                                viewBox="0 0 20 20"
+                                class="fill-gray-200 size-5 sm:size-6"
+                            >
+                                <path
+                                    fill-rule="evenodd"
+                                    clip-rule="evenodd"
+                                    d="M8.21967 5.21967C8.51256 4.92678 8.98744 4.92678 9.28033 5.21967L13.5303 9.46967C13.8232 9.76256 13.8232 10.2374 13.5303 10.5303L9.28033 14.7803C8.98744 15.0732 8.51256 15.0732 8.21967 14.7803C7.92678 14.4874 7.92678 14.0126 8.21967 13.7197L11.9393 10L8.21967 6.28033C7.92678 5.98744 7.92678 5.51256 8.21967 5.21967Z"
+                                />
+                            </svg>
+                        </button>
+                    </div>
                     <div class="flex items-center gap-4">
                         <img
-                            src="/storage/product/product_1.png"
-                            alt=""
-                            class="w-[80px] sm:w-[120px] h-[60px] sm:h-[80px] object-cover rounded-lg"
-                        />
-                        <img
-                            src="/storage/product/product_1.png"
-                            alt=""
-                            class="w-[80px] sm:w-[120px] h-[60px] sm:h-[80px] object-cover rounded-lg"
-                        />
-                        <img
-                            src="/storage/product/product_1.png"
-                            alt=""
-                            class="w-[80px] sm:w-[120px] h-[60px] sm:h-[80px] object-cover rounded-lg"
-                        />
-                        <img
-                            src="/storage/product/product_1.png"
-                            alt=""
-                            class="w-[80px] sm:w-[120px] h-[60px] sm:h-[80px] object-cover rounded-lg"
+                            v-for="(img, index) in props.product.images"
+                            :key="img.id"
+                            :src="'/storage/' + img.image"
+                            :alt="props.product.name"
+                            class="w-[80px] sm:w-[120px] h-[60px] sm:h-[80px] object-cover rounded-lg cursor-pointer transition duration-200 hover:scale-105"
+                            :class="{
+                                'opacity-50 !cursor-default hover:!scale-100':
+                                    image.id == img.id,
+                            }"
+                            @click="changeImage(index)"
                         />
                     </div>
                 </div>
                 <div class="flex flex-col justify-start py-6">
                     <h1 class="mb-4 text-2xl font-bold sm:text-3xl">
-                        Sarimbit terbaru by Seply
+                        {{ props.product.name }}
                     </h1>
                     <div class="flex items-center gap-4 mb-6">
-                        <p class="text-xl font-bold sm:text-2xl">Rp 399.000</p>
+                        <p class="text-xl font-bold sm:text-2xl">
+                            Rp
+                            {{
+                                props.product.selling_price.toLocaleString(
+                                    "id-ID"
+                                )
+                            }}
+                        </p>
                         <div
                             class="bg-red-500 text-white px-1.5 py-0.5 rounded-md text-sm"
                         >
-                            20%
+                            {{ props.product.discount }}%
                         </div>
                     </div>
                     <div class="flex flex-col gap-6">
@@ -62,7 +144,7 @@ import JoinUs from "@/Components/JoinUs.vue";
                                 Rincian
                             </h3>
                             <div
-                                class="relative overflow-x-auto sm:rounded-lg w-full max-w-[300px] border border-gray-300"
+                                class="relative overflow-x-auto sm:rounded-lg w-full max-w-[400px] border border-gray-300"
                             >
                                 <table class="w-full">
                                     <tbody
@@ -70,19 +152,50 @@ import JoinUs from "@/Components/JoinUs.vue";
                                     >
                                         <tr>
                                             <td>Kategori</td>
-                                            <td>Baju</td>
+                                            <td>
+                                                {{
+                                                    props.product.categories
+                                                        ?.map(
+                                                            (category) =>
+                                                                category.name
+                                                        )
+                                                        .join(", ")
+                                                }}
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td>Warna</td>
-                                            <td>Merah</td>
+                                            <td>
+                                                {{ props.product.color?.name }}
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td>Ukuran</td>
-                                            <td>M, L, XL</td>
+                                            <td>
+                                                {{
+                                                    props.product.sizes
+                                                        ?.map(
+                                                            (size) => size.name
+                                                        )
+                                                        .join(", ")
+                                                }}
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td>Stok</td>
-                                            <td>Tersedia</td>
+                                            <td>
+                                                {{
+                                                    props.product.stock > 0
+                                                        ? "Tersedia"
+                                                        : "Habis"
+                                                }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Min. Pemesanan</td>
+                                            <td>
+                                                {{ props.product.min_order }}
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -96,14 +209,26 @@ import JoinUs from "@/Components/JoinUs.vue";
                             >
                                 Deskripsi
                             </h3>
-                            <p class="text-gray-700">
-                                Kami telah mendapatkan sertifikasi dari berbagai
-                                lembaga yang mengakui keaslian dan kualitas
-                                produk kami. Setiap produk yang kami tawarkan
-                                telah melalui proses verifikasi yang ketat untuk
-                                memastikan bahwa Anda mendapatkan produk yang
-                                benar-benar original dan berkualitas tinggi.
+                            <p
+                                class="text-gray-700 line-clamp-3 overflow-ellipsis"
+                                :class="{
+                                    'line-clamp-none overflow-visible':
+                                        fullDescription,
+                                }"
+                            >
+                                {{ props.product.description }}
                             </p>
+
+                            <button
+                                class="mt-2 text-primary hover:underline"
+                                @click="fullDescription = !fullDescription"
+                            >
+                                {{
+                                    fullDescription
+                                        ? "Lihat Sedikit"
+                                        : "Selengkapnya..."
+                                }}
+                            </button>
                         </div>
 
                         <!-- Call to Actions -->
@@ -156,7 +281,7 @@ import JoinUs from "@/Components/JoinUs.vue";
                 >
                     <div class="flex items-center justify-between w-full gap-4">
                         <h1 class="mb-4 text-2xl font-bold sm:text-3xl">
-                            Produk Terlaris
+                            Produk Terkait
                         </h1>
                         <a
                             href="#"
@@ -183,32 +308,14 @@ import JoinUs from "@/Components/JoinUs.vue";
                         class="grid w-full grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-4 sm:gap-9"
                     >
                         <ProductCard
-                            name="Produk 1"
-                            :price="100000"
-                            image="/storage/product/product_1.png"
-                            description="Deskripsi produk 1"
-                            :discount="20"
-                        />
-                        <ProductCard
-                            name="Produk 1"
-                            :price="100000"
-                            image="/storage/product/product_1.png"
-                            description="Deskripsi produk 1"
-                            :discount="20"
-                        />
-                        <ProductCard
-                            name="Produk 1"
-                            :price="100000"
-                            image="/storage/product/product_1.png"
-                            description="Deskripsi produk 1"
-                            :discount="20"
-                        />
-                        <ProductCard
-                            name="Produk 1"
-                            :price="100000"
-                            image="/storage/product/product_1.png"
-                            description="Deskripsi produk 1"
-                            :discount="20"
+                            v-for="product in props.relatedProducts || []"
+                            :key="product.id"
+                            :name="product.name"
+                            :price="product.selling_price"
+                            :image="'/storage/' + product.images[0].image"
+                            :description="product.brand?.name"
+                            :discount="product.discount"
+                            :slug="product.slug"
                         />
                     </div>
                 </div>

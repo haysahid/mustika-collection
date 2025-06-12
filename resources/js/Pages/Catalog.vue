@@ -4,6 +4,116 @@ import LandingSection from "@/Components/LandingSection.vue";
 import ProductCard from "@/Components/ProductCard.vue";
 import JoinUs from "@/Components/JoinUs.vue";
 import CatalogFilter from "@/Components/CatalogFilter.vue";
+import { ref, onMounted, watch, computed } from "vue";
+import { usePage, router } from "@inertiajs/vue3";
+
+const props = defineProps({
+    products: null,
+    filters: null,
+});
+
+const products = props.products.data.map((product) => ({
+    ...product,
+    images: product.images.map((image) => ({
+        ...image,
+        image: image.image ? "/storage/" + image.image : null,
+    })),
+}));
+
+const catalogFilter = ref(null);
+
+const filters = ref({
+    brands: null,
+    colors: null,
+    categories: null,
+    sizes: null,
+});
+
+const getFilters = computed(() => {
+    return {
+        brands:
+            props.filters.brands.map((brand) => ({
+                ...brand,
+                selected: filters.value.brands?.includes(brand.name) || false,
+            })) || [],
+        colors:
+            props.filters.colors.map((color) => ({
+                ...color,
+                selected: filters.value.colors?.includes(color.name) || false,
+            })) || [],
+        categories:
+            props.filters.categories.map((category) => ({
+                ...category,
+                selected:
+                    filters.value.categories?.includes(category.name) || false,
+            })) || [],
+        sizes:
+            props.filters.sizes.map((size) => ({
+                ...size,
+                selected: filters.value.sizes?.includes(size.name) || false,
+            })) || [],
+    };
+});
+
+const getQueryParams = () => {
+    filters.value.brands = route().params.brands
+        ? route().params.brands.split(",")
+        : [];
+    filters.value.colors = route().params.colors
+        ? route().params.colors.split(",")
+        : [];
+    filters.value.categories = route().params.categories
+        ? route().params.categories.split(",")
+        : [];
+    filters.value.sizes = route().params.sizes
+        ? route().params.sizes.split(",")
+        : [];
+};
+getQueryParams();
+
+watch(
+    () => catalogFilter.value?.filters,
+    (newFilters) => {
+        filters.value = {
+            brands:
+                newFilters.brands
+                    ?.filter((brand) => brand.selected)
+                    .map((brand) => brand.name) || [],
+            colors:
+                newFilters.colors
+                    ?.filter((color) => color.selected)
+                    .map((color) => color.name) || [],
+            categories:
+                newFilters.categories
+                    ?.filter((category) => category.selected)
+                    .map((category) => category.name) || [],
+            sizes:
+                newFilters.sizes
+                    ?.filter((size) => size.selected)
+                    .map((size) => size.name) || [],
+        };
+
+        let queryParams = {};
+        if (filters.value.brands.length > 0) {
+            queryParams.brands = filters.value.brands.join(",");
+        }
+        if (filters.value.colors.length > 0) {
+            queryParams.colors = filters.value.colors.join(",");
+        }
+        if (filters.value.categories.length > 0) {
+            queryParams.categories = filters.value.categories.join(",");
+        }
+        if (filters.value.sizes.length > 0) {
+            queryParams.sizes = filters.value.sizes.join(",");
+        }
+
+        router.get(route().current(), queryParams, {
+            preserveState: true,
+            preserveScroll: true,
+        });
+    },
+    { deep: true }
+);
 </script>
 
 <template>
@@ -56,64 +166,31 @@ import CatalogFilter from "@/Components/CatalogFilter.vue";
         >
             <LandingSection>
                 <div
-                    class="flex flex-col items-start justify-center mx-auto sm:flex-row gap-14 max-w-7xl"
+                    class="flex flex-col items-start justify-center mx-auto md:flex-row gap-14 max-w-7xl"
                 >
                     <!-- Filter -->
-                    <CatalogFilter class="w-full sm:w-1/3" />
+                    <CatalogFilter
+                        ref="catalogFilter"
+                        :filters="getFilters"
+                        class="w-full md:w-1/3 lg:w-1/5"
+                    />
 
                     <!-- Products -->
-                    <div class="flex flex-col items-start gap-12">
+                    <div
+                        class="flex flex-col items-start w-full gap-12 md:w-2/3 lg:w-4/5"
+                    >
                         <div
-                            class="grid w-full grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+                            class="grid w-full grid-cols-2 gap-5 sm:gap-6 lg:grid-cols-3"
                         >
                             <ProductCard
-                                name="Produk 1"
-                                description="Deskripsi produk 1"
-                                image="/storage/product/product_1.png"
-                                :price="100000"
-                                :discount="20"
-                            />
-                            <ProductCard
-                                name="Produk 1"
-                                description="Deskripsi produk 1"
-                                image="/storage/product/product_1.png"
-                                :price="100000"
-                                :discount="20"
-                            />
-                            <ProductCard
-                                name="Produk 1"
-                                description="Deskripsi produk 1"
-                                image="/storage/product/product_1.png"
-                                :price="100000"
-                                :discount="20"
-                            />
-                            <ProductCard
-                                name="Produk 1"
-                                description="Deskripsi produk 1"
-                                image="/storage/product/product_1.png"
-                                :price="100000"
-                                :discount="20"
-                            />
-                            <ProductCard
-                                name="Produk 1"
-                                description="Deskripsi produk 1"
-                                image="/storage/product/product_1.png"
-                                :price="100000"
-                                :discount="20"
-                            />
-                            <ProductCard
-                                name="Produk 1"
-                                description="Deskripsi produk 1"
-                                image="/storage/product/product_1.png"
-                                :price="100000"
-                                :discount="20"
-                            />
-                            <ProductCard
-                                name="Produk 1"
-                                description="Deskripsi produk 1"
-                                image="/storage/product/product_1.png"
-                                :price="100000"
-                                :discount="20"
+                                v-for="product in products"
+                                :key="product.id"
+                                :name="product.name"
+                                :description="product.brand?.name"
+                                :image="product.images[0]?.image"
+                                :price="product.selling_price"
+                                :discount="product.discount"
+                                :slug="product.slug"
                             />
                         </div>
 

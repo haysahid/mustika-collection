@@ -1,47 +1,71 @@
 <script setup>
 import { ref } from "vue";
 import Checkbox from "@/Components/Checkbox.vue";
+import InputLabel from "@/Components/InputLabel.vue";
+
+const props = defineProps({
+    filters: Object,
+});
+
+const filters = ref(props.filters);
 
 const showingFilterDropdown = ref(false);
+
+defineExpose({
+    filters,
+});
 </script>
 
 <template>
     <div>
         <!-- Primary Filter -->
-        <div class="hidden sm:block">
-            <h2 class="text-2xl font-bold mb-4">Kategori</h2>
-            <div class="hidden sm:flex sm:flex-col gap-4">
-                <div class="flex items-center gap-2">
-                    <Checkbox id="filter-1" name="filter-1" />
-                    <label for="filter-1">Filter 1</label>
-                </div>
-                <div class="flex items center gap-2">
-                    <Checkbox id="filter-2" name="filter-2" />
-                    <label for="filter-2">Filter 2</label>
-                </div>
-                <div class="flex items center gap-2">
-                    <Checkbox id="filter-3" name="filter-3" />
-                    <label for="filter-3">Filter 3</label>
-                </div>
-                <div class="flex items center gap-2">
-                    <Checkbox id="filter-4" name="filter-4" />
-                    <label for="filter-4">Filter 4</label>
+        <div class="hidden md:block">
+            <h2 class="mb-4 text-2xl font-bold">Kategori</h2>
+            <div
+                v-if="filters?.categories"
+                class="hidden gap-4 md:flex md:flex-col"
+            >
+                <div
+                    v-for="category in filters.categories || []"
+                    :key="category.id"
+                    class="flex items-center justify-start"
+                >
+                    <label
+                        :for="`category-${category.id}`"
+                        class="flex items-center gap-2 cursor-pointer [&>*]:cursor-pointer justify-start"
+                    >
+                        <Checkbox
+                            :id="`category-${category.id}`"
+                            :label="category.name"
+                            :checked="category.selected"
+                            @update:checked="
+                                category.selected
+                                    ? (category.selected = false)
+                                    : (category.selected = true)
+                            "
+                        />
+                        <InputLabel
+                            :for="`category-${category.id}`"
+                            :value="category.name"
+                            class="text-sm text-gray-500"
+                        />
+                    </label>
                 </div>
             </div>
         </div>
 
         <!-- Filter Dropdown -->
         <div
-            class="w-full sm:hidden bg-white shadow-md rounded-lg outline outline-1 outline-gray-100"
+            class="w-full bg-white rounded-lg shadow-md md:hidden outline outline-1 outline-gray-100"
         >
             <button
-                class="text-gray-500 hover:text-gray-700 focus:outline-none flex gap-4 justify-between items-center w-full p-4"
+                class="flex items-center justify-between w-full gap-4 p-4 text-gray-500 hover:text-gray-700 focus:outline-none"
                 @click="showingFilterDropdown = !showingFilterDropdown"
             >
                 <h2>Filter</h2>
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    class="h-6 w-6"
+                    class="w-6 h-6"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -59,7 +83,7 @@ const showingFilterDropdown = ref(false);
                 class="px-4 pt-2.5 pb-4"
                 :class="{ hidden: !showingFilterDropdown }"
             >
-                <h2 class="text-xl font-bold mb-4">Kategori</h2>
+                <h2 class="mb-4 text-xl font-bold">Kategori</h2>
                 <div class="grid grid-cols-2 gap-2">
                     <div class="flex items-center gap-2">
                         <Checkbox

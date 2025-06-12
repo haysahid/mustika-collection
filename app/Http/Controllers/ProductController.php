@@ -22,12 +22,38 @@ class ProductController extends Controller
         $sortDirection = $request->input('order_direction', 'desc');
         $search = $request->input('search');
 
+        $brands = $request->input('brands');
+        $colors = $request->input('colors');
+        $categories = $request->input('categories');
+        $sizes = $request->input('sizes');
+
         $products = Product::query();
+
+        if ($brands) {
+            $products->whereIn('brand_id', $brands);
+        }
+
+        if ($colors) {
+            $products->whereIn('color_id', $colors);
+        }
+
+        if ($categories) {
+            $products->whereHas('categories', function ($query) use ($categories) {
+                $query->whereIn('category_id', $categories);
+            });
+        }
+
+        if ($sizes) {
+            $products->whereHas('sizes', function ($query) use ($sizes) {
+                $query->whereIn('size_id', $sizes);
+            });
+        }
 
         if ($search) {
             $products->where('name', 'like', '%' . $search . '%')
                 ->orWhere('description', 'like', '%' . $search . '%');
         }
+
         $products->orderBy($sortBy, $sortDirection);
         $products->with(['brand', 'color', 'categories', 'sizes', 'images',]);
         $products->get();
@@ -42,7 +68,17 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Admin/Product/AddProduct');
+        $brands = Brand::class::get();
+        $categories = Category::get();
+        $sizes = Size::get();
+        $colors = Color::get();
+
+        return Inertia::render('Admin/Product/AddProduct', [
+            'brands' => $brands,
+            'categories' => $categories,
+            'sizes' => $sizes,
+            'colors' => $colors,
+        ]);
     }
 
     /**

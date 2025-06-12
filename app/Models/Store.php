@@ -13,6 +13,7 @@ class Store extends Model
         'name',
         'description',
         'address',
+        'email',
         'phone',
         'logo',
         'banner',

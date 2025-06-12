@@ -31,14 +31,14 @@ class Product extends Model
         return $this->belongsTo(Store::class);
     }
 
-    public function color()
-    {
-        return $this->belongsTo(Color::class);
-    }
-
     public function brand()
     {
         return $this->belongsTo(Brand::class);
+    }
+
+    public function color()
+    {
+        return $this->belongsTo(Color::class);
     }
 
     public function categories()

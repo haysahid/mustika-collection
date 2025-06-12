@@ -1,10 +1,13 @@
 <script setup>
+import { ref } from "vue";
 import { useForm } from "@inertiajs/vue3";
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import TextInput from "@/Components/TextInput.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import TextAreaInput from "@/Components/TextAreaInput.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
+import SuccessDialog from "@/Components/SuccessDialog.vue";
+import ErrorDialog from "@/Components/ErrorDialog.vue";
 
 const props = defineProps({
     store: {
@@ -16,12 +19,30 @@ const props = defineProps({
 const form = useForm(props.store);
 
 const submit = () => {
-    form.transform((data) => ({
-        ...data,
-        remember: form.remember ? "on" : "",
-    })).post(route("admin.login"), {
-        onFinish: () => form.reset("password"),
+    form.post(route("admin.store.update"), {
+        onSuccess: () => {
+            openSuccessDialog("Informasi Toko berhasil diperbarui.");
+        },
+        onError: (errors) => {
+            openErrorDialog(errors.error);
+        },
     });
+};
+
+const showSuccessDialog = ref(false);
+const successMessage = ref(null);
+
+const showErrorDialog = ref(false);
+const errorMessage = ref(null);
+
+const openSuccessDialog = (message) => {
+    successMessage.value = message;
+    showSuccessDialog.value = true;
+};
+
+const openErrorDialog = (message) => {
+    errorMessage.value = message;
+    showErrorDialog.value = true;
 };
 </script>
 
@@ -56,7 +77,7 @@ const submit = () => {
         </template>
 
         <div class="md:px-11">
-            <form action="" class="max-w-3xl">
+            <form @submit.prevent="submit" class="max-w-3xl">
                 <div class="flex flex-col items-start gap-4">
                     <!-- Name -->
                     <div
@@ -225,10 +246,34 @@ const submit = () => {
                         />
                     </div>
 
-                    <PrimaryButton class="mt-4" @click="submit">
+                    <PrimaryButton type="submit" class="mt-4">
                         Simpan Data
                     </PrimaryButton>
                 </div>
+
+                <SuccessDialog
+                    :show="showSuccessDialog"
+                    :title="successMessage"
+                    @close="showSuccessDialog = false"
+                />
+
+                <ErrorDialog
+                    :show="showErrorDialog"
+                    @close="showErrorDialog = false"
+                >
+                    <template #content>
+                        <div>
+                            <div
+                                class="mb-1 text-lg font-medium text-center text-gray-900"
+                            >
+                                Terjadi Kesalahan
+                            </div>
+                            <p class="text-center text-gray-700">
+                                {{ errorMessage }}
+                            </p>
+                        </div>
+                    </template>
+                </ErrorDialog>
             </form>
         </div>
     </AdminLayout>

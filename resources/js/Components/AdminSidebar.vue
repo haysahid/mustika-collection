@@ -31,8 +31,8 @@ const menus = [
     },
     {
         name: "Info Toko",
-        href: route("admin.store.info"),
-        active: route().current("admin.store.info"),
+        href: route("admin.store.edit"),
+        active: route().current("admin.store.edit"),
         icon: `
             <svg 
                 xmlns="http://www.w3.org/2000/svg" 

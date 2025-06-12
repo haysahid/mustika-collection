@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\PublicController;
 use App\Http\Controllers\StoreCertificateController;
 use App\Http\Controllers\StoreController;
 use App\Http\Middleware\AdminMiddleware;
@@ -9,20 +10,11 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', function () {
-    // return Inertia::render('Welcome', [
-    //     'canLogin' => Route::has('login'),
-    //     'canRegister' => Route::has('register'),
-    //     'laravelVersion' => Application::VERSION,
-    //     'phpVersion' => PHP_VERSION,
-    // ]);
+Route::get('/', [PublicController::class, 'home'])->name('home');
 
-    return Inertia::render('Home');
-})->name('home');
+Route::get('/catalog', [PublicController::class, 'catalog'])->name('catalog');
 
-Route::get('/catalog',  fn() => Inertia::render('Catalog'))->name('catalog');
-
-Route::get('/product/{slug}', fn() => Inertia::render('ProductDetail'))->name('product.show');
+Route::get('/product/{slug}', [PublicController::class, 'productDetail'])->name('product.show');
 
 Route::prefix('admin')->group(function () {
     Route::get('/login', [AdminController::class, 'login'])->name('admin.login');
@@ -31,7 +23,8 @@ Route::prefix('admin')->group(function () {
     Route::middleware([AdminMiddleware::class])->group(function () {
         Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
-        Route::get('/store-info', [StoreController::class, 'edit'])->name('admin.store.info');
+        Route::get('/store-info', [StoreController::class, 'edit'])->name('admin.store.edit');
+        Route::post('/store-info', [StoreController::class, 'update'])->name('admin.store.update');
 
         Route::get('/certificate', [StoreCertificateController::class, 'index'])->name('admin.certificate');
         Route::get('/certificate/create', [StoreCertificateController::class, 'create'])->name('admin.certificate.create');

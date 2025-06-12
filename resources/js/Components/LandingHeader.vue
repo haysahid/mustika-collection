@@ -14,16 +14,16 @@ const logout = () => {
 <template>
     <nav class="bg-primary px-6 sm:px-12 md:px-[100px] py-1 sticky top-0 z-50">
         <!-- Primary Navigation Menu -->
-        <div class="max-w-7xl mx-auto">
+        <div class="mx-auto max-w-7xl">
             <div class="flex justify-between h-16">
                 <div class="flex justify-between w-full">
                     <!-- Logo -->
-                    <div class="shrink-0 flex items-center">
+                    <div class="flex items-center shrink-0">
                         <Link :href="route('home')">
                             <img
                                 src="/storage/logo_white.png"
                                 alt="Logo"
-                                class="h-12 sm:h-16 w-auto"
+                                class="w-auto h-12 sm:h-16"
                             />
                         </Link>
                     </div>
@@ -31,30 +31,29 @@ const logout = () => {
                     <!-- Navigation Links -->
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                         <NavLink
-                            href="#about"
-                            :active="route().current('dashboard')"
+                            :href="
+                                route().current('home')
+                                    ? '#about'
+                                    : route('home') + '#about'
+                            "
+                            :active="route().current('home')"
                         >
                             Tentang Kami
                         </NavLink>
                         <NavLink
                             :href="route('catalog')"
-                            :active="route().current('dashboard')"
+                            :active="route().current('catalog')"
                         >
                             Katalog
                         </NavLink>
-                        <NavLink
-                            href="#join"
-                            :active="route().current('dashboard')"
-                        >
-                            Gabung
-                        </NavLink>
+                        <NavLink href="#join" :active="false"> Gabung </NavLink>
                     </div>
                 </div>
 
                 <!-- Hamburger -->
-                <div class="-me-2 flex items-center sm:hidden">
+                <div class="flex items-center -me-2 sm:hidden">
                     <button
-                        class="inline-flex items-center justify-center p-2 rounded-md text-white/80 hover:text-white hover:bg-white/10 focus:outline-none focus:bg-white/10 focus:hover:bg-white/20 focus:text-white transition duration-150 ease-in-out"
+                        class="inline-flex items-center justify-center p-2 transition duration-150 ease-in-out rounded-md text-white/80 hover:text-white hover:bg-white/10 focus:outline-none focus:bg-white/10 focus:hover:bg-white/20 focus:text-white"
                         @click="
                             showingNavigationDropdown =
                                 !showingNavigationDropdown
@@ -102,7 +101,11 @@ const logout = () => {
         >
             <div class="pt-2 pb-3 space-y-1">
                 <ResponsiveNavLink
-                    :href="route('home')"
+                    :href="
+                        route().current('home')
+                            ? '#about'
+                            : route('home') + '#about'
+                    "
                     :active="route().current('home')"
                 >
                     Tentang Kami
@@ -113,10 +116,7 @@ const logout = () => {
                 >
                     Katalog
                 </ResponsiveNavLink>
-                <ResponsiveNavLink
-                    :href="route('home')"
-                    :active="route().current('dashboard')"
-                >
+                <ResponsiveNavLink href="#join" :active="false">
                     Gabung
                 </ResponsiveNavLink>
             </div>
