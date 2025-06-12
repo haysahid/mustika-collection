@@ -12,7 +12,7 @@ const props = defineProps({
     <Link
         :href="href"
         class="inline-flex items-center text-base font-medium leading-5 text-center transition duration-150 ease-in-out outline-none text-white/80 hover:text-white focus:text-white"
-        :class="[{ '!text-white': active }, active ? activeClass : '']"
+        :class="[active ? activeClass : '']"
     >
         <slot />
     </Link>

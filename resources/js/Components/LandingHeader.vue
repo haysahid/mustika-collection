@@ -6,9 +6,23 @@ import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
 
 const showingNavigationDropdown = ref(false);
 
-const logout = () => {
-    router.post(route("logout"));
-};
+const menus = [
+    {
+        name: "Tentang Kami",
+        href: route().current("home") ? "#about" : route("home") + "#about",
+        active: route().current("home"),
+    },
+    {
+        name: "Katalog",
+        href: route("catalog"),
+        active: route().current("catalog"),
+    },
+    {
+        name: "Gabung",
+        href: "#join",
+        active: false,
+    },
+];
 </script>
 
 <template>
@@ -31,22 +45,16 @@ const logout = () => {
                     <!-- Navigation Links -->
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                         <NavLink
-                            :href="
-                                route().current('home')
-                                    ? '#about'
-                                    : route('home') + '#about'
-                            "
-                            :active="route().current('home')"
+                            v-for="menu in menus"
+                            :key="menu.name"
+                            :href="menu.href"
+                            :active="menu.active"
+                            :class="{
+                                '!text-white': menu.active,
+                            }"
                         >
-                            Tentang Kami
+                            {{ menu.name }}
                         </NavLink>
-                        <NavLink
-                            :href="route('catalog')"
-                            :active="route().current('catalog')"
-                        >
-                            Katalog
-                        </NavLink>
-                        <NavLink href="#join" :active="false"> Gabung </NavLink>
                     </div>
                 </div>
 
@@ -101,23 +109,12 @@ const logout = () => {
         >
             <div class="pt-2 pb-3 space-y-1">
                 <ResponsiveNavLink
-                    :href="
-                        route().current('home')
-                            ? '#about'
-                            : route('home') + '#about'
-                    "
-                    :active="route().current('home')"
+                    v-for="menu in menus"
+                    :key="menu.name"
+                    :href="menu.href"
+                    :active="menu.active"
                 >
-                    Tentang Kami
-                </ResponsiveNavLink>
-                <ResponsiveNavLink
-                    :href="route('catalog')"
-                    :active="route().current('catalog')"
-                >
-                    Katalog
-                </ResponsiveNavLink>
-                <ResponsiveNavLink href="#join" :active="false">
-                    Gabung
+                    {{ menu.name }}
                 </ResponsiveNavLink>
             </div>
         </div>
