@@ -18,12 +18,12 @@ class StoreSeeder extends Seeder
     {
         Store::updateOrCreate([
             'name' => 'Mustika Collection',
-            'description' => 'Toko koleksi busana muslim dan aksesoris',
-            'address' => 'Jl. Raya Mustika No. 123, Jakarta',
+            'description' => 'Toko Mustika Collection merupakan toko distributor busana muslim yang berlokasi di Jl. Anggur Raya, Kutabumi, Kec. Ps. Kemis, Kabupaten Tangerang, Provinsi Banten. Menyediakan berbagai busana muslim lengkap untuk semua usia.',
+            'address' => 'Jl. Anggur Raya, Kutabumi, Kec. Ps. Kemis, Kabupaten Tangerang, Provinsi Banten',
             'email' => 'store@example.com',
             'phone' => '021-12345678',
             'logo' => 'logo_black.png',
-            'banner' => 'promotion_banner.png',
+            'banner' => 'store.png',
         ]);
 
         StoreAdvantage::insert([
