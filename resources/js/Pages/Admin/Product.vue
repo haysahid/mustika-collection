@@ -7,194 +7,20 @@ import AdminItemAction from "@/Components/AdminItemAction.vue";
 import DeleteConfirmationDialog from "@/Components/DeleteConfirmationDialog.vue";
 import SuccessDialog from "@/Components/SuccessDialog.vue";
 
-const products = ref([
-    {
-        id: 1,
-        code: "PRD001",
-        name: "Tas Kulit Premium",
-        slug: "tas-kulit-premium",
-        description: "Tas kulit asli dengan desain elegan dan tahan lama.",
-        material: "Kulit Asli",
-        selling_price: 350000,
-        discount: 20,
-        stock: 10,
-        min_order: 1,
-        unit: "pcs",
-        color_id: 2,
-        brand_id: 1,
-        store_id: 1,
-        disabled_at: null,
-        created_at: "2024-06-01T10:00:00Z",
-        updated_at: "2024-06-01T10:00:00Z",
-        brand: {
-            id: 1,
-            name: "Brand A",
-            description: "Deskripsi Brand A",
-            logo: "../storage/brand/brand_1.png",
-            website: "https://brand-a.com",
-            created_at: "2024-06-01T10:00:00Z",
-            updated_at: "2024-06-01T10:00:00Z",
-        },
-        images: [
-            {
-                id: 1,
-                product_id: 1,
-                image: "../storage/product/product_1.png",
-                created_at: "2024-06-01T10:00:00Z",
-                updated_at: "2024-06-01T10:00:00Z",
-            },
-        ],
-        categories: [
-            {
-                id: 1,
-                name: "Koko Dewasa/Anak",
-                image: "../storage/product/product_1.png",
-                created_at: "2024-06-01T10:00:00Z",
-                updated_at: "2024-06-01T10:00:00Z",
-            },
-            {
-                id: 2,
-                name: "Gamis Dewasa/Anak",
-                image: "../storage/product/product_1.png",
-                created_at: "2024-06-01T10:00:00Z",
-                updated_at: "2024-06-01T10:00:00Z",
-            },
-        ],
-        sizes: [
-            {
-                id: 1,
-                name: "Besar",
-                created_at: "2024-06-01T10:00:00Z",
-                updated_at: "2024-06-01T10:00:00Z",
-            },
-        ],
+const props = defineProps({
+    products: null,
+});
+
+const products = ref(
+    props.products.data.map((product) => ({
+        ...product,
+        images: product.images.map((image) => ({
+            ...image,
+            image: image.image ? "/storage/" + image.image : null,
+        })),
         showDeleteModal: false,
-    },
-    {
-        id: 2,
-        code: "PRD001",
-        name: "Tas Kulit Premium",
-        slug: "tas-kulit-premium",
-        description: "Tas kulit asli dengan desain elegan dan tahan lama.",
-        material: "Kulit Asli",
-        selling_price: 350000,
-        discount: 20,
-        stock: 10,
-        min_order: 1,
-        unit: "pcs",
-        color_id: 2,
-        brand_id: 1,
-        store_id: 1,
-        disabled_at: null,
-        created_at: "2024-06-01T10:00:00Z",
-        updated_at: "2024-06-01T10:00:00Z",
-        brand: {
-            id: 1,
-            name: "Brand A",
-            description: "Deskripsi Brand A",
-            logo: "../storage/brand/brand_1.png",
-            website: "https://brand-a.com",
-            created_at: "2024-06-01T10:00:00Z",
-            updated_at: "2024-06-01T10:00:00Z",
-        },
-        images: [
-            {
-                id: 1,
-                product_id: 1,
-                image: "../storage/product/product_1.png",
-                created_at: "2024-06-01T10:00:00Z",
-                updated_at: "2024-06-01T10:00:00Z",
-            },
-        ],
-        categories: [
-            {
-                id: 1,
-                name: "Koko Dewasa/Anak",
-                image: "../storage/product/product_1.png",
-                created_at: "2024-06-01T10:00:00Z",
-                updated_at: "2024-06-01T10:00:00Z",
-            },
-            {
-                id: 2,
-                name: "Gamis Dewasa/Anak",
-                image: "../storage/product/product_1.png",
-                created_at: "2024-06-01T10:00:00Z",
-                updated_at: "2024-06-01T10:00:00Z",
-            },
-        ],
-        sizes: [
-            {
-                id: 1,
-                name: "Besar",
-                created_at: "2024-06-01T10:00:00Z",
-                updated_at: "2024-06-01T10:00:00Z",
-            },
-        ],
-        showDeleteModal: false,
-    },
-    {
-        id: 3,
-        code: "PRD001",
-        name: "Tas Kulit Premium",
-        slug: "tas-kulit-premium",
-        description: "Tas kulit asli dengan desain elegan dan tahan lama.",
-        material: "Kulit Asli",
-        selling_price: 350000,
-        discount: 20,
-        stock: 10,
-        min_order: 1,
-        unit: "pcs",
-        color_id: 2,
-        brand_id: 1,
-        store_id: 1,
-        disabled_at: null,
-        created_at: "2024-06-01T10:00:00Z",
-        updated_at: "2024-06-01T10:00:00Z",
-        brand: {
-            id: 1,
-            name: "Brand A",
-            description: "Deskripsi Brand A",
-            logo: "../storage/brand/brand_1.png",
-            website: "https://brand-a.com",
-            created_at: "2024-06-01T10:00:00Z",
-            updated_at: "2024-06-01T10:00:00Z",
-        },
-        images: [
-            {
-                id: 1,
-                product_id: 1,
-                image: "../storage/product/product_1.png",
-                created_at: "2024-06-01T10:00:00Z",
-                updated_at: "2024-06-01T10:00:00Z",
-            },
-        ],
-        categories: [
-            {
-                id: 1,
-                name: "Koko Dewasa/Anak",
-                image: "../storage/product/product_1.png",
-                created_at: "2024-06-01T10:00:00Z",
-                updated_at: "2024-06-01T10:00:00Z",
-            },
-            {
-                id: 2,
-                name: "Gamis Dewasa/Anak",
-                image: "../storage/product/product_1.png",
-                created_at: "2024-06-01T10:00:00Z",
-                updated_at: "2024-06-01T10:00:00Z",
-            },
-        ],
-        sizes: [
-            {
-                id: 1,
-                name: "Besar",
-                created_at: "2024-06-01T10:00:00Z",
-                updated_at: "2024-06-01T10:00:00Z",
-            },
-        ],
-        showDeleteModal: false,
-    },
-]);
+    }))
+);
 
 const showDeleteProductDialog = (id) => {
     const product = products.value.find((item) => item.id === id);
@@ -241,7 +67,7 @@ const showSuccessDialog = ref(false);
             <PrimaryButton
                 type="button"
                 class="bg-yellow-500 hover:bg-yellow-500/80 active:bg-yellow-500/90 focus:bg-yellow-500 focus:ring-yellow-500 max-sm:text-xs max-sm:px-4 max-sm:py-2"
-                @click="$inertia.visit(route('admin.product.add'))"
+                @click="$inertia.visit(route('admin.product.create'))"
             >
                 + Tambah Data</PrimaryButton
             >
@@ -252,7 +78,7 @@ const showSuccessDialog = ref(false);
                     <thead>
                         <tr>
                             <th class="w-12">No</th>
-                            <th>Nama Barang</th>
+                            <th class="min-w-[200px]">Nama Barang</th>
                             <th class="min-w-[150px] w-[200px]">Foto</th>
                             <th>Harga</th>
                             <th>Kategori Produk</th>
@@ -266,9 +92,14 @@ const showSuccessDialog = ref(false);
                             :key="product.id"
                         >
                             <td>
-                                {{ index + 1 }}
+                                {{
+                                    index +
+                                    1 +
+                                    (props.products.current_page - 1) *
+                                        props.products.per_page
+                                }}
                             </td>
-                            <td>
+                            <td class="!whitespace-normal">
                                 {{ product.name }}
                             </td>
                             <td>
@@ -323,7 +154,7 @@ const showSuccessDialog = ref(false);
                                     @edit="
                                         $inertia.visit(
                                             route('admin.product.edit', {
-                                                id: product.id,
+                                                product: product,
                                             })
                                         )
                                     "
@@ -358,7 +189,7 @@ const showSuccessDialog = ref(false);
             </div>
 
             <!-- Pagination -->
-            <AdminPagination />
+            <AdminPagination :links="props.products.links" />
         </div>
     </AdminLayout>
 </template>

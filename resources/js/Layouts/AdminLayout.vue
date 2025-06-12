@@ -34,7 +34,7 @@ defineProps({
                 <AdminSidebar />
 
                 <div
-                    class="flex-1 w-full transition-all duration-300 ease-in-out md:ml-64 h-[calc(100vh-72px)] sm:min-h-[calc(100vh-72px)] relative mt-[72px]"
+                    class="flex-1 w-full transition-all duration-300 ease-in-out md:ml-64 h-[calc(100vh-72px)] sm:min-h-[calc(100vh-72px)] relative mt-[72px] overflow-x-hidden"
                 >
                     <main class="p-6 pb-16">
                         <div
@@ -55,7 +55,7 @@ defineProps({
                         <p
                             class="text-xs text-gray-600 sm:text-sm md:text-base"
                         >
-                            © 2000 - Company, Inc. All rights reserved.
+                            © 2025 - Company, Inc. All rights reserved.
                         </p>
                     </footer>
                 </div>

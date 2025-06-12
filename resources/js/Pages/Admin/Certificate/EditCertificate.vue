@@ -1,6 +1,13 @@
 <script setup>
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import CertificateForm from "./CertificateForm.vue";
+
+const props = defineProps({
+    certificate: {
+        type: Object,
+        default: () => ({}),
+    },
+});
 </script>
 
 <template>
@@ -21,7 +28,7 @@ import CertificateForm from "./CertificateForm.vue";
         </template>
 
         <div class="md:px-11 max-w-7xl">
-            <CertificateForm />
+            <CertificateForm :certificate="props.certificate" />
         </div>
     </AdminLayout>
 </template>

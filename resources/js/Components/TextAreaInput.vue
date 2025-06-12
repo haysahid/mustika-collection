@@ -32,6 +32,14 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
+    rows: {
+        type: Number,
+        default: 4,
+    },
+    height: {
+        type: String,
+        default: "max-h-[300px]",
+    },
     error: {
         type: String,
         default: null,
@@ -48,6 +56,8 @@ const hasPrefix = !!slots.prefix;
 
 function updateValue(value) {
     emit("update:modelValue", value);
+
+    input.value.parentNode.dataset.clonedVal = value;
 }
 
 onMounted(() => {
@@ -61,7 +71,11 @@ defineExpose({ focus: () => input.value.focus() });
 
 <template>
     <div>
-        <label :for="id" class="relative flex items-center p-0 border-none">
+        <label
+            :for="id"
+            class="relative grid after:px-3.5 after:py-2 [&>textarea]:text-inherit after:text-inherit [&>textarea]:resize-none [&>textarea]:overflow-auto [&>textarea]:[grid-area:1/1/2/2] after:[grid-area:1/1/2/2] after:whitespace-pre-wrap after:invisible after:content-[attr(data-cloned-val)_'_'] after:border max-h-[300px]"
+            :class="[props.height]"
+        >
             <slot name="prefix"></slot>
             <textarea
                 ref="input"
@@ -71,12 +85,16 @@ defineExpose({ focus: () => input.value.focus() });
                 :type="props.type"
                 :autofocus="props.autofocus ? true : false"
                 :autocomplete="props.autocomplete"
-                class="w-full px-3.5 border-gray-300 shadow-sm rounded-2xl focus:border-indigo-500 focus:ring-indigo-500"
-                :class="{
-                    'pl-11': hasPrefix,
-                    'border-red-500 focus:border-red-500 focus:ring-red-500':
-                        props.error,
-                }"
+                :rows="props.rows"
+                class="w-full px-3.5 py-2 border-gray-300 shadow-sm rounded-2xl focus:border-indigo-500 focus:ring-indigo-500 max-h-[300px]"
+                :class="[
+                    {
+                        'pl-11': hasPrefix,
+                        'border-red-500 focus:border-red-500 focus:ring-red-500':
+                            props.error,
+                    },
+                    props.height,
+                ]"
                 :value="props.modelValue"
                 @input="updateValue($event.target.value)"
             />

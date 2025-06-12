@@ -17,4 +17,19 @@ class Store extends Model
         'logo',
         'banner',
     ];
+
+    public function advantages()
+    {
+        return $this->hasMany(StoreAdvantage::class);
+    }
+
+    public function certificates()
+    {
+        return $this->hasMany(StoreCertificate::class);
+    }
+
+    public function social_links()
+    {
+        return $this->hasMany(StoreSocialLink::class);
+    }
 }

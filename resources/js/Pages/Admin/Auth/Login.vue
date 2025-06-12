@@ -16,6 +16,7 @@ const form = useForm({
 });
 
 const submit = () => {
+    console.log("Submitting form with data:", form);
     form.transform((data) => ({
         ...data,
         remember: form.remember ? "on" : "",

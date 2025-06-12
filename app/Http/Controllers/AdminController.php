@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -39,5 +40,19 @@ class AdminController extends Controller
         return redirect()->back()->withErrors([
             'access' => 'Username atau password salah.',
         ]);
+    }
+
+    public function dashboard()
+    {
+        $productCount = Product::count();
+        $userCount = User::count();
+
+        return Inertia::render(
+            'Admin/Dashboard',
+            [
+                'productCount' => $productCount,
+                'userCount' => $userCount,
+            ]
+        );
     }
 }

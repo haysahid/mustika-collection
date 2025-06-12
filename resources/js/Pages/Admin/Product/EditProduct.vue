@@ -1,6 +1,13 @@
 <script setup>
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import ProductForm from "./ProductForm.vue";
+
+const props = defineProps({
+    product: {
+        type: Object,
+        required: true,
+    },
+});
 </script>
 
 <template>
@@ -21,7 +28,7 @@ import ProductForm from "./ProductForm.vue";
         </template>
 
         <div class="md:px-11 max-w-7xl">
-            <ProductForm />
+            <ProductForm :product="props.product" />
         </div>
     </AdminLayout>
 </template>

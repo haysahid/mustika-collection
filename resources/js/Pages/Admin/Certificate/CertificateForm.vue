@@ -1,29 +1,81 @@
 <script setup>
+import { ref } from "vue";
 import { useForm } from "@inertiajs/vue3";
 import TextInput from "@/Components/TextInput.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import TextAreaInput from "@/Components/TextAreaInput.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import ImageInput from "@/Components/ImageInput.vue";
+import ErrorDialog from "@/Components/ErrorDialog.vue";
+
+const props = defineProps({
+    certificate: {
+        type: Object,
+        default: () => ({
+            name: null,
+            description: null,
+            image: null,
+        }),
+    },
+});
 
 const form = useForm({
-    name: "",
-    description: "",
-    image: null,
+    ...props.certificate,
+    image: props.certificate.image
+        ? "/storage/" + props.certificate.image
+        : null,
 });
 
 const submit = () => {
-    form.transform((data) => ({
-        ...data,
-        remember: form.remember ? "on" : "",
-    })).post(route("admin.login"), {
-        onFinish: () => form.reset("password"),
+    if (props.certificate.id) {
+        form.transform((data) => {
+            const formData = new FormData();
+            Object.keys(data).forEach((key) => {
+                if (key === "image" && !(data[key] instanceof File)) {
+                    return;
+                }
+
+                if (data[key] === null || data[key] === undefined) {
+                    return;
+                }
+
+                formData.append(key, data[key]);
+            });
+            return formData;
+        }).post(
+            route("admin.certificate.update", {
+                storeCertificate: props.certificate,
+            }),
+            {
+                onError: (errors) => {
+                    openErrorDialog(errors.error);
+                },
+                onFinish: () => {
+                    form.reset();
+                },
+            }
+        );
+        return;
+    }
+
+    form.post(route("admin.certificate.store"), {
+        onFinish: () => {
+            form.reset();
+        },
     });
+};
+
+const showErrorDialog = ref(false);
+const errorMessage = ref(null);
+
+const openErrorDialog = (message) => {
+    errorMessage.value = message;
+    showErrorDialog.value = true;
 };
 </script>
 
 <template>
-    <form action="" class="max-w-3xl">
+    <form @submit.prevent="submit" class="max-w-3xl">
         <div class="flex flex-col items-start gap-4">
             <!-- Name -->
             <div
@@ -43,8 +95,8 @@ const submit = () => {
                     class="block w-full mt-1"
                     required
                     :autofocus="true"
-                    :error="form.errors.username"
-                    @update:modelValue="form.errors.username = null"
+                    :error="form.errors.name"
+                    @update:modelValue="form.errors.name = null"
                 />
             </div>
 
@@ -93,9 +145,22 @@ const submit = () => {
                 />
             </div>
 
-            <PrimaryButton class="mt-4" @click="submit">
+            <PrimaryButton type="submit" class="mt-4">
                 Simpan Data
             </PrimaryButton>
         </div>
+
+        <ErrorDialog :show="showErrorDialog" @close="showErrorDialog = false">
+            <template #content>
+                <div>
+                    <div
+                        class="mb-1 text-lg font-medium text-center text-gray-900"
+                    >
+                        Terjadi Kesalahan
+                    </div>
+                    <p class="text-center text-gray-700">{{ errorMessage }}</p>
+                </div>
+            </template>
+        </ErrorDialog>
     </form>
 </template>

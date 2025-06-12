@@ -6,33 +6,14 @@ import InputLabel from "@/Components/InputLabel.vue";
 import TextAreaInput from "@/Components/TextAreaInput.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 
-const form = useForm({
-    name: "",
-    phone: "",
-    email: "",
-    address: "",
-    advantages: [
-        {
-            name: "",
-            description: "",
-        },
-        {
-            name: "",
-            description: "",
-        },
-        {
-            name: "",
-            description: "",
-        },
-        {
-            name: "",
-            description: "",
-        },
-    ],
-    description: "",
-    logo: null,
-    banner: null,
+const props = defineProps({
+    store: {
+        type: Object,
+        required: null,
+    },
 });
+
+const form = useForm(props.store);
 
 const submit = () => {
     form.transform((data) => ({
@@ -202,27 +183,19 @@ const submit = () => {
                                             form.errors.advantages?.[index]
                                                 ?.name
                                         "
-                                        @update:modelValue="
-                                            form.errors.advantages[index].name =
-                                                null
-                                        "
                                     />
                                     <TextAreaInput
                                         :id="'advantage_description_' + index"
                                         v-model="advantage.description"
                                         type="text"
                                         placeholder="Masukkan Deskripsi Keunggulan"
+                                        height="sm:max-h-[110px]"
                                         class="block w-full mt-1"
                                         required
                                         autocomplete="advantage_description"
                                         :error="
                                             form.errors.advantages?.[index]
                                                 ?.description
-                                        "
-                                        @update:modelValue="
-                                            form.errors.advantages[
-                                                index
-                                            ].description = null
                                         "
                                     />
                                 </div>

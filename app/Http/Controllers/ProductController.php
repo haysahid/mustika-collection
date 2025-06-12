@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Brand;
+use App\Models\Category;
+use App\Models\Color;
 use App\Models\Product;
+use App\Models\Size;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -11,9 +15,26 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Inertia::render('Admin/Product');
+        $limit = $request->input('limit', 5);
+        $sortBy = $request->input('order_by', 'created_at');
+        $sortDirection = $request->input('order_direction', 'desc');
+        $search = $request->input('search');
+
+        $products = Product::query();
+
+        if ($search) {
+            $products->where('name', 'like', '%' . $search . '%')
+                ->orWhere('description', 'like', '%' . $search . '%');
+        }
+        $products->orderBy($sortBy, $sortDirection);
+        $products->with(['brand', 'color', 'categories', 'sizes', 'images',]);
+        $products->get();
+
+        return Inertia::render('Admin/Product', [
+            'products' => $products->paginate($limit),
+        ]);
     }
 
     /**
@@ -37,7 +58,7 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        return Inertia::render('Admin/Product/EditProduct');
+        //
     }
 
     /**
@@ -45,7 +66,20 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        //
+        $product->load(['brand', 'color', 'categories', 'sizes', 'images']);
+
+        $brands = Brand::class::get();
+        $categories = Category::get();
+        $sizes = Size::get();
+        $colors = Color::get();
+
+        return Inertia::render('Admin/Product/EditProduct', [
+            'product' => $product,
+            'brands' => $brands,
+            'categories' => $categories,
+            'sizes' => $sizes,
+            'colors' => $colors,
+        ]);
     }
 
     /**

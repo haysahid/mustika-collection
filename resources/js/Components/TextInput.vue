@@ -40,7 +40,10 @@ const props = defineProps({
         type: String,
         default: null,
     },
-    modelValue: String,
+    modelValue: {
+        type: [String, Number],
+        default: null,
+    },
 });
 
 const emit = defineEmits(["update:modelValue"]);

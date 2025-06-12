@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onUpdated } from "vue";
+import InputError from "@/Components/InputError.vue";
 
 const props = defineProps([
     "id",
@@ -12,6 +13,7 @@ const props = defineProps([
     "width",
     "height",
     "objectFit",
+    "error",
 ]);
 
 const emit = defineEmits(["update:modelValue", "enter"]);
@@ -52,7 +54,15 @@ defineExpose({ clearImage });
                     <img
                         id="preview_img"
                         class="object-cover w-full rounded-2xl aspect-square"
-                        :class="[props.height, props.objectFit, props.width]"
+                        :class="[
+                            {
+                                'outline outline-2 outline-red-500':
+                                    props.error,
+                            },
+                            props.height,
+                            props.objectFit,
+                            props.width,
+                        ]"
                         :src="imagePath || props.modelValue"
                         alt="Current image"
                     />
@@ -116,5 +126,6 @@ defineExpose({ clearImage });
                 class="hidden"
             />
         </label>
+        <InputError class="mt-1" :message="props.error" />
     </div>
 </template>

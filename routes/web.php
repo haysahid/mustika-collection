@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\StoreCertificateController;
+use App\Http\Controllers\StoreController;
 use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -24,41 +25,27 @@ Route::get('/catalog',  fn() => Inertia::render('Catalog'))->name('catalog');
 Route::get('/product/{slug}', fn() => Inertia::render('ProductDetail'))->name('product.show');
 
 Route::prefix('admin')->group(function () {
-    Route::get('/login', [AdminController::class, 'login'])
-        ->middleware('guest')
-        ->name('admin.login');
-
+    Route::get('/login', [AdminController::class, 'login'])->name('admin.login');
     Route::post('/login', [AdminController::class, 'loginProcess']);
 
-    Route::middleware(AdminMiddleware::class)->group(function () {
-        Route::get('/dashboard', function () {
-            return Inertia::render('Admin/Dashboard');
-        })->name('admin.dashboard');
+    Route::middleware([AdminMiddleware::class])->group(function () {
+        Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
-        Route::get('/store-info', function () {
-            return Inertia::render('Admin/StoreInfo');
-        })->name('admin.store.info');
+        Route::get('/store-info', [StoreController::class, 'edit'])->name('admin.store.info');
 
-        Route::get('/certificate', [StoreCertificateController::class, 'index'])
-            ->name('admin.certificate');
+        Route::get('/certificate', [StoreCertificateController::class, 'index'])->name('admin.certificate');
+        Route::get('/certificate/create', [StoreCertificateController::class, 'create'])->name('admin.certificate.create');
+        Route::post('/certificate', [StoreCertificateController::class, 'store'])->name('admin.certificate.store');
+        Route::get('/certificate/{storeCertificate}', [StoreCertificateController::class, 'edit'])->name('admin.certificate.edit');
+        Route::post('/certificate/{storeCertificate}', [StoreCertificateController::class, 'update'])->name('admin.certificate.update');
+        Route::delete('/certificate/{storeCertificate}', [StoreCertificateController::class, 'destroy'])->name('admin.certificate.destroy');
 
-        Route::get('/certificate/add', [StoreCertificateController::class, 'create'])
-            ->name('admin.certificate.add');
+        Route::get('/product', [ProductController::class, 'index'])->name('admin.product');
+        Route::get('/product/create', [ProductController::class, 'create'])->name('admin.product.create');
+        Route::post('/product', [ProductController::class, 'store'])->name('admin.product.store');
+        Route::post('/product/{product}', [ProductController::class, 'update'])->name('admin.product.update');
 
-        Route::get('/certificate/{id}', [StoreCertificateController::class, 'show'])
-            ->name('admin.certificate.edit');
-
-        Route::get('/product', function () {
-            return Inertia::render('Admin/Product');
-        })->name('admin.product');
-
-        Route::get('/product/add', function () {
-            return Inertia::render('Admin/Product/AddProduct');
-        })->name('admin.product.add');
-
-        Route::get('/product/{id}', function () {
-            return Inertia::render('Admin/Product/EditProduct');
-        })->name('admin.product.edit');
+        Route::get('/product/{product}', [ProductController::class, 'edit'])->name('admin.product.edit');
     });
 });
 

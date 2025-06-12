@@ -1,6 +1,17 @@
 <script setup>
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import SummaryCard from "@/Components/SummaryCard.vue";
+
+const props = defineProps({
+    productCount: {
+        type: Number,
+        default: 0,
+    },
+    userCount: {
+        type: Number,
+        default: 0,
+    },
+});
 </script>
 
 <template>
@@ -10,7 +21,10 @@ import SummaryCard from "@/Components/SummaryCard.vue";
                 <div
                     class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
                 >
-                    <SummaryCard title="Total Produk" value="240">
+                    <SummaryCard
+                        title="Total Produk"
+                        :value="props.productCount"
+                    >
                         <template #icon>
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -40,7 +54,10 @@ import SummaryCard from "@/Components/SummaryCard.vue";
                             </svg>
                         </template>
                     </SummaryCard>
-                    <SummaryCard title="Total Pengunjung" value="1.235">
+                    <SummaryCard
+                        title="Total Pengunjung"
+                        :value="props.userCount"
+                    >
                         <template #icon>
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"

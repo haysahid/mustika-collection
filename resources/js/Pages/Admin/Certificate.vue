@@ -1,67 +1,87 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import { usePage, useForm } from "@inertiajs/vue3";
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import AdminPagination from "@/Components/AdminPagination.vue";
 import AdminItemAction from "@/Components/AdminItemAction.vue";
 import DeleteConfirmationDialog from "@/Components/DeleteConfirmationDialog.vue";
 import SuccessDialog from "@/Components/SuccessDialog.vue";
+import ErrorDialog from "@/Components/ErrorDialog.vue";
 
-const certificates = ref([
-    {
-        id: 1,
-        name: "Sertifikat A",
-        description: "Deskripsi Sertifikat A",
-        image: "../storage/certificate.png",
-    },
-    {
-        id: 2,
-        name: "Sertifikat B",
-        description: "Deskripsi Sertifikat B",
-        image: "../storage/certificate.png",
-    },
-    {
-        id: 3,
-        name: "Sertifikat C",
-        description: "Deskripsi Sertifikat C",
-        image: "../storage/certificate.png",
-    },
-    {
-        id: 4,
-        name: "Sertifikat D",
-        description: "Deskripsi Sertifikat D",
-        image: "../storage/certificate.png",
-    },
-    {
-        id: 5,
-        name: "Sertifikat E",
-        description: "Deskripsi Sertifikat E",
-        image: "../storage/certificate.png",
-    },
-    {
-        id: 6,
-        name: "Sertifikat F",
-        description: "Deskripsi Sertifikat F",
-        image: "../storage/certificate.png",
-    },
-]);
+const props = defineProps({
+    certificates: null,
+});
 
-const showDeleteCertificateDialog = (id) => {
-    const certificate = certificates.value.find((cert) => cert.id === id);
+const certificates = ref(
+    props.certificates.data.map((certificate) => ({
+        ...certificate,
+        image: certificate.image ? "/storage/" + certificate.image : null,
+        showDeleteModal: false,
+    }))
+);
+
+const showDeleteCertificateDialog = (certificate) => {
     if (certificate) {
         certificate.showDeleteModal = true;
         console.log(`Deleting certificate with ID: ${certificate}`);
     }
 };
 
-const closeDeleteCertificateDialog = (id) => {
-    const certificate = certificates.value.find((cert) => cert.id === id);
+const closeDeleteCertificateDialog = (certificate, result) => {
     if (certificate) {
         certificate.showDeleteModal = false;
+        if (result) {
+            openSuccessDialog("Data Berhasil Dihapus");
+            certificates.value = certificates.value.filter(
+                (cert) => cert.id !== certificate.id
+            );
+        }
+    }
+};
+
+const deleteCertificate = (certificate) => {
+    if (certificate) {
+        const form = useForm();
+        form.delete(
+            route("admin.certificate.destroy", {
+                storeCertificate: certificate,
+            }),
+            {
+                onError: (errors) => {
+                    openErrorDialog(errors.error);
+                },
+                onSuccess: () => {
+                    closeDeleteCertificateDialog(certificate, true);
+                },
+            }
+        );
     }
 };
 
 const showSuccessDialog = ref(false);
+const successMessage = ref("Berhasil");
+
+const openSuccessDialog = (message) => {
+    successMessage.value = message;
+    showSuccessDialog.value = true;
+};
+
+const showErrorDialog = ref(false);
+const errorMessage = ref("");
+
+const openErrorDialog = (message) => {
+    errorMessage.value = message;
+    showErrorDialog.value = true;
+};
+
+const page = usePage();
+
+onMounted(() => {
+    if (page.props.flash.success) {
+        openSuccessDialog(page.props.flash.success);
+    }
+});
 </script>
 
 <template>
@@ -85,7 +105,7 @@ const showSuccessDialog = ref(false);
             <PrimaryButton
                 type="button"
                 class="bg-yellow-500 hover:bg-yellow-500/80 active:bg-yellow-500/90 focus:bg-yellow-500 focus:ring-yellow-500 max-sm:text-xs max-sm:px-4 max-sm:py-2"
-                @click="$inertia.visit(route('admin.certificate.add'))"
+                @click="$inertia.visit(route('admin.certificate.create'))"
             >
                 + Tambah Data</PrimaryButton
             >
@@ -110,13 +130,18 @@ const showSuccessDialog = ref(false);
                             :key="certificate.id"
                         >
                             <td>
-                                {{ index + 1 }}
+                                {{
+                                    index +
+                                    1 +
+                                    (props.certificates.current_page - 1) *
+                                        props.certificates.per_page
+                                }}
                             </td>
                             <td>
                                 <img
                                     :src="certificate.image"
                                     alt="Sertifikat"
-                                    class="object-cover w-[100px] sm:w-[160px] rounded"
+                                    class="object-cover w-[100px] sm:w-[160px] rounded aspect-[3/2]"
                                 />
                             </td>
                             <td>
@@ -132,33 +157,22 @@ const showSuccessDialog = ref(false);
                                     @edit="
                                         $inertia.visit(
                                             route('admin.certificate.edit', {
-                                                id: certificate.id,
+                                                storeCertificate: certificate,
                                             })
                                         )
                                     "
                                     @delete="
-                                        showDeleteCertificateDialog(
-                                            certificate.id
-                                        )
+                                        showDeleteCertificateDialog(certificate)
                                     "
                                 />
                                 <DeleteConfirmationDialog
                                     :show="certificate.showDeleteModal"
                                     @close="
                                         closeDeleteCertificateDialog(
-                                            certificate.id
+                                            certificate
                                         )
                                     "
-                                    @delete="
-                                        // Logic to delete the certificate
-                                        console.log(
-                                            `Deleting certificate with ID: ${certificate.id}`
-                                        );
-                                        closeDeleteCertificateDialog(
-                                            certificate.id
-                                        );
-                                        showSuccessDialog = true;
-                                    "
+                                    @delete="deleteCertificate(certificate)"
                                 />
                             </td>
                         </tr>
@@ -167,13 +181,31 @@ const showSuccessDialog = ref(false);
 
                 <SuccessDialog
                     :show="showSuccessDialog"
-                    title="Data Berhasil Dihapus"
+                    :title="successMessage"
                     @close="showSuccessDialog = false"
                 />
+
+                <ErrorDialog
+                    :show="showErrorDialog"
+                    @close="showErrorDialog = false"
+                >
+                    <template #content>
+                        <div>
+                            <div
+                                class="mb-1 text-lg font-medium text-center text-gray-900"
+                            >
+                                Terjadi Kesalahan
+                            </div>
+                            <p class="text-center text-gray-700">
+                                {{ errorMessage }}
+                            </p>
+                        </div>
+                    </template>
+                </ErrorDialog>
             </div>
 
             <!-- Pagination -->
-            <AdminPagination />
+            <AdminPagination :links="props.certificates.links" />
         </div>
     </AdminLayout>
 </template>

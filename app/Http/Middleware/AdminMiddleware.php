@@ -30,12 +30,12 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::check() && ($this->user->isAdmin())) {
-            return $next($request);
+        if (!Auth::check() || !($this->user->isAdmin())) {
+            return redirect()->route('admin.login')->withErrors([
+                'access' => 'Anda tidak memiliki akses ke halaman ini.',
+            ]);
         }
 
-        return redirect()->route('admin.login')->withErrors([
-            'access' => 'Anda tidak memiliki akses ke halaman ini.',
-        ]);
+        return $next($request);
     }
 }

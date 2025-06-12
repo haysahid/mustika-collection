@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed } from "vue";
-import { useForm } from "@inertiajs/vue3";
+import { useForm, usePage } from "@inertiajs/vue3";
 import TextInput from "@/Components/TextInput.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import TextAreaInput from "@/Components/TextAreaInput.vue";
@@ -9,32 +9,26 @@ import ImageInput from "@/Components/ImageInput.vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import Checkbox from "@/Components/Checkbox.vue";
 
-const form = useForm({
-    name: "",
-    description: "",
-    material: "",
-    selling_price: null,
-    discount: null,
-    stock: null,
-    min_order: 1,
-    unit: "",
-    color_id: null,
-    brand_id: null,
-    store_id: null,
-    brand: null,
-    color: null,
-    images: [],
-    categories: [],
-    sizes: [],
+const props = defineProps({
+    product: {
+        type: Object,
+        default: null,
+    },
 });
 
-// Brands
-const brands = [
-    { id: 1, name: "Brand A" },
-    { id: 2, name: "Brand B" },
-    { id: 3, name: "Brand C" },
-];
+const form = useForm({
+    ...props.product,
+    categories: props.product?.categories || [],
+    sizes: props.product?.sizes || [],
+    images:
+        props.product?.images?.map((image) => ({
+            image: "/storage/" + image.image,
+        })) || [],
+});
 
+const page = usePage();
+
+const brands = page.props.brands || [];
 const brandSearch = ref("");
 const isBrandDropdownOpen = ref(false);
 
@@ -44,38 +38,9 @@ const filteredBrands = computed(() => {
     );
 });
 
-// Categories
-const categories = [
-    { id: 1, name: "Tas" },
-    { id: 2, name: "Kulit" },
-    { id: 3, name: "Aksesoris" },
-    { id: 4, name: "Elektronik" },
-    { id: 5, name: "Pakaian" },
-    { id: 6, name: "Sepatu" },
-    { id: 7, name: "Perhiasan" },
-    { id: 8, name: "Olahraga" },
-    { id: 9, name: "Kecantikan" },
-    { id: 10, name: "Mainan" },
-];
-
-// Sizes
-const sizes = [
-    { id: 1, name: "S" },
-    { id: 2, name: "M" },
-    { id: 3, name: "L" },
-    { id: 4, name: "XL" },
-    { id: 5, name: "XXL" },
-];
-
-// Colors
-const colors = [
-    { id: 1, name: "Merah" },
-    { id: 2, name: "Biru" },
-    { id: 3, name: "Hijau" },
-    { id: 4, name: "Kuning" },
-    { id: 5, name: "Hitam" },
-    { id: 6, name: "Putih" },
-];
+const categories = page.props.categories || [];
+const sizes = page.props.sizes || [];
+const colors = page.props.colors || [];
 
 const submit = () => {
     form.transform((data) => ({
@@ -229,19 +194,29 @@ const submit = () => {
                     class="text-lg font-bold sm:w-1/5"
                 />
                 <span class="hidden text-sm sm:block">:</span>
-                <ImageInput
-                    id="image"
-                    v-model="form.image"
-                    type="file"
-                    accept="image/*"
-                    placeholder="Upload Produk"
-                    class="block w-full mt-1 h-"
-                    width="max-w-[180px]"
-                    height="h-[120px]"
-                    required
-                    :error="form.errors.image"
-                    @update:modelValue="form.errors.image = null"
-                />
+                <div
+                    class="grid w-full grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+                >
+                    <ImageInput
+                        v-for="(image, index) in form.images"
+                        :key="index"
+                        :id="`image-${index}`"
+                        v-model="form.images[index].image"
+                        type="file"
+                        accept="image/*"
+                        placeholder="Upload Produk"
+                        class="block w-full mt-1 h-"
+                        width="max-w-[180px]"
+                        height="h-[120px]"
+                        :error="form.errors.images?.[index]"
+                        @update:modelValue="
+                            form.errors.images[index] = null;
+                            if (!image.image) {
+                                form.images.splice(index, 1);
+                            }
+                        "
+                    />
+                </div>
             </div>
 
             <!-- Selling Price -->
@@ -325,10 +300,10 @@ const submit = () => {
                 <span class="hidden text-sm sm:block">:</span>
                 <div class="flex flex-col items-start w-full gap-3 mt-[1px]">
                     <div
-                        class="grid w-full grid-cols-2 gap-2 sm:gap-2.5 md:grid-cols-3 lg:grid-cols-4"
+                        class="grid w-full grid-cols-1 gap-2 sm:gap-2.5 md:grid-cols-2 lg:grid-cols-3"
                     >
                         <div
-                            v-for="category in categories"
+                            v-for="category in categories || []"
                             :key="category.id"
                             class="flex items-center justify-start"
                         >
@@ -368,7 +343,9 @@ const submit = () => {
                     <PrimaryButton
                         type="button"
                         class="!px-3 !py-2 text-xs !text-orange-500 bg-yellow-100 hover:bg-yellow-100/80 active:bg-yellow-100/90 focus:bg-yellow-100 focus:ring-yellow-100 outline outline-orange-100"
-                        @click="$inertia.visit(route('admin.certificate.add'))"
+                        @click="
+                            $inertia.visit(route('admin.certificate.create'))
+                        "
                     >
                         + Tambah Kategori Produk
                     </PrimaryButton>
@@ -413,7 +390,7 @@ const submit = () => {
                 <div class="flex flex-col items-start w-full gap-3 mt-[1px]">
                     <div class="grid w-full max-w-sm grid-cols-4 gap-3">
                         <div
-                            v-for="size in sizes"
+                            v-for="size in sizes || []"
                             :key="size.id"
                             class="flex items-center justify-start"
                         >
@@ -451,7 +428,7 @@ const submit = () => {
                     <PrimaryButton
                         type="button"
                         class="!px-3 !py-2 text-xs !text-orange-500 bg-yellow-100 hover:bg-yellow-100/80 active:bg-yellow-100/90 focus:bg-yellow-100 focus:ring-yellow-100 outline outline-orange-100"
-                        @click="$inertia.visit(route('admin.size.add'))"
+                        @click="$inertia.visit(route('admin.size.create'))"
                     >
                         + Tambah Ukuran Produk
                     </PrimaryButton>
@@ -473,7 +450,7 @@ const submit = () => {
                         class="grid w-full grid-cols-2 gap-2 sm:gap-2.5 md:grid-cols-3 lg:grid-cols-4"
                     >
                         <div
-                            v-for="color in colors"
+                            v-for="color in colors || []"
                             :key="color.id"
                             class="flex items-center justify-start"
                         >
@@ -507,7 +484,7 @@ const submit = () => {
                     <PrimaryButton
                         type="button"
                         class="!px-3 !py-2 text-xs !text-orange-500 bg-yellow-100 hover:bg-yellow-100/80 active:bg-yellow-100/90 focus:bg-yellow-100 focus:ring-yellow-100 outline outline-orange-100"
-                        @click="$inertia.visit(route('admin.color.add'))"
+                        @click="$inertia.visit(route('admin.color.create'))"
                     >
                         + Tambah Warna Lain
                     </PrimaryButton>
