@@ -106,6 +106,7 @@ const menus = [
                         class="px-6 py-4 w-full bg-transparent hover:bg-secondary/10 hover:border-l-4 hover:border-[#CE4DB1] border-l-4 transition-all duration-300 ease-in-out border-primary"
                         :class="{
                             '!px-4 !py-2.5': props.responsive,
+                            '!text-primary': menu.active,
                         }"
                     >
                         <span
