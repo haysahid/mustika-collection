@@ -26,9 +26,9 @@ const menus = [
 </script>
 
 <template>
-    <nav class="bg-primary px-6 sm:px-12 md:px-[100px] py-1 sticky top-0 z-50">
+    <nav class="sticky top-0 z-50 py-1 bg-primary sm:px-12 md:px-[100px]">
         <!-- Primary Navigation Menu -->
-        <div class="mx-auto max-w-7xl">
+        <div class="px-6 mx-auto max-w-7xl sm:px-0">
             <div class="flex justify-between h-16">
                 <div class="flex justify-between w-full">
                     <!-- Logo -->
@@ -107,16 +107,21 @@ const menus = [
             }"
             class="sm:hidden"
         >
-            <div class="pt-2 pb-3 space-y-1">
-                <ResponsiveNavLink
-                    v-for="menu in menus"
-                    :key="menu.name"
-                    :href="menu.href"
-                    :active="menu.active"
-                >
-                    {{ menu.name }}
-                </ResponsiveNavLink>
-            </div>
+            <ul>
+                <li v-for="menu in menus" :key="menu.name">
+                    <NavLink
+                        :href="menu.href"
+                        :active="menu.active"
+                        active-class="!bg-secondary !border-[#CE4DB1] text-primary"
+                        class="px-4 py-2.5 w-full bg-transparent hover:bg-secondary/10 hover:border-l-4 hover:border-[#CE4DB1] border-l-4 transition-all duration-300 ease-in-out border-primary"
+                        :class="{
+                            '!text-primary': menu.active,
+                        }"
+                    >
+                        {{ menu.name }}
+                    </NavLink>
+                </li>
+            </ul>
         </div>
     </nav>
 </template>

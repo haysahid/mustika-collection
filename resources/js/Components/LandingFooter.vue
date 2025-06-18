@@ -3,14 +3,14 @@ import { Link } from "@inertiajs/vue3";
 </script>
 
 <template>
-    <footer class="bg-primary px-6 pt-20 pb-6 sm:px-12 md:px-[100px]">
-        <div class="max-w-7xl mx-auto">
+    <footer class="bg-primary px-6 pt-12 sm:pt-20 pb-6 sm:px-12 md:px-[100px]">
+        <div class="mx-auto max-w-7xl">
             <div
-                class="flex flex-col sm:flex-row justify-between items-start gap-8 mb-12"
+                class="flex flex-col items-start justify-between gap-8 mb-12 sm:flex-row"
             >
                 <!-- Identity -->
                 <div
-                    class="text-center md:text-start w-full sm:2/3 md:w-1/3 flex flex-col items-center sm:items-start"
+                    class="flex flex-col items-center w-full text-center md:text-start sm:2/3 md:w-1/3 sm:items-start"
                 >
                     <Link :href="route('home')">
                         <img
@@ -20,7 +20,7 @@ import { Link } from "@inertiajs/vue3";
                         />
                     </Link>
                     <div class="text-center sm:text-start">
-                        <p class="text-gray-100 mb-2">
+                        <p class="mb-2 text-gray-100">
                             <a
                                 href="mailto:hay.sahid@gmail.com"
                                 class="text-gray-100 hover:text-white"
@@ -28,7 +28,7 @@ import { Link } from "@inertiajs/vue3";
                                 hay.sahid@gmail.com
                             </a>
                         </p>
-                        <p class="text-gray-100 mb-2">
+                        <p class="mb-2 text-gray-100">
                             <a
                                 href="tel:+6281234567890"
                                 class="text-gray-100 hover:text-white"
@@ -44,10 +44,10 @@ import { Link } from "@inertiajs/vue3";
 
                 <!-- Quick Access -->
                 <div
-                    class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full sm:1/3 md:w-2/3"
+                    class="flex flex-wrap justify-center w-full grid-cols-1 gap-y-8 gap-x-12 sm:grid md:grid-cols-3 sm:1/3 md:w-2/3"
                 >
                     <div class="text-center sm:text-start">
-                        <h3 class="text-lg font-semibold text-white mb-4">
+                        <h3 class="mb-4 text-lg font-semibold text-white">
                             Navigasi
                         </h3>
                         <ul class="space-y-2">
@@ -78,7 +78,7 @@ import { Link } from "@inertiajs/vue3";
                         </ul>
                     </div>
                     <div class="text-center sm:text-start">
-                        <h3 class="text-lg font-semibold text-white mb-4">
+                        <h3 class="mb-4 text-lg font-semibold text-white">
                             Navigasi
                         </h3>
                         <ul class="space-y-2">
@@ -109,7 +109,7 @@ import { Link } from "@inertiajs/vue3";
                         </ul>
                     </div>
                     <div class="text-center sm:text-start">
-                        <h3 class="text-lg font-semibold text-white mb-4">
+                        <h3 class="mb-4 text-lg font-semibold text-white">
                             Navigasi
                         </h3>
                         <ul class="space-y-2">
@@ -142,7 +142,7 @@ import { Link } from "@inertiajs/vue3";
                 </div>
             </div>
             <div class="text-center">
-                <p class="text-gray-100">
+                <p class="text-sm text-gray-100 sm:text-base">
                     &copy; {{ new Date().getFullYear() }} Your Company. All
                     rights reserved.
                 </p>
