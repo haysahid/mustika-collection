@@ -75,7 +75,11 @@ const certificate = ref(props.store?.certificates[0] || null);
                             :key="product.id"
                             :name="product.name"
                             :price="product.selling_price"
-                            :image="'/storage/' + product.images[0].image"
+                            :image="
+                                product.images && product.images.length > 0
+                                    ? '/storage/' + product.images[0].image
+                                    : null
+                            "
                             :description="product.brand?.name"
                             :discount="product.discount"
                             :slug="product.slug"

@@ -16,29 +16,33 @@ Route::get('/catalog', [PublicController::class, 'catalog'])->name('catalog');
 
 Route::get('/product/{slug}', [PublicController::class, 'productDetail'])->name('product.show');
 
-Route::prefix('admin')->group(function () {
-    Route::get('/login', [AdminController::class, 'login'])->name('admin.login');
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('/login', [AdminController::class, 'login'])->name('login');
     Route::post('/login', [AdminController::class, 'loginProcess']);
+    Route::post('/logout', [AdminController::class, 'logout'])->name('logout');
 
     Route::middleware([AdminMiddleware::class])->group(function () {
-        Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+        Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
 
-        Route::get('/store-info', [StoreController::class, 'edit'])->name('admin.store.edit');
-        Route::post('/store-info', [StoreController::class, 'update'])->name('admin.store.update');
+        // Store
+        Route::get('/store-info', [StoreController::class, 'edit'])->name('store.edit');
+        Route::post('/store-info', [StoreController::class, 'update'])->name('store.update');
 
-        Route::get('/certificate', [StoreCertificateController::class, 'index'])->name('admin.certificate');
-        Route::get('/certificate/create', [StoreCertificateController::class, 'create'])->name('admin.certificate.create');
-        Route::post('/certificate', [StoreCertificateController::class, 'store'])->name('admin.certificate.store');
-        Route::get('/certificate/{storeCertificate}', [StoreCertificateController::class, 'edit'])->name('admin.certificate.edit');
-        Route::post('/certificate/{storeCertificate}', [StoreCertificateController::class, 'update'])->name('admin.certificate.update');
-        Route::delete('/certificate/{storeCertificate}', [StoreCertificateController::class, 'destroy'])->name('admin.certificate.destroy');
+        // Certificate
+        Route::get('/certificate', [StoreCertificateController::class, 'index'])->name('certificate');
+        Route::get('/certificate/create', [StoreCertificateController::class, 'create'])->name('certificate.create');
+        Route::post('/certificate', [StoreCertificateController::class, 'store'])->name('certificate.store');
+        Route::get('/certificate/{storeCertificate}', [StoreCertificateController::class, 'edit'])->name('certificate.edit');
+        Route::post('/certificate/{storeCertificate}', [StoreCertificateController::class, 'update'])->name('certificate.update');
+        Route::delete('/certificate/{storeCertificate}', [StoreCertificateController::class, 'destroy'])->name('certificate.destroy');
 
-        Route::get('/product', [ProductController::class, 'index'])->name('admin.product');
-        Route::get('/product/create', [ProductController::class, 'create'])->name('admin.product.create');
-        Route::post('/product', [ProductController::class, 'store'])->name('admin.product.store');
-        Route::post('/product/{product}', [ProductController::class, 'update'])->name('admin.product.update');
-
-        Route::get('/product/{product}', [ProductController::class, 'edit'])->name('admin.product.edit');
+        // Product
+        Route::get('/product', [ProductController::class, 'index'])->name('product');
+        Route::get('/product/create', [ProductController::class, 'create'])->name('product.create');
+        Route::post('/product', [ProductController::class, 'store'])->name('product.store');
+        Route::get('/product/{product}', [ProductController::class, 'edit'])->name('product.edit');
+        Route::post('/product/{product}', [ProductController::class, 'update'])->name('product.update');
+        Route::delete('/product/{product}', [ProductController::class, 'destroy'])->name('product.destroy');
     });
 });
 

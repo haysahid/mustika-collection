@@ -1,6 +1,8 @@
 <script setup>
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import SummaryCard from "@/Components/SummaryCard.vue";
+import { onMounted } from "vue";
+import { usePage } from "@inertiajs/vue3";
 
 const props = defineProps({
     productCount: {
@@ -11,6 +13,15 @@ const props = defineProps({
         type: Number,
         default: 0,
     },
+});
+
+const page = usePage();
+
+onMounted(() => {
+    console.log("Access token:", page.props.flash.access_token);
+    if (page.props.flash.access_token) {
+        localStorage.setItem("access_token", page.props.flash.access_token);
+    }
 });
 </script>
 

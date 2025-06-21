@@ -16,7 +16,8 @@ const props = defineProps({
 const showingNavigationDropdown = ref(false);
 
 const logout = () => {
-    router.post(route("logout"));
+    localStorage.removeItem("access_token");
+    router.post(route("admin.logout"));
 };
 </script>
 

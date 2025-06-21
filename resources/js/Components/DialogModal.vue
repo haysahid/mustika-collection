@@ -1,4 +1,5 @@
 <script setup>
+import { useSlots } from "vue";
 import Modal from "./Modal.vue";
 
 const emit = defineEmits(["close"]);
@@ -25,6 +26,10 @@ defineProps({
 const close = () => {
     emit("close");
 };
+
+const slots = useSlots();
+
+const hasContentSlot = !!slots.content;
 </script>
 
 <template>
@@ -61,7 +66,12 @@ const close = () => {
                     <slot name="title" />
                 </div>
 
-                <slot name="content" />
+                <div
+                    v-if="hasContentSlot"
+                    class="mb-2 text-center text-gray-600"
+                >
+                    <slot name="content" />
+                </div>
 
                 <div class="flex flex-row justify-center mt-2 text-end">
                     <slot name="footer" />

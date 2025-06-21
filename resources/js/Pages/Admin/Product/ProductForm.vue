@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { useForm, usePage } from "@inertiajs/vue3";
 import TextInput from "@/Components/TextInput.vue";
 import InputLabel from "@/Components/InputLabel.vue";
@@ -8,6 +8,8 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import ImageInput from "@/Components/ImageInput.vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import Checkbox from "@/Components/Checkbox.vue";
+import ErrorDialog from "@/Components/ErrorDialog.vue";
+import { useDraggable, VueDraggable } from "vue-draggable-plus";
 
 const props = defineProps({
     product: {
@@ -16,15 +18,38 @@ const props = defineProps({
     },
 });
 
-const form = useForm({
-    ...props.product,
-    categories: props.product?.categories || [],
-    sizes: props.product?.sizes || [],
-    images:
-        props.product?.images?.map((image) => ({
-            image: "/storage/" + image.image,
-        })) || [],
-});
+const form = useForm(
+    props.product
+        ? {
+              ...props.product,
+              categories: props.product?.categories || [],
+              sizes: props.product?.sizes || [],
+              images: [
+                  ...(props.product?.images?.map((image) => ({
+                      ...image,
+                      image: "/storage/" + image.image,
+                  })) || []),
+                  { id: "new-1", image: null },
+              ],
+          }
+        : {
+              name: null,
+              brand_id: null,
+              brand: null,
+              images: [{ id: "new-1", image: null }],
+              selling_price: null,
+              discount: 0,
+              stock: 0,
+              categories: [],
+              sizes: [],
+              color_id: null,
+              color: null,
+              material: null,
+              description: null,
+          }
+);
+
+const drag = ref(false);
 
 const page = usePage();
 
@@ -42,18 +67,215 @@ const categories = page.props.categories || [];
 const sizes = page.props.sizes || [];
 const colors = page.props.colors || [];
 
-const submit = () => {
-    form.transform((data) => ({
-        ...data,
-        remember: form.remember ? "on" : "",
-    })).post(route("admin.login"), {
-        onFinish: () => form.reset("password"),
+function uploadNewImage(image, index) {
+    const token = `Bearer ${localStorage.getItem("access_token")}`;
+
+    const formData = new FormData();
+    formData.append("product_id", props.product.id);
+    formData.append("image", image.image);
+    formData.append("order", index);
+
+    axios
+        .post(`${page.props.ziggy.url}/api/admin/product-image`, formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+                Authorization: token,
+            },
+        })
+        .then((response) => {
+            form.images[index] = {
+                ...response.data.result,
+                image: "/storage/" + response.data.result.image,
+            };
+        })
+        .catch((error) => {
+            if (error.response?.data?.error) {
+                openErrorDialog(error.response.data.error);
+            }
+        });
+}
+
+function updateImage(index, image) {
+    const token = `Bearer ${localStorage.getItem("access_token")}`;
+
+    const formData = new FormData();
+    formData.append("_method", "PUT");
+    formData.append("order", index);
+
+    axios
+        .post(
+            `${page.props.ziggy.url}/api/admin/product-image/${image.id}`,
+            formData,
+            {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                    Authorization: token,
+                },
+            }
+        )
+        .then((response) => {
+            form.images[index] = {
+                ...response.data.result,
+                image: "/storage/" + response.data.result.image,
+            };
+        })
+        .catch((error) => {
+            if (error.response?.data?.error) {
+                openErrorDialog(error.response.data.error);
+            }
+        });
+}
+
+function updateImages() {
+    const images = form.images || [];
+
+    images.forEach((image, index) => {
+        if (isNewImage(image) && image.image instanceof File) {
+            uploadNewImage(image, index);
+        } else if (isExistingImage(image)) {
+            if (image.order == index) return;
+            updateImage(index, image);
+        }
     });
+}
+
+function deleteImages() {
+    const token = `Bearer ${localStorage.getItem("access_token")}`;
+    const images = imagesToDelete.value || [];
+
+    images.forEach((imageId) => {
+        axios
+            .delete(
+                `${page.props.ziggy.url}/api/admin/product-image/${imageId}`,
+                {
+                    headers: {
+                        Authorization: token,
+                    },
+                }
+            )
+            .then(() => {
+                imagesToDelete.value = imagesToDelete.value.filter(
+                    (id) => id !== imageId
+                );
+            })
+            .catch((error) => {
+                if (error.response?.data?.error) {
+                    openErrorDialog(error.response.data.error);
+                }
+            });
+    });
+}
+
+const submit = () => {
+    if (props.product?.id) {
+        updateImages();
+        deleteImages();
+
+        form.transform((data) => {
+            const formData = new FormData();
+            Object.keys(data).forEach((key) => {
+                if (key === "images") return;
+
+                if (key === "categories") {
+                    data.categories.forEach((category, index) => {
+                        formData.append(`categories[${index}]`, category.id);
+                    });
+                } else if (key === "sizes") {
+                    data.sizes.forEach((size, index) => {
+                        formData.append(`sizes[${index}]`, size.id);
+                    });
+                } else if (data[key] !== null && data[key] !== undefined) {
+                    formData.append(key, data[key]);
+                }
+            });
+            return formData;
+        }).post(route("admin.product.update", props.product), {
+            onError: (errors) => {
+                if (errors.error) {
+                    openErrorDialog(errors.error);
+                }
+            },
+            onFinish: () => {
+                form.reset();
+            },
+        });
+    } else {
+        form.transform((data) => {
+            const formData = new FormData();
+            Object.keys(data).forEach((key) => {
+                if (key === "images") {
+                    data[key].forEach((image, index) => {
+                        if (image.image instanceof File) {
+                            formData.append(`images[${index}]`, image);
+                        }
+                    });
+                } else if (key === "categories") {
+                    data.categories.forEach((category, index) => {
+                        formData.append(`categories[${index}]`, category.id);
+                    });
+                } else if (key === "sizes") {
+                    data.sizes.forEach((size, index) => {
+                        formData.append(`sizes[${index}]`, size.id);
+                    });
+                } else if (data[key] !== null && data[key] !== undefined) {
+                    formData.append(key, data[key]);
+                }
+            });
+            return formData;
+        }).post(route("admin.product.store"), {
+            onError: (errors) => {
+                if (errors.error) {
+                    openErrorDialog(errors.error);
+                }
+            },
+            onFinish: () => {
+                form.reset();
+            },
+        });
+    }
+};
+
+const imagesContainer = ref(null);
+
+const draggable = useDraggable(imagesContainer, form.images, {
+    animation: 150,
+    onStart: (event) => {
+        drag.value = true;
+        const item = event.item;
+        item.style.opacity = "0.2";
+    },
+    onEnd: (event) => {
+        drag.value = false;
+        const item = event.item;
+        item.style.opacity = "1";
+    },
+});
+
+const countNewImages = computed(() => {
+    return form.images.filter((image) => isNewImage(image)).length;
+});
+
+const isNewImage = (image) => {
+    return typeof image.id == "string" && image.id.startsWith("new-");
+};
+
+const isExistingImage = (image) => {
+    return typeof image.id == "number" && typeof image.image == "string";
+};
+
+const imagesToDelete = ref([]);
+
+const showErrorDialog = ref(false);
+const errorMessage = ref(null);
+
+const openErrorDialog = (message) => {
+    errorMessage.value = message;
+    showErrorDialog.value = true;
 };
 </script>
 
 <template>
-    <form action="" class="max-w-3xl">
+    <form @submit.prevent="submit" class="max-w-3xl">
         <div class="flex flex-col items-start gap-4">
             <h2 class="text-lg font-bold">Informasi Produk</h2>
 
@@ -124,7 +346,7 @@ const submit = () => {
                                 <button
                                     v-if="form.brand_id && !isBrandDropdownOpen"
                                     type="button"
-                                    class="absolute p-[7px] text-gray-400 bg-white rounded-full top-1 right-1 hover:bg-gray-100"
+                                    class="absolute p-[7px] text-gray-400 bg-white rounded-full top-1 right-1 hover:bg-gray-100 transition-all duration-300 ease-in-out"
                                     @click="
                                         form.brand_id = null;
                                         form.brand = null;
@@ -194,24 +416,37 @@ const submit = () => {
                     class="text-lg font-bold sm:w-1/5"
                 />
                 <span class="hidden text-sm sm:block">:</span>
-                <div
-                    class="grid w-full grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
-                >
+                <div ref="imagesContainer" class="flex flex-wrap w-full gap-2">
                     <ImageInput
                         v-for="(image, index) in form.images"
-                        :key="index"
-                        :id="`image-${index}`"
-                        v-model="form.images[index].image"
+                        :key="image.id"
+                        :id="`image-${image.id}`"
+                        v-model="image.image"
                         type="file"
                         accept="image/*"
                         placeholder="Upload Produk"
-                        class="block w-full mt-1 h-"
-                        width="max-w-[180px]"
+                        class="!w-auto mt-1"
+                        width="!w-[180px]"
                         height="h-[120px]"
+                        :showDeleteButton="true"
                         :error="form.errors.images?.[index]"
+                        :isDragging="drag"
                         @update:modelValue="
-                            form.errors.images[index] = null;
-                            if (!image.image) {
+                            if (isNewImage(image)) {
+                                image.image = $event;
+                                form.images.push({
+                                    id: `new-${countNewImages + 1}`,
+                                    image: null,
+                                });
+                            } else {
+                                image.image = $event;
+                            }
+                        "
+                        @delete="
+                            if (isNewImage(image)) {
+                                form.images.splice(index, 1);
+                            } else {
+                                imagesToDelete.push(image.id);
                                 form.images.splice(index, 1);
                             }
                         "
@@ -511,9 +746,22 @@ const submit = () => {
                 />
             </div>
 
-            <PrimaryButton class="mt-4" @click="submit">
+            <PrimaryButton type="submit" class="mt-4">
                 Simpan Data
             </PrimaryButton>
         </div>
+
+        <ErrorDialog :show="showErrorDialog" @close="showErrorDialog = false">
+            <template #content>
+                <div>
+                    <div
+                        class="mb-1 text-lg font-medium text-center text-gray-900"
+                    >
+                        Terjadi Kesalahan
+                    </div>
+                    <p class="text-center text-gray-700">{{ errorMessage }}</p>
+                </div>
+            </template>
+        </ErrorDialog>
     </form>
 </template>

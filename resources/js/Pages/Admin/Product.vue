@@ -1,5 +1,6 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import { usePage, useForm } from "@inertiajs/vue3";
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import AdminPagination from "@/Components/AdminPagination.vue";
@@ -30,14 +31,52 @@ const showDeleteProductDialog = (id) => {
     }
 };
 
-const closeDeleteProductDialog = (id) => {
-    const product = products.value.find((item) => item.id === id);
+const closeDeleteProductDialog = (product, result) => {
     if (product) {
         product.showDeleteModal = false;
+        if (result) {
+            openSuccessDialog("Data Berhasil Dihapus");
+            products.value = products.value.filter(
+                (item) => item.id !== product.id
+            );
+        }
+    }
+};
+
+const deleteProduct = (product) => {
+    if (product) {
+        const form = useForm();
+        form.delete(
+            route("admin.product.destroy", {
+                product: product,
+            }),
+            {
+                onError: (errors) => {
+                    openErrorDialog(errors.error);
+                },
+                onSuccess: () => {
+                    closeDeleteProductDialog(product, true);
+                },
+            }
+        );
     }
 };
 
 const showSuccessDialog = ref(false);
+const successMessage = ref("Data Berhasil Dihapus");
+
+const openSuccessDialog = (message) => {
+    successMessage.value = message;
+    showSuccessDialog.value = true;
+};
+
+const page = usePage();
+
+onMounted(() => {
+    if (page.props.flash.success) {
+        openSuccessDialog(page.props.flash.success);
+    }
+});
 </script>
 
 <template>
@@ -164,17 +203,9 @@ const showSuccessDialog = ref(false);
                                 />
                                 <DeleteConfirmationDialog
                                     :show="product.showDeleteModal"
-                                    @close="
-                                        closeDeleteProductDialog(product.id)
-                                    "
-                                    @delete="
-                                        // Logic to delete the product
-                                        console.log(
-                                            `Deleting product with ID: ${product.id}`
-                                        );
-                                        closeDeleteProductDialog(product.id);
-                                        showSuccessDialog = true;
-                                    "
+                                    :title="`Hapus Produk <b>${product.name}</b>?`"
+                                    @close="closeDeleteProductDialog(product)"
+                                    @delete="deleteProduct(product)"
                                 />
                             </td>
                         </tr>
@@ -183,7 +214,7 @@ const showSuccessDialog = ref(false);
 
                 <SuccessDialog
                     :show="showSuccessDialog"
-                    title="Data Berhasil Dihapus"
+                    :title="successMessage"
                     @close="showSuccessDialog = false"
                 />
             </div>

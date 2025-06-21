@@ -8,6 +8,10 @@ const props = defineProps({
         type: String,
         default: "Anda Yakin Menghapus Data Ini?",
     },
+    description: {
+        type: String,
+        default: null,
+    },
     positiveButtonText: {
         type: String,
         default: "Hapus Data",
@@ -30,7 +34,15 @@ const close = () => {
 </script>
 <template>
     <DialogModal :show="props.show" @close="close" maxWidth="sm">
-        <template #title>{{ props.title }}</template>
+        <template #title>
+            <h3
+                v-html="props.title"
+                class="text-lg font-medium leading-6 text-gray-900"
+            ></h3>
+        </template>
+        <template v-if="props.description" #content>
+            <p class="text-center text-wrap">{{ props.description }}</p>
+        </template>
         <slot />
         <template #footer>
             <div class="flex gap-4 text-base">

@@ -22,7 +22,7 @@ return new class extends Migration
             $table->integer('discount')->unsigned()->nullable();
             $table->integer('stock')->unsigned()->default(0);
             $table->integer('min_order')->unsigned()->nullable();
-            $table->string('unit');
+            $table->string('unit')->nullable();
             $table->foreignId('color_id')->nullable()->constrained('colors')->onDelete('set null');
             $table->foreignId('brand_id')->nullable()->constrained('brands')->onDelete('set null');
             $table->timestamp('disabled_at')->nullable();

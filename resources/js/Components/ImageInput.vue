@@ -14,9 +14,11 @@ const props = defineProps([
     "height",
     "objectFit",
     "error",
+    "isDragging",
+    "showDeleteButton",
 ]);
 
-const emit = defineEmits(["update:modelValue", "enter"]);
+const emit = defineEmits(["update:modelValue", "enter", "delete"]);
 
 const imagePath = ref(null);
 
@@ -67,6 +69,7 @@ defineExpose({ clearImage });
                         alt="Current image"
                     />
                     <div
+                        v-if="!props.isDragging"
                         class="absolute inset-0 flex flex-col items-center justify-center w-full h-full duration-300 ease-linear bg-black bg-opacity-0 rounded-2xl group-hover:bg-opacity-70"
                     >
                         <svg
@@ -90,6 +93,31 @@ defineExpose({ clearImage });
                             Ganti gambar
                         </p>
                     </div>
+                    <!-- Delete button -->
+                    <button
+                        v-if="props.showDeleteButton"
+                        type="button"
+                        class="absolute p-[7px] text-gray-300 bg-gray-300/0 rounded-full top-1 right-1 hover:bg-gray-300/20 hover:text-gray-300 group-hover:text-gray-300 transition-all duration-300 ease-in-out opacity-0 group-hover:opacity-100"
+                        @click="
+                            clearImage();
+                            emit('delete');
+                        "
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="size-5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12"
+                            />
+                        </svg>
+                    </button>
                 </div>
 
                 <div
