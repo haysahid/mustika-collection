@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('product_links', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
-            $table->foreignId('platform_id')->constrained('platforms')->onDelete('cascade');
+            $table->foreignId('platform_id')->nullable()->constrained('platforms')->onDelete('cascade');
             $table->string('url');
             $table->timestamps();
             $table->softDeletes();

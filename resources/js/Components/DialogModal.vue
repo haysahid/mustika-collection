@@ -29,7 +29,9 @@ const close = () => {
 
 const slots = useSlots();
 
+const hasTitleSlot = !!slots.title;
 const hasContentSlot = !!slots.content;
+const hasFooterSlot = !!slots.footer;
 </script>
 
 <template>
@@ -62,18 +64,24 @@ const hasContentSlot = !!slots.content;
                 </svg>
             </button>
             <div class="flex flex-col items-center p-6">
-                <div class="mb-2 text-lg font-medium text-center text-gray-900">
+                <div
+                    v-if="hasTitleSlot"
+                    class="mb-2 text-lg font-medium text-center text-gray-900"
+                >
                     <slot name="title" />
                 </div>
 
                 <div
                     v-if="hasContentSlot"
-                    class="mb-2 text-center text-gray-600"
+                    class="flex flex-col items-center w-full text-center text-gray-600"
                 >
                     <slot name="content" />
                 </div>
 
-                <div class="flex flex-row justify-center mt-2 text-end">
+                <div
+                    v-if="hasFooterSlot"
+                    class="flex flex-row justify-center mt-2 text-end"
+                >
                     <slot name="footer" />
                 </div>
             </div>

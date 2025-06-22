@@ -4,7 +4,9 @@
         "paths": {
             "@/*": ["resources/js/*"]
         },
-        "lib": ["dom", "es2016"]
+        "lib": ["dom", "es2016"],
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true
     },
     "exclude": ["node_modules", "public"]
 }

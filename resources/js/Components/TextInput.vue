@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, onUpdated } from "vue";
 import { useSlots } from "vue";
 import InputError from "@/Components/InputError.vue";
 
@@ -59,8 +59,8 @@ const emit = defineEmits(["update:modelValue"]);
 const input = ref(null);
 
 const slots = useSlots();
-const hasPrefix = !!slots.prefix;
-const hasSuffix = !!slots.suffix;
+const hasPrefix = ref(!!slots.prefix);
+const hasSuffix = ref(!!slots.suffix);
 
 function updateValue(value) {
     emit("update:modelValue", value);
@@ -70,6 +70,11 @@ onMounted(() => {
     if (input.value.hasAttribute("autofocus")) {
         input.value.focus();
     }
+});
+
+onUpdated(() => {
+    hasPrefix.value = !!slots.prefix;
+    hasSuffix.value = !!slots.suffix;
 });
 
 defineExpose({ focus: () => input.value.focus() });
@@ -105,6 +110,6 @@ defineExpose({ focus: () => input.value.focus() });
             />
             <slot name="suffix"></slot>
         </label>
-        <InputError class="mt-1" :message="props.error" />
+        <InputError class="mt-1 px-3.5" :message="props.error" />
     </div>
 </template>

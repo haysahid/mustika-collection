@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Color;
+use App\Models\Platform;
 use App\Models\Product;
 use App\Models\Size;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
@@ -59,7 +61,7 @@ class ProductController extends Controller
         }
 
         $products->orderBy($orderBy, $orderDirection);
-        $products->with(['brand', 'color', 'categories', 'sizes', 'images',]);
+        $products->with(['brand', 'color', 'categories', 'sizes', 'images', 'links']);
         $products->get();
 
         return Inertia::render('Admin/Product', [
@@ -77,12 +79,14 @@ class ProductController extends Controller
         $categories = Category::get();
         $sizes = Size::get();
         $colors = Color::get();
+        $platforms = Platform::get();
 
         return Inertia::render('Admin/Product/AddProduct', [
             'brands' => $brands,
             'categories' => $categories,
             'sizes' => $sizes,
             'colors' => $colors,
+            'platforms' => $platforms,
         ]);
     }
 
@@ -109,6 +113,7 @@ class ProductController extends Controller
             'sizes.*' => 'exists:sizes,id',
             'images' => 'nullable|array',
             'images.*' => 'file|mimes:jpg,jpeg,png,webp|max:2048',
+            'links' => 'nullable|array',
         ], [
             'code.string' => 'Kode produk harus berupa string.',
             'code.max' => 'Kode produk tidak boleh lebih dari 100 karakter.',
@@ -137,6 +142,7 @@ class ProductController extends Controller
             'images.*.file' => 'Gambar harus berupa file.',
             'images.*.mimes' => 'Gambar harus berupa file dengan format: jpg, jpeg, png, webp.',
             'images.*.max' => 'Ukuran gambar tidak boleh lebih dari 2MB.',
+            'links.array' => 'Tautan harus berupa array.',
         ]);
 
         try {
@@ -156,6 +162,16 @@ class ProductController extends Controller
                     $product->images()->create([
                         'image' => $imagePath,
                         'order' => $key,
+                    ]);
+                }
+            }
+
+            if (isset($validated['links'])) {
+                foreach ($request->input('links') as $link) {
+                    $product->links()->create([
+                        'name' => $link['name'],
+                        'platform_id' => $link['platform_id'],
+                        'url' => $link['url'],
                     ]);
                 }
             }
@@ -184,12 +200,13 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        $product->load(['brand', 'color', 'categories', 'sizes', 'images']);
+        $product->load(['brand', 'color', 'categories', 'sizes', 'images', 'links.platform']);
 
         $brands = Brand::class::get();
         $categories = Category::get();
         $sizes = Size::get();
         $colors = Color::get();
+        $platforms = Platform::get();
 
         return Inertia::render('Admin/Product/EditProduct', [
             'product' => $product,
@@ -197,6 +214,7 @@ class ProductController extends Controller
             'categories' => $categories,
             'sizes' => $sizes,
             'colors' => $colors,
+            'platforms' => $platforms,
         ]);
     }
 
@@ -221,6 +239,7 @@ class ProductController extends Controller
             'categories.*' => 'exists:categories,id',
             'sizes' => 'nullable|array',
             'sizes.*' => 'exists:sizes,id',
+            'links' => 'nullable|array',
         ], [
             'code.required' => 'Kode produk harus diisi.',
             'name.required' => 'Nama produk harus diisi.',
@@ -242,6 +261,7 @@ class ProductController extends Controller
             'categories.*.exists' => 'Kategori yang dipilih tidak valid.',
             'sizes.array' => 'Ukuran harus berupa array.',
             'sizes.*.exists' => 'Ukuran yang dipilih tidak valid.',
+            'links.array' => 'Tautan harus berupa array.',
         ]);
 
         try {
@@ -253,6 +273,19 @@ class ProductController extends Controller
 
             $product->categories()->sync($validated['categories']);
             $product->sizes()->sync($validated['sizes']);
+
+            Log::info('Product links: ' . json_encode($request->input('links')));
+
+            $product->links()->delete();
+
+            if ($request->has('links')) {
+                foreach ($request->input('links') as $link) {
+                    $product->links()->create([
+                        'platform_id' => isset($link['platform_id']) ? $link['platform_id'] : null,
+                        'url' => $link['url'],
+                    ]);
+                }
+            }
 
             DB::commit();
 
