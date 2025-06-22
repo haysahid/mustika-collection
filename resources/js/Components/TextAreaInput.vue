@@ -40,6 +40,10 @@ const props = defineProps({
         type: String,
         default: "max-h-[300px]",
     },
+    preventNewLine: {
+        type: Boolean,
+        default: false,
+    },
     error: {
         type: String,
         default: null,
@@ -55,6 +59,10 @@ const slots = useSlots();
 const hasPrefix = !!slots.prefix;
 
 function updateValue(value) {
+    if (props.preventNewLine) {
+        value = value.replace(/\n/g, " ");
+    }
+
     emit("update:modelValue", value);
 
     input.value.parentNode.dataset.clonedVal = value;
@@ -88,7 +96,7 @@ defineExpose({ focus: () => input.value.focus() });
                 :autofocus="props.autofocus ? true : false"
                 :autocomplete="props.autocomplete"
                 :rows="props.rows"
-                class="w-full px-3.5 py-2 border-gray-300 shadow-sm rounded-2xl focus:border-indigo-500 focus:ring-indigo-500 max-h-[300px]"
+                class="w-full px-3.5 py-2 border-gray-300 shadow-sm rounded-[21px] focus:border-indigo-500 focus:ring-indigo-500 max-h-[300px]"
                 :class="[
                     {
                         'pl-11': hasPrefix,

@@ -39,12 +39,17 @@ defineProps({
                     <main class="p-6 pb-16">
                         <div
                             v-if="showTitle"
-                            class="flex items-center gap-2 mb-4 sm:mb-6 sm:gap-4 max-w-7xl"
+                            class="flex items-center justify-between gap-4 mb-4 sm:mb-6"
                         >
-                            <slot name="icon" />
-                            <h1 class="text-lg font-bold sm:text-xl">
-                                {{ title }}
-                            </h1>
+                            <div
+                                class="flex items-center gap-2 sm:gap-4 max-w-7xl"
+                            >
+                                <slot name="icon" />
+                                <h1 class="text-lg font-bold sm:text-xl">
+                                    {{ title }}
+                                </h1>
+                            </div>
+                            <slot name="trailing"></slot>
                         </div>
                         <slot />
                     </main>

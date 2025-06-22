@@ -26,15 +26,15 @@ class ProductController extends Controller
         $orderDirection = $request->input('order_direction', 'desc');
         $search = $request->input('search');
 
-        $brands = $request->input('brands');
+        $brandId = $request->input('brand_id');
         $colors = $request->input('colors');
         $categories = $request->input('categories');
         $sizes = $request->input('sizes');
 
         $products = Product::query();
 
-        if ($brands) {
-            $products->whereIn('brand_id', $brands);
+        if ($brandId) {
+            $products->where('brand_id', $brandId);
         }
 
         if ($colors) {
@@ -64,6 +64,7 @@ class ProductController extends Controller
 
         return Inertia::render('Admin/Product', [
             'products' => $products->paginate($limit),
+            'brands' => Brand::get(),
         ]);
     }
 

@@ -40,6 +40,14 @@ const props = defineProps({
         type: String,
         default: null,
     },
+    bgClass: {
+        type: String,
+        default: "",
+    },
+    textClass: {
+        type: String,
+        default: "",
+    },
     modelValue: {
         type: [String, Number],
         default: null,
@@ -52,6 +60,7 @@ const input = ref(null);
 
 const slots = useSlots();
 const hasPrefix = !!slots.prefix;
+const hasSuffix = !!slots.suffix;
 
 function updateValue(value) {
     emit("update:modelValue", value);
@@ -80,12 +89,17 @@ defineExpose({ focus: () => input.value.focus() });
                 :autocomplete="props.autocomplete"
                 :required="props.required"
                 :readonly="props.readonly"
-                class="w-full px-3.5 border-gray-300 rounded-full shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
-                :class="{
-                    'pl-11': hasPrefix,
-                    'border-red-500 focus:border-red-500 focus:ring-red-500':
-                        props.error,
-                }"
+                class="w-full px-3.5 py-2 border-gray-300 rounded-full shadow-sm focus:border-indigo-500 focus:ring-indigo-500 overflow-ellipsis"
+                :class="[
+                    {
+                        'pl-11': hasPrefix,
+                        'pr-11': hasSuffix,
+                        'border-red-500 focus:border-red-500 focus:ring-red-500':
+                            props.error,
+                    },
+                    props.bgClass,
+                    props.textClass,
+                ]"
                 :value="props.modelValue"
                 @input="updateValue($event.target.value)"
             />

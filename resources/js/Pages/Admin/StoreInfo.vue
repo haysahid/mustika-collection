@@ -159,7 +159,7 @@ const openErrorDialog = (message) => {
                             class="w-[100px] sm:w-1/5 text-lg font-bold"
                         />
                         <span class="hidden text-sm sm:block">:</span>
-                        <TextInput
+                        <TextAreaInput
                             id="address"
                             v-model="form.address"
                             type="text"
@@ -167,6 +167,8 @@ const openErrorDialog = (message) => {
                             class="block w-full mt-1"
                             required
                             autocomplete="address"
+                            :rows="1"
+                            :preventNewLine="true"
                             :error="form.errors.address"
                             @update:modelValue="form.errors.address = null"
                         />
