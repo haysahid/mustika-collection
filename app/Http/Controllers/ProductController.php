@@ -23,7 +23,7 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        $limit = $request->input('limit', 5);
+        $limit = $request->input('limit', 10);
         $orderBy = $request->input('order_by', 'created_at');
         $orderDirection = $request->input('order_direction', 'desc');
         $search = $request->input('search');
@@ -40,7 +40,9 @@ class ProductController extends Controller
         }
 
         if ($colors) {
-            $products->whereIn('color_id', $colors);
+            $products->whereHas('colors', function ($query) use ($colors) {
+                $query->whereIn('color_id', $colors);
+            });
         }
 
         if ($categories) {
@@ -61,7 +63,7 @@ class ProductController extends Controller
         }
 
         $products->orderBy($orderBy, $orderDirection);
-        $products->with(['brand', 'color', 'categories', 'sizes', 'images', 'links']);
+        $products->with(['brand', 'colors', 'categories', 'sizes', 'images', 'links']);
         $products->get();
 
         return Inertia::render('Admin/Product', [
@@ -105,8 +107,9 @@ class ProductController extends Controller
             'stock' => 'required|integer',
             'min_order' => 'nullable|integer',
             'unit' => 'nullable|string|max:100',
-            'color_id' => 'required|exists:colors,id',
             'brand_id' => 'required|exists:brands,id',
+            'colors' => 'nullable|array',
+            'colors.*' => 'exists:colors,id',
             'categories' => 'nullable|array',
             'categories.*' => 'exists:categories,id',
             'sizes' => 'nullable|array',
@@ -130,10 +133,10 @@ class ProductController extends Controller
             'min_order.integer' => 'Jumlah pesanan minimum harus berupa bilangan bulat.',
             'unit.string' => 'Satuan harus berupa string.',
             'unit.max' => 'Satuan tidak boleh lebih dari 100 karakter.',
-            'color_id.required' => 'Warna produk harus dipilih.',
-            'color_id.exists' => 'Warna yang dipilih tidak valid.',
             'brand_id.required' => 'Merek produk harus dipilih.',
             'brand_id.exists' => 'Merek yang dipilih tidak valid.',
+            'colors.array' => 'Warna harus berupa array.',
+            'colors.*.exists' => 'Warna yang dipilih tidak valid.',
             'categories.array' => 'Kategori harus berupa array.',
             'categories.*.exists' => 'Kategori yang dipilih tidak valid.',
             'sizes.array' => 'Ukuran harus berupa array.',
@@ -153,8 +156,17 @@ class ProductController extends Controller
                 'store_id' => 1,
             ]);
 
-            $product->categories()->attach($validated['categories']);
-            $product->sizes()->attach($validated['sizes']);
+            if (isset($validated['colors'])) {
+                $product->colors()->attach($validated['colors']);
+            }
+
+            if (isset($validated['categories'])) {
+                $product->categories()->attach($validated['categories']);
+            }
+
+            if (isset($validated['sizes'])) {
+                $product->sizes()->attach($validated['sizes']);
+            }
 
             if (isset($validated['images'])) {
                 foreach ($validated['images'] as $key => $image) {
@@ -200,7 +212,7 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        $product->load(['brand', 'color', 'categories', 'sizes', 'images', 'links.platform']);
+        $product->load(['brand', 'colors', 'categories', 'sizes', 'images', 'links.platform']);
 
         $brands = Brand::class::get();
         $categories = Category::get();
@@ -233,8 +245,9 @@ class ProductController extends Controller
             'stock' => 'required|integer',
             'min_order' => 'nullable|integer',
             'unit' => 'nullable|string|max:100',
-            'color_id' => 'required|exists:colors,id',
             'brand_id' => 'required|exists:brands,id',
+            'colors' => 'nullable|array',
+            'colors.*' => 'exists:colors,id',
             'categories' => 'nullable|array',
             'categories.*' => 'exists:categories,id',
             'sizes' => 'nullable|array',
@@ -253,10 +266,10 @@ class ProductController extends Controller
             'min_order.integer' => 'Jumlah pesanan minimum harus berupa bilangan bulat.',
             'unit.string' => 'Satuan harus berupa string.',
             'unit.max' => 'Satuan tidak boleh lebih dari 100 karakter.',
-            'color_id.required' => 'Warna produk harus dipilih.',
-            'color_id.exists' => 'Warna yang dipilih tidak valid.',
             'brand_id.required' => 'Merek produk harus dipilih.',
             'brand_id.exists' => 'Merek yang dipilih tidak valid.',
+            'colors.array' => 'Warna harus berupa array.',
+            'colors.*.exists' => 'Warna yang dipilih tidak valid.',
             'categories.array' => 'Kategori harus berupa array.',
             'categories.*.exists' => 'Kategori yang dipilih tidak valid.',
             'sizes.array' => 'Ukuran harus berupa array.',
@@ -271,6 +284,11 @@ class ProductController extends Controller
                 'slug' => str($validated['name'])->slug(),
             ]);
 
+            if ($request->has('colors')) {
+                $product->colors()->sync($validated['colors']);
+            } else {
+                $product->colors()->detach();
+            }
 
             if ($request->has('categories')) {
                 $product->categories()->sync($validated['categories']);

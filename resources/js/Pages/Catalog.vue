@@ -6,6 +6,7 @@ import JoinUs from "@/Components/JoinUs.vue";
 import CatalogFilter from "@/Components/CatalogFilter.vue";
 import { ref, onMounted, watch, computed } from "vue";
 import { usePage, router } from "@inertiajs/vue3";
+import CatalogPagination from "@/Components/CatalogPagination.vue";
 
 const props = defineProps({
     products: null,
@@ -23,6 +24,7 @@ const products = props.products.data.map((product) => ({
 const catalogFilter = ref(null);
 
 const filters = ref({
+    search: null,
     brands: null,
     colors: null,
     categories: null,
@@ -56,6 +58,7 @@ const getFilters = computed(() => {
 });
 
 const getQueryParams = () => {
+    filters.value.search = route().params.search || null;
     filters.value.brands = route().params.brands
         ? route().params.brands.split(",")
         : [];
@@ -71,56 +74,38 @@ const getQueryParams = () => {
 };
 getQueryParams();
 
-watch(
-    () => catalogFilter.value?.filters,
-    (newFilters) => {
-        filters.value = {
-            brands:
-                newFilters.brands
-                    ?.filter((brand) => brand.selected)
-                    .map((brand) => brand.name) || [],
-            colors:
-                newFilters.colors
-                    ?.filter((color) => color.selected)
-                    .map((color) => color.name) || [],
-            categories:
-                newFilters.categories
-                    ?.filter((category) => category.selected)
-                    .map((category) => category.name) || [],
-            sizes:
-                newFilters.sizes
-                    ?.filter((size) => size.selected)
-                    .map((size) => size.name) || [],
-        };
+function onChangeCategories(categories) {
+    const selectedCategories = categories
+        .filter((category) => category.selected)
+        .map((category) => category.name)
+        .join(",");
+    router.get(route("catalog"), {
+        ...route().params,
+        categories: selectedCategories || undefined,
+        page: undefined,
+    });
+}
 
-        let queryParams = {};
-        if (filters.value.brands.length > 0) {
-            queryParams.brands = filters.value.brands.join(",");
-        }
-        if (filters.value.colors.length > 0) {
-            queryParams.colors = filters.value.colors.join(",");
-        }
-        if (filters.value.categories.length > 0) {
-            queryParams.categories = filters.value.categories.join(",");
-        }
-        if (filters.value.sizes.length > 0) {
-            queryParams.sizes = filters.value.sizes.join(",");
-        }
+function onChangeSearch() {
+    const searchQuery = filters.value.search;
 
-        router.get(route().current(), queryParams, {
-            preserveState: true,
-            preserveScroll: true,
-        });
-    },
-    { deep: true }
-);
+    if (searchQuery && searchQuery.trim() === "") {
+        filters.value.search = null;
+    }
+
+    router.get(route("catalog"), {
+        ...route().params,
+        search: searchQuery || undefined,
+        page: undefined,
+    });
+}
 </script>
 
 <template>
     <LandingLayout title="Katalog">
         <!-- Search -->
         <LandingSection
-            class="bg-gradient-to-b from-[#E0BEFF80] from-80% to-white !min-h-[40vh] px-6 sm:px-12 md:px-[100px]"
+            class="bg-gradient-to-b from-secondary/60 from-80% to-white !min-h-[40vh] px-6 sm:px-12 md:px-[100px]"
         >
             <div
                 class="flex flex-col items-center w-full py-12 text-center gap-9"
@@ -133,8 +118,7 @@ watch(
                 </div>
                 <div class="w-full max-w-2xl mx-auto">
                     <form
-                        action="#"
-                        method="GET"
+                        @submit.prevent="onChangeSearch"
                         class="flex items-center space-x-4"
                     >
                         <label
@@ -142,15 +126,17 @@ watch(
                             class="relative flex items-center w-full space-x-4"
                         >
                             <input
+                                v-model="filters.search"
                                 id="search"
                                 type="text"
                                 name="search"
                                 placeholder="Cari produk..."
-                                class="w-full py-4 pl-8 pr-24 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 overflow-ellipsis"
+                                :autofocus="route().params.search"
+                                class="w-full py-4 pl-8 pr-24 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 overflow-ellipsis"
                             />
                             <button
                                 type="submit"
-                                class="absolute flex items-center justify-center px-4 py-2 text-white transition duration-200 bg-purple-600 rounded-lg hover:bg-purple-700 right-3"
+                                class="absolute flex items-center justify-center px-4 py-2 text-white transition duration-200 rounded-lg bg-primary hover:bg-primary-dark right-3"
                             >
                                 Cari
                             </button>
@@ -166,13 +152,14 @@ watch(
         >
             <LandingSection>
                 <div
-                    class="flex flex-col items-start justify-center mx-auto md:flex-row gap-14 max-w-7xl"
+                    class="flex flex-col items-start justify-center w-full mx-auto md:flex-row gap-14 max-w-7xl"
                 >
                     <!-- Filter -->
                     <CatalogFilter
                         ref="catalogFilter"
                         :filters="getFilters"
                         class="w-full md:w-1/3 lg:w-1/5"
+                        @change="onChangeCategories"
                     />
 
                     <!-- Products -->
@@ -180,7 +167,8 @@ watch(
                         class="flex flex-col items-start w-full gap-12 md:w-2/3 lg:w-4/5"
                     >
                         <div
-                            class="grid w-full grid-cols-2 gap-5 sm:gap-6 lg:grid-cols-3"
+                            v-if="products.length > 0"
+                            class="grid w-full grid-cols-2 gap-6 lg:gap-8 lg:grid-cols-3"
                         >
                             <ProductCard
                                 v-for="product in products"
@@ -193,38 +181,18 @@ watch(
                                 :slug="product.slug"
                             />
                         </div>
+                        <div
+                            v-else
+                            class="flex items-center justify-center w-full h-64 text-gray-500"
+                        >
+                            <p>Tidak ada produk yang ditemukan.</p>
+                        </div>
 
                         <!-- Pagination -->
-                        <div class="flex justify-center mt-6">
-                            <nav class="flex items-center gap-4 text-gray-600">
-                                <a
-                                    href="#"
-                                    class="flex items-center justify-center text-white transition duration-200 rounded-lg size-12 aspect-square bg-primary"
-                                    >1</a
-                                >
-                                <a
-                                    href="#"
-                                    class="size-12 aspect-square flex items-center justify-center bg-[#E4CFF6] text-primary rounded-lg hover:bg-[#E4CFF6]/80 transition duration-300 font-semibold"
-                                    >2</a
-                                >
-                                <a
-                                    href="#"
-                                    class="size-12 aspect-square flex items-center justify-center bg-[#E4CFF6] text-primary rounded-lg hover:bg-[#E4CFF6]/80 transition duration-300 font-semibold"
-                                    >3</a
-                                >
-                                <span>...</span>
-                                <a
-                                    href="#"
-                                    class="size-12 aspect-square flex items-center justify-center bg-[#E4CFF6] text-primary rounded-lg hover:bg-[#E4CFF6]/80 transition duration-300 font-semibold"
-                                    >6</a
-                                >
-                                <a
-                                    href="#"
-                                    class="size-12 aspect-square flex items-center justify-center bg-[#E4CFF6] text-primary rounded-lg hover:bg-[#E4CFF6]/80 transition duration-300 font-semibold"
-                                    >{{ ">" }}</a
-                                >
-                            </nav>
-                        </div>
+                        <CatalogPagination
+                            v-if="props.products.data.length > 0"
+                            :links="props.products.links"
+                        />
                     </div>
                 </div>
             </LandingSection>

@@ -94,7 +94,7 @@ defineExpose({ focus: () => input.value.focus() });
                 :autocomplete="props.autocomplete"
                 :required="props.required"
                 :readonly="props.readonly"
-                class="w-full px-3.5 py-2 border-gray-300 rounded-full shadow-sm focus:border-indigo-500 focus:ring-indigo-500 overflow-ellipsis"
+                class="w-full px-4 py-2 border-gray-300 rounded-full shadow-sm focus:border-indigo-500 focus:ring-indigo-500 overflow-ellipsis"
                 :class="[
                     {
                         'pl-11': hasPrefix,
@@ -110,6 +110,6 @@ defineExpose({ focus: () => input.value.focus() });
             />
             <slot name="suffix"></slot>
         </label>
-        <InputError class="mt-1 px-3.5" :message="props.error" />
+        <InputError class="px-4 mt-1" :message="props.error" />
     </div>
 </template>

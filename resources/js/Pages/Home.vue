@@ -47,15 +47,25 @@ const certificate = ref(props.store?.certificates[0] || null);
                 >
                     <div class="flex flex-col items-start justify-center gap-4">
                         <div
-                            class="flex items-center justify-between w-full gap-4 mb-4"
+                            class="flex items-center justify-between w-full gap-12 mb-4"
                         >
-                            <h1 class="text-2xl font-bold sm:text-3xl">
+                            <h1
+                                class="text-2xl font-bold sm:text-3xl text-nowrap"
+                            >
                                 Produk Terlaris
                             </h1>
                             <TextInput
                                 placeholder="Cari produk..."
                                 bgClass="bg-gray-100"
-                                textClass="text-sm sm:text-base"
+                                textClass="text-sm sm:text-base !ps-4"
+                                class="relative w-full max-w-md"
+                                @keyup.enter="
+                                    (e) => {
+                                        $inertia.get(route('catalog'), {
+                                            search: e.target.value,
+                                        });
+                                    }
+                                "
                             >
                                 <template #suffix>
                                     <svg

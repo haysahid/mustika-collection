@@ -5,6 +5,7 @@ import LandingLayout from "@/Layouts/LandingLayout.vue";
 import LandingSection from "@/Components/LandingSection.vue";
 import ProductCard from "@/Components/ProductCard.vue";
 import JoinUs from "@/Components/JoinUs.vue";
+import ProductLinkDialog from "@/Components/ProductLinkDialog.vue";
 
 const page = usePage();
 const store = page.props.store;
@@ -48,6 +49,33 @@ const goToNextImage = () => {
         image.value = props.product.images[imageIndex.value];
     }
 };
+
+function formatPrice(price, discount = 0) {
+    if (discount > 0) {
+        price = price - (price * discount) / 100;
+    }
+
+    return price.toLocaleString("id-ID", {
+        style: "currency",
+        currency: "IDR",
+        minimumFractionDigits: 0,
+    });
+}
+
+function linkWhatsApp() {
+    const phone = store.phone?.replace(/[^0-9]/g, "");
+    return `https://wa.me/${phone}?text=Halo, saya tertarik dengan produk "${
+        props.product.name
+    }". \n\nLink produk: ${route("product.show", props.product.slug)}`;
+}
+
+const showProductLinkDialog = ref(false);
+function openProductLinkDialog() {
+    showProductLinkDialog.value = true;
+}
+function closeProductLinkDialog() {
+    showProductLinkDialog.value = false;
+}
 </script>
 
 <template>
@@ -57,20 +85,23 @@ const goToNextImage = () => {
             <div
                 class="grid grid-cols-1 gap-8 mx-auto lg:grid-cols-2 lg:gap-14 max-w-7xl"
             >
-                <div class="flex flex-col items-start justify-start gap-4">
+                <div
+                    v-if="props.product.images.length > 0"
+                    class="flex flex-col items-start justify-start gap-4"
+                >
                     <div
                         class="relative flex items-center justify-center w-full overflow-hidden group"
                     >
                         <img
                             :src="'/storage/' + image.image"
                             :alt="props.product.name"
-                            class="object-cover rounded-2xl aspect-square"
+                            class="object-cover w-full transition-all duration-300 ease-in-out rounded-2xl aspect-square"
                         />
                         <button
                             v-if="canGoToPreviousImage"
                             @click="goToPreviousImage"
                             type="button"
-                            class="size-8 sm:size-12 opacity-0 aspect-square flex items-center justify-center text-primary hover:bg-[#E4CFF6]/80 font-semibold absolute -left-8 group-hover:bg-black/40 group-hover:opacity-100 group-hover:left-4 transition-all duration-300 ease-in-out rounded-full hover:scale-110"
+                            class="size-8 sm:size-10 opacity-0 aspect-square flex items-center justify-center text-primary hover:bg-[#E4CFF6]/80 font-semibold absolute -left-8 group-hover:bg-black/40 group-hover:opacity-100 group-hover:left-4 transition-all duration-300 ease-in-out rounded-full hover:scale-110"
                         >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -90,7 +121,7 @@ const goToNextImage = () => {
                             v-if="canGoToNextImage"
                             @click="goToNextImage"
                             type="button"
-                            class="size-8 sm:size-12 opacity-0 aspect-square flex items-center justify-center text-primary hover:bg-[#E4CFF6]/80 font-semibold absolute -right-8 group-hover:bg-black/40 group-hover:opacity-100 group-hover:right-4 transition-all duration-300 ease-in-out rounded-full hover:scale-110"
+                            class="size-8 sm:size-10 opacity-0 aspect-square flex items-center justify-center text-primary hover:bg-[#E4CFF6]/80 font-semibold absolute -right-8 group-hover:bg-black/40 group-hover:opacity-100 group-hover:right-4 transition-all duration-300 ease-in-out rounded-full hover:scale-110"
                         >
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -107,7 +138,7 @@ const goToNextImage = () => {
                             </svg>
                         </button>
                     </div>
-                    <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-4 pb-4 overflow-x-auto">
                         <img
                             v-for="(img, index) in props.product.images"
                             :key="img.id"
@@ -122,24 +153,49 @@ const goToNextImage = () => {
                         />
                     </div>
                 </div>
-                <div class="flex flex-col justify-start py-6">
+                <div
+                    v-else
+                    class="flex items-center justify-center w-full bg-gray-100 rounded-2xl aspect-square"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        class="size-12 fill-gray-400"
+                    >
+                        <path
+                            d="M5 21C4.45 21 3.97933 20.8043 3.588 20.413C3.19667 20.0217 3.00067 19.5507 3 19V5C3 4.45 3.196 3.97933 3.588 3.588C3.98 3.19667 4.45067 3.00067 5 3H19C19.55 3 20.021 3.196 20.413 3.588C20.805 3.98 21.0007 4.45067 21 5V19C21 19.55 20.8043 20.021 20.413 20.413C20.0217 20.805 19.5507 21.0007 19 21H5ZM6 17H18L14.25 12L11.25 16L9 13L6 17Z"
+                        />
+                    </svg>
+                </div>
+
+                <div class="flex flex-col justify-start py-4">
                     <h1 class="mb-4 text-2xl font-bold sm:text-3xl">
                         {{ props.product.name }}
                     </h1>
                     <div class="flex items-center gap-4 mb-6">
-                        <p class="text-xl font-bold sm:text-2xl">
-                            Rp
+                        <p class="text-xl font-bold sm:text-2xl text-primary">
                             {{
-                                props.product.selling_price.toLocaleString(
-                                    "id-ID"
+                                formatPrice(
+                                    props.product.selling_price,
+                                    props.product.discount
                                 )
                             }}
                         </p>
-                        <div
-                            class="bg-red-500 text-white px-1.5 py-0.5 rounded-md text-sm"
-                        >
-                            {{ props.product.discount }}%
-                        </div>
+                        <template v-if="props.product.discount">
+                            <p
+                                class="text-sm text-gray-500 line-through strike sm:text-base"
+                            >
+                                {{ formatPrice(props.product.selling_price) }}
+                            </p>
+
+                            <div
+                                class="bg-red-500 text-white px-1.5 py-0.5 rounded-md text-sm"
+                            >
+                                {{ props.product.discount }}%
+                            </div>
+                        </template>
                     </div>
                     <div class="flex flex-col gap-6">
                         <!-- Table Details -->
@@ -172,7 +228,14 @@ const goToNextImage = () => {
                                         <tr>
                                             <td>Warna</td>
                                             <td>
-                                                {{ props.product.color?.name }}
+                                                {{
+                                                    props.product.colors
+                                                        ?.map(
+                                                            (color) =>
+                                                                color.name
+                                                        )
+                                                        .join(", ")
+                                                }}
                                             </td>
                                         </tr>
                                         <tr>
@@ -192,7 +255,7 @@ const goToNextImage = () => {
                                             <td>
                                                 {{
                                                     props.product.stock > 0
-                                                        ? "Tersedia"
+                                                        ? props.product.stock
                                                         : "Habis"
                                                 }}
                                             </td>
@@ -243,6 +306,7 @@ const goToNextImage = () => {
                         >
                             <button
                                 class="flex items-center justify-center w-full gap-2 px-6 py-3 transition duration-200 rounded-lg bg-primary hover:bg-primary-dark sm:w-auto"
+                                @click="openProductLinkDialog"
                             >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -260,12 +324,7 @@ const goToNextImage = () => {
                                 </p>
                             </button>
                             <a
-                                :href="`https://wa.me/${store.phone?.replace(
-                                    /[^0-9]/g,
-                                    ''
-                                )}?text=Halo, saya tertarik dengan produk ${
-                                    props.product.name
-                                }.`"
+                                :href="linkWhatsApp()"
                                 target="_blank"
                                 class="w-full sm:w-auto"
                             >
@@ -291,6 +350,23 @@ const goToNextImage = () => {
                         </div>
                     </div>
                 </div>
+
+                <ProductLinkDialog
+                    :show="showProductLinkDialog"
+                    :links="
+                        props.product.links.map(function (link) {
+                            if (!link.platform) return link;
+                            return {
+                                ...link,
+                                platform: {
+                                    ...link.platform,
+                                    icon: '/storage/' + link.platform.icon,
+                                },
+                            };
+                        })
+                    "
+                    @close="closeProductLinkDialog"
+                />
             </div>
 
             <!-- Related Products -->

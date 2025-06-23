@@ -83,7 +83,7 @@ defineExpose({ focus: () => input.value.focus() });
     <div>
         <label
             :for="id"
-            class="relative grid after:px-3.5 after:py-2 [&>textarea]:text-inherit after:text-inherit [&>textarea]:resize-none [&>textarea]:overflow-auto [&>textarea]:[grid-area:1/1/2/2] after:[grid-area:1/1/2/2] after:whitespace-pre-wrap after:invisible after:content-[attr(data-cloned-val)_'_'] after:border max-h-[300px]"
+            class="relative grid after:px-4 after:py-2 [&>textarea]:text-inherit after:text-inherit [&>textarea]:resize-none [&>textarea]:overflow-auto [&>textarea]:[grid-area:1/1/2/2] after:[grid-area:1/1/2/2] after:whitespace-pre-wrap after:invisible after:content-[attr(data-cloned-val)_'_'] after:border max-h-[300px]"
             :class="[props.height]"
         >
             <slot name="prefix"></slot>
@@ -96,7 +96,7 @@ defineExpose({ focus: () => input.value.focus() });
                 :autofocus="props.autofocus ? true : false"
                 :autocomplete="props.autocomplete"
                 :rows="props.rows"
-                class="w-full px-3.5 py-2 border-gray-300 shadow-sm rounded-[21px] focus:border-indigo-500 focus:ring-indigo-500 max-h-[300px]"
+                class="w-full px-4 py-2 border-gray-300 shadow-sm rounded-[21px] focus:border-indigo-500 focus:ring-indigo-500 max-h-[300px]"
                 :class="[
                     {
                         'pl-11': hasPrefix,

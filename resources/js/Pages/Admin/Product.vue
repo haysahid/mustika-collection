@@ -466,22 +466,40 @@ onMounted(() => {
                                 </div>
                             </td>
                             <td class="text-center">
-                                <p
-                                    v-if="product.discount > 0"
-                                    class="text-red-500 line-through"
-                                >
-                                    Rp
-                                    {{ product.selling_price.toLocaleString() }}
-                                </p>
                                 <p>
-                                    Rp
                                     {{
                                         (
                                             product.selling_price *
                                             (1 - product.discount / 100)
-                                        ).toLocaleString()
+                                        ).toLocaleString("id-ID", {
+                                            style: "currency",
+                                            currency: "IDR",
+                                            minimumFractionDigits: 0,
+                                        })
                                     }}
                                 </p>
+                                <div
+                                    v-if="product.discount > 0"
+                                    class="flex items-center justify-center gap-2 mt-1"
+                                >
+                                    <p class="text-red-500 line-through">
+                                        {{
+                                            product.selling_price.toLocaleString(
+                                                "id-ID",
+                                                {
+                                                    style: "currency",
+                                                    currency: "IDR",
+                                                    minimumFractionDigits: 0,
+                                                }
+                                            )
+                                        }}
+                                    </p>
+                                    <div
+                                        class="px-1.5 py-0.5 text-xs text-white bg-red-500 rounded-md h-fit"
+                                    >
+                                        {{ product.discount }}%
+                                    </div>
+                                </div>
                             </td>
                             <td class="text-center">
                                 <div

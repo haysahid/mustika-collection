@@ -26,26 +26,9 @@ class ProductSeeder extends Seeder
         ]);
 
         $products = require __DIR__ . '/data/products.php';
+        shuffle($products);
 
         foreach ($products as $productData) {
-            // Ensure color exists or create it
-            if (!isset($productData['color_id']) && isset($productData['color'])) {
-                // Check if color exists by name or hex_color, otherwise create it
-                $existingColor = Color::where('name', $productData['color']['name'])
-                    ->orWhere('hex_code', $productData['color']['hex_code'])
-                    ->first();
-
-                if ($existingColor) {
-                    $productData['color_id'] = $existingColor->id;
-                } else {
-                    // Create a new color if it doesn't exist
-                    $productData['color_id'] = Color::create([
-                        'name' => $productData['color']['name'],
-                        'hex_code' => $productData['color']['hex_code'],
-                    ])->id;
-                }
-            }
-
             // Ensure brand exists or create it
             if (!isset($productData['brand_id']) && isset($productData['brand'])) {
                 $brand = Brand::firstOrCreate(
@@ -66,10 +49,39 @@ class ProductSeeder extends Seeder
                 'stock' => $productData['stock'],
                 'min_order' => $productData['min_order'],
                 'unit' => $productData['unit'],
-                'color_id' => $productData['color_id'],
                 'brand_id' => $productData['brand_id'],
                 'store_id' => $productData['store_id'],
             ]);
+
+            // Attach colors
+            if (isset($productData['colors'])) {
+                foreach ($productData['colors'] as $color) {
+                    if (isset($color['id'])) {
+                        // If color ID is provided, attach it directly
+                        $product->colors()->attach($color['id']);
+                        continue;
+                    }
+
+                    // Check if color exists by name or hex_color, otherwise create it
+                    $existingColor = Color::where('name', $color['name'])
+                        ->orWhere('hex_code', $color['hex_code'])
+                        ->first();
+
+                    if ($existingColor) {
+                        $product->colors()->attach($existingColor->id);
+                    } else {
+                        // Create a new color if it doesn't exist
+                        $newColor = Color::create([
+                            'name' => $color['name'],
+                            'hex_code' => $color['hex_code'],
+                        ]);
+
+                        if ($newColor) {
+                            $product->colors()->attach($newColor->id);
+                        }
+                    }
+                }
+            }
 
             // Attach categories
             if (isset($productData['categories'])) {
@@ -116,9 +128,15 @@ class ProductSeeder extends Seeder
                 foreach ($productData['images'] as $image) {
                     // If image is a URL, download it and store it
                     if (filter_var($image['image'], FILTER_VALIDATE_URL)) {
-                        $imageContents = @file_get_contents($image['image']);
+                        $imageUrl = $image['image'];
+                        $imageContents = @file_get_contents($imageUrl);
                         if ($imageContents !== false) {
-                            $imagePath = 'product/' . basename($image['image']);
+                            $basename = basename(parse_url($imageUrl, PHP_URL_PATH));
+                            // If the basename does not have an extension, add .jpg
+                            if (!preg_match('/\.[a-zA-Z0-9]+$/', $basename)) {
+                                $basename .= '.jpg';
+                            }
+                            $imagePath = 'product/' . $basename;
                             Storage::put($imagePath, $imageContents);
                             $image['image'] = $imagePath;
                         } else {

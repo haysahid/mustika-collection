@@ -9,20 +9,20 @@ return [
         'description' => 'Eksis 194 Windsor Wine adalah koleksi sarimbit couple keluarga terbaru dari Seply untuk tahun 2023. Koleksi ini tersedia untuk Koko Dewasa/Anak, Gamis Dewasa/Anak, serta Hijab Sara Square. Didesain dengan nuansa Windsor Wine yang elegan, Eksis 194 cocok untuk tampilan serasi keluarga muslim.',
         'material' => 'Premium Material', // Assumed, as not specified in the visible screenshot
         'selling_price' => 53100,
-        'original_price' => 59000,
         'discount' => 10,
         'stock' => 45,
         'min_order' => 1, // Assumed minimum 1 unit
         'unit' => 'set', // Common unit for couple/family outfits
         'store_id' => 1,
-        'color_id' => null, // 'Wine' is not in the predefined color list by ID
-        'color' => [
-            'name' => 'Wine',
-            'hex_code' => '#722F37', // Common hex code for Wine color
-        ],
         'brand_id' => null, // 'Seply' is not in the predefined brand list by ID
         'brand' => [
             'name' => 'Seply',
+        ],
+        'colors' => [
+            [
+                'name' => 'Wine',
+                'hex_code' => '#722F37', // Common hex code for Wine color
+            ]
         ],
         'categories' => [
             ['name' => 'Fashion Muslim'],
@@ -76,12 +76,13 @@ return [
         'min_order' => 1, // Assumed minimum 1 unit
         'unit' => 'set', // Common unit for couple/family outfits
         'store_id' => 1,
-        'color_id' => null, // 'Rose' is not in the predefined color list by ID
-        'color' => [
-            'name' => 'Rose',
-            'hex_code' => '#FFC0CB', // Common hex code for a light Rose/Pink
-        ],
         'brand_id' => 3, // Nibras
+        'colors' => [
+            [
+                'name' => 'Rose',
+                'hex_code' => '#FFC0CB', // Common hex code for a light Rose/Pink
+            ]
+        ],
         'categories' => [
             ['name' => 'Fashion Muslim'],
             ['name' => 'Set'],
@@ -129,6 +130,532 @@ return [
             ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasl-m2p0qpwx805t73', 'order' => 9],
         ],
     ],
+    [
+        'code' => 'PRD_HYRAOLIVE_RAYYA',
+        'name' => 'Hyra Olive Rayya Series Nibras Couple Keluarga Muslim Terkini 2025',
+        'slug' => 'hyra-olive-rayya-series-nibras-couple-keluarga-muslim-terkini-2025',
+        'description' => 'Hyra Olive Rayya Series adalah koleksi sarimbit couple keluarga terbaru dari Nibras untuk tahun 2025. Terdiri dari busana koko dewasa, gamis dewasa, koko anak, gamis anak, dan tunik ibu, koleksi ini ideal untuk tampilan serasi keluarga muslim dengan nuansa olive yang menawan.',
+        'material' => 'Premium Material', // Assumed, as not specified in the visible screenshot
+        'selling_price' => 198000,
+        'discount' => 10,
+        'stock' => 72,
+        'min_order' => 1, // Assumed minimum 1 unit
+        'unit' => 'set', // Common unit for couple/family outfits
+        'brand_id' => 3, // Nibras
+        'store_id' => 1,
+        'colors' => [
+            [
+                'name' => 'Olive',
+                'hex_code' => '#808000', // Common hex code for Olive color
+            ],
+        ],
+        'categories' => [
+            ['name' => 'Fashion Muslim'],
+            ['name' => 'Set'],
+            ['name' => 'Koko Dewasa / Anak'],
+            ['name' => 'Gamis Dewasa / Anak'],
+            ['name' => 'Tunik Ibu'],
+        ],
+        'sizes' => [
+            ['name' => '0'],
+            ['name' => '0+'],
+            ['name' => '1'],
+            ['name' => '2'],
+            ['name' => '3'],
+            ['name' => '4'],
+            ['name' => '5'],
+            ['name' => '6'],
+            ['name' => '7'],
+            ['name' => '8'],
+            ['name' => '9'],
+            ['name' => '10'],
+            ['name' => '11'],
+            ['name' => '12'],
+            ['id' => 1], // XS - based on existing reference data
+            ['id' => 2], // S
+            ['id' => 3], // M
+            ['id' => 4], // L
+            ['id' => 5], // XL
+            ['id' => 6], // XXL
+        ],
+        'links' => [
+            [
+                'platform_id' => 1, // Shopee
+                'url' => 'https://shopee.co.id/Hyra-Olive-Rayya-Series-Nibras-Couple-Keluarga-Muslim-Terkini-2025-i.17828602.27567853212',
+            ],
+        ],
+        'images' => [
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasb-m2p0qpwx3rts25', 'order' => 1],
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasb-m2p0qpwx6kyo83', 'order' => 2],
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7ras8-m2p0qpwx0yow37', 'order' => 3],
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasm-m2p0qpwwzk4g79', 'order' => 4],
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasm-m2p0qpwx56e815', 'order' => 5],
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasa-m2p0qpwx2d9c9f', 'order' => 6],
+        ],
+    ],
+    [
+        'code' => 'PRD_IVORYDARKPURPLE_RAYYA',
+        'name' => 'Ivory Dark Purple Rayya Series Nibras Couple Keluarga Muslim Terkini 2025',
+        'slug' => 'ivory-dark-purple-rayya-series-nibras-couple-keluarga-muslim-terkini-2025',
+        'description' => 'Ivory Dark Purple Rayya Series adalah koleksi sarimbit couple keluarga terbaru dari Nibras untuk tahun 2025. Terdiri dari busana koko dewasa, gamis dewasa, koko anak, gamis anak, dan tunik ibu, koleksi ini ideal untuk tampilan serasi keluarga muslim dengan kombinasi warna ivory dan dark purple yang mewah.',
+        'material' => 'Premium Material', // Assumed, as not specified in the visible screenshot
+        'selling_price' => 196200,
+        'discount' => 10,
+        'stock' => 89,
+        'min_order' => 1, // Assumed minimum 1 unit
+        'unit' => 'set', // Common unit for couple/family outfits
+        'brand_id' => 3, // Nibras - Posisi dipindahkan ke sini
+        'store_id' => 1,
+        'colors' => [ // Menggunakan 'colors' sebagai array
+            [
+                'name' => 'Ivory',
+                'hex_code' => '#FFFFF0', // Hex for Ivory
+            ],
+            [
+                'name' => 'Dark Purple',
+                'hex_code' => '#301934', // Hex for Dark Purple
+            ]
+        ],
+        'categories' => [
+            ['name' => 'Fashion Muslim'],
+            ['name' => 'Set'],
+            ['name' => 'Koko Dewasa / Anak'],
+            ['name' => 'Gamis Dewasa / Anak'],
+            ['name' => 'Tunik Ibu'],
+        ],
+        'sizes' => [
+            ['name' => '0'],
+            ['name' => '0+'],
+            ['name' => '1'],
+            ['name' => '2'],
+            ['name' => '3'],
+            ['name' => '4'],
+            ['name' => '5'],
+            ['name' => '6'],
+            ['name' => '7'],
+            ['name' => '8'],
+            ['name' => '9'],
+            ['name' => '10'],
+            ['name' => '11'],
+            ['name' => '12'],
+            ['id' => 1], // XS - based on existing reference data
+            ['id' => 2], // S
+            ['id' => 3], // M
+            ['id' => 4], // L
+            ['id' => 5], // XL
+            ['id' => 6], // XXL
+        ],
+        'links' => [
+            [
+                'platform_id' => 1, // Shopee
+                'url' => 'https://shopee.co.id/Ivory-Dark-Purple-Rayya-Series-Nibras-Couple-Keluarga-Muslim-Terkini-2025-i.17828602.29117852998',
+            ],
+        ],
+        'images' => [
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasa-m2p0qpwx9e3k13', 'order' => 1],
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasm-m2p0qpy0zcuc09', 'order' => 2],
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7ras9-m2p0qpy10res17', 'order' => 3],
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasm-m2p0qpwxaso0ef', 'order' => 4],
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasl-m2p0qpwxc78g75', 'order' => 5],
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasl-m2p0qpy125z886', 'order' => 6],
+        ],
+    ],
+    [
+        'code' => 'PRD_ETHICA_158_OLIVINE',
+        'name' => 'Couple 158 Olivine Busana Ethica Keluarga Muslim Terbaru 2023',
+        'slug' => 'couple-158-olivine-busana-ethica-keluarga-muslim-terbaru-2023',
+        'description' => 'Couple 158 Olivine adalah busana muslim keluarga terbaru dari Ethica untuk tahun 2023. Hadir dalam nuansa olivine yang segar, koleksi ini cocok untuk tampilan serasi keluarga, terdiri dari berbagai ukuran untuk dewasa dan anak-anak.',
+        'material' => 'Premium Material', // Assumed, as not specified in the visible screenshot
+        'selling_price' => 254900, // Corrected based on 10% discount from Rp190.000
+        'discount' => 10, // Corrected based on image_ee3900.jpg
+        'stock' => 34, // Corrected based on image_ee3900.jpg
+        'min_order' => 1, // Assumed minimum 1 unit
+        'unit' => 'set', // Common unit for couple/family outfits
+        'brand_id' => 5, // Ethica
+        'store_id' => 1,
+        'colors' => [
+            [
+                'name' => 'Olivine',
+                'hex_code' => '#9AB973', // Hex for Olivine
+            ]
+        ],
+        'categories' => [
+            ['name' => 'Fashion Muslim'],
+            ['name' => 'Set'],
+            ['name' => 'Koko'],
+            ['name' => 'Gamis'],
+        ],
+        'sizes' => [
+            ['name' => '0'],
+            ['name' => '0+'],
+            ['name' => '1'],
+            ['name' => '2'],
+            ['name' => '3'],
+            ['name' => '4'],
+            ['name' => '5'],
+            ['name' => '6'],
+            ['name' => '7'],
+            ['name' => '8'],
+            ['name' => '9'],
+            ['name' => '10'],
+            ['name' => '11'],
+            ['name' => '12'],
+            ['name' => 'XS'],
+            ['name' => 'S'],
+            ['name' => 'M'],
+            ['name' => 'L'],
+            ['name' => 'XL'],
+            ['name' => 'XXL'],
+        ],
+        'links' => [
+            [
+                'platform_id' => 1, // Shopee
+                'url' => 'https://shopee.co.id/Couple-158-Olivine-Busana-Ethica-Keluarga-Muslim-Terbaru-2023-i.17828602.20358867404',
+            ],
+        ],
+        'images' => [
+            ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22100-o4spb9zu90iv6b', 'order' => 1],
+            ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22100-b3rmf0zu90ivc0', 'order' => 2],
+            ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22100-4nfpn7zu90iv1a', 'order' => 3],
+            ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22100-0yqkta1u90ivd3', 'order' => 4],
+            ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22120-dy4v4utjdjlv38', 'order' => 5],
+        ],
+    ],
+    [
+        'code' => 'PRD_SEPLY_EKSIS_228_PECAN_BROWN',
+        'name' => 'Eksis 228 Pecan Brown Busana Couple Keluarga Muslim Seply 2024',
+        'slug' => 'eksis-228-pecan-brown-busana-couple-keluarga-muslim-seply-2024',
+        'description' => 'Eksis 228 Pecan Brown adalah busana couple keluarga muslim terbaru dari Seply untuk tahun 2024. Hadir dengan warna pecan brown yang elegan, koleksi ini ideal untuk tampilan serasi keluarga, tersedia dalam berbagai ukuran untuk dewasa dan anak-anak.',
+        'material' => 'Premium Material', // Assumed, as not specified in the visible screenshot
+        'selling_price' => 169900,
+        'discount' => 10,
+        'stock' => 28,
+        'min_order' => 1, // Assumed minimum 1 unit
+        'unit' => 'set', // Common unit for couple/family outfits
+        'brand_id' => 6, // Seply (newly added brand ID)
+        'store_id' => 1,
+        'colors' => [
+            [
+                'name' => 'Pecan Brown',
+                'hex_code' => '#6B4423', // Hex for Pecan Brown
+            ]
+        ],
+        'categories' => [
+            ['name' => 'Fashion Muslim'],
+            ['name' => 'Set'],
+            ['name' => 'Koko'],
+            ['name' => 'Gamis'],
+        ],
+        'sizes' => [
+            ['name' => '0'],
+            ['name' => '0+'],
+            ['name' => '1'],
+            ['name' => '2'],
+            ['name' => '3'],
+            ['name' => '4'],
+            ['name' => '5'],
+            ['name' => '6'],
+            ['name' => '7'],
+            ['name' => '8'],
+            ['name' => '9'],
+            ['name' => '10'],
+            ['name' => '11'],
+            ['name' => '12'],
+            ['name' => 'XS'],
+            ['name' => 'S'],
+            ['name' => 'M'],
+            ['name' => 'L'],
+            ['name' => 'XL'],
+            ['name' => 'XXL'],
+        ],
+        'links' => [
+            [
+                'platform_id' => 1, // Shopee
+                'url' => 'https://shopee.co.id/Eksis-228-Pecan-Brown-Busana-Couple-Keluarga-Muslim-Seply-2024-i.17828602.24868832058',
+            ],
+        ],
+        'images' => [
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7r990-lstxy8xbi6z194', 'order' => 1],
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7r98r-lstxy8xbb64t05', 'order' => 2],
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7r98p-lstxy8xbfdu574', 'order' => 3],
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7r98q-lstxy8xbgsel07', 'order' => 4],
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7r98u-lstxy8xbckp914', 'order' => 5],
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7r98p-lstxy8xbdz9p4e', 'order' => 6],
+        ],
+    ],
+    [
+        'code' => 'PRD_SEPLY_EKSIS_256_ALHAMBRA_GREEN',
+        'name' => 'Eksis 256 Alhambra Green Busana Couple Keluarga Muslim Seply 2024',
+        'slug' => 'eksis-256-alhambra-green-busana-couple-keluarga-muslim-seply-2024',
+        'description' => 'Eksis 256 Alhambra Green adalah busana couple keluarga muslim terbaru dari Seply untuk tahun 2024. Hadir dengan warna Alhambra Green yang menawan, koleksi ini ideal untuk tampilan serasi keluarga, tersedia dalam berbagai ukuran untuk dewasa dan anak-anak.',
+        'material' => 'Katun', // Corrected based on image_ee9e3a.jpg
+        'selling_price' => 149900,
+        'discount' => 10,
+        'stock' => 54,
+        'min_order' => 1, // Assumed minimum 1 unit
+        'unit' => 'set', // Common unit for couple/family outfits
+        'brand_id' => 6, // Seply
+        'store_id' => 1,
+        'colors' => [
+            [
+                'name' => 'Alhambra Green',
+                'hex_code' => '#699769', // Hex for Alhambra Green
+            ]
+        ],
+        'categories' => [
+            ['name' => 'Fashion Muslim'],
+            ['name' => 'Set'],
+            ['name' => 'Koko'],
+            ['name' => 'Gamis'],
+        ],
+        'sizes' => [
+            ['name' => '0'],
+            ['name' => '0+'],
+            ['name' => '1'],
+            ['name' => '2'],
+            ['name' => '3'],
+            ['name' => '4'],
+            ['name' => '5'],
+            ['name' => '6'],
+            ['name' => '7'],
+            ['name' => '8'],
+            ['name' => '9'],
+            ['name' => '10'],
+            ['name' => '11'],
+            ['name' => '12'],
+            ['name' => 'XS'],
+            ['name' => 'S'],
+            ['name' => 'M'],
+            ['name' => 'L'],
+            ['name' => 'XL'],
+            ['name' => 'XXL'],
+        ],
+        'links' => [
+            [
+                'platform_id' => 1, // Shopee
+                'url' => 'https://shopee.co.id/Eksis-256-Alhambra-Green-Busana-Couple-Keluarga-Muslim-Seply-2024-i.17828602.22789609778',
+            ],
+        ],
+        'images' => [
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7r98w-lstxy8xb8czx91', 'order' => 1],
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7r98p-lstxy8xb6yfh76', 'order' => 2],
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7r98v-lstxy8xb6ybqa0', 'order' => 3],
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7r98w-lstxy8xb9rkd01', 'order' => 4],
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7r98x-lstxy8xb6y6573', 'order' => 5],
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7r98q-lstxy8xb6y3re7', 'order' => 6],
+        ],
+    ],
+    [
+        'code' => 'PRD_NIBRAS_TEEN_SETELAN_S',
+        'name' => 'Nibras Teen Setelan Baju Muslim Remaja Atasan Bawahan SIZE S',
+        'slug' => 'nibras-teen-setelan-baju-muslim-remaja-atasan-bawahan-size-s',
+        'description' => 'Nibras Teen adalah setelan baju muslim remaja terbaru. Terdiri dari atasan dan bawahan, cocok untuk gaya casual dan syar\'i. Tersedia dalam berbagai ukuran.',
+        'material' => 'Katun',
+        'selling_price' => 99500,
+        'discount' => 45,
+        'stock' => 20,
+        'min_order' => 1, // Assumed minimum 1 unit
+        'unit' => 'setelan', // Unit based on product name
+        'brand_id' => 3, // Nibras
+        'store_id' => 1, // Not specified
+        'colors' => [
+            [
+                'name' => 'Milk Choco', // NT 58 MILK CHOCO
+                'hex_code' => '#D2B48C', // Approximate hex for Milk Choco
+            ],
+            [
+                'name' => 'Emerald', // NT 44 EMERALD
+                'hex_code' => '#50C878', // Approximate hex for Emerald
+            ],
+            [
+                'name' => 'Turquoise', // NT 57 TURQUOISE
+                'hex_code' => '#40E0D0', // Approximate hex for Turquoise
+            ],
+            [
+                'name' => 'Tosca Kuning', // NT 32 TOSCA KUNING
+                'hex_code' => '#ADD8E6', // Approximate hex for Light Blue (Tosca often leans blue/green, with yellow hint)
+            ],
+            [
+                'name' => 'Dusty Pink', // NT 079 DUSTY PINK
+                'hex_code' => '#E8B5CE', // Approximate hex for Dusty Pink
+            ],
+            [
+                'name' => 'Maroon', // NT 41 MAROON
+                'hex_code' => '#800000', // Hex for Maroon
+            ],
+            [
+                'name' => 'Tosca', // NT 28 TOSCA
+                'hex_code' => '#008080', // Hex for Teal/Tosca
+            ],
+            [
+                'name' => 'Orange', // NT 28 ORANGE
+                'hex_code' => '#FFA500', // Hex for Orange
+            ],
+            [
+                'name' => 'Maroon', // NT 27 MAROON (duplicate, but keeping as separate entry to reflect codes)
+                'hex_code' => '#800000', // Hex for Maroon
+            ],
+            [
+                'name' => 'Ungu', // NT 13 UNGU
+                'hex_code' => '#800080', // Hex for Purple/Ungu
+            ]
+        ],
+        'categories' => [
+            ['name' => 'Fashion Muslim'],
+            ['name' => 'Pakaian Muslim Anak'],
+            ['name' => 'Pakaian Muslim Anak Perempuan'],
+            ['name' => 'Setelan'], // Inferred from product name
+            ['name' => 'Remaja'], // Inferred from product name
+        ],
+        'sizes' => [
+            ['name' => 'S'], // From product title and size selection
+            // Other sizes like XS, M, L, XL, XXL are usually available for Nibras Teen sets,
+            // but not explicitly shown for selection in this specific cropped screenshot.
+            // If a full product page or size chart was available, more sizes would be included.
+        ],
+        'links' => [
+            [
+                'platform_id' => 1, // Shopee
+                'url' => 'https://shopee.co.id/Nibras-Teen-Setelan-Baju-Muslim-Remaja-Atasan-Bawahan-SIZE-S-i.17828602.29667963557',
+            ],
+        ],
+        'images' => [
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasb-m2qqbugp3e8h33', 'order' => 1], // From HTML
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasc-m2qqbugp4ssx45', 'order' => 2], // From HTML
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasf-m2qqbugz2zlw2a', 'order' => 3], // From HTML
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasi-m2qpngm1yh1t41', 'order' => 4], // From HTML
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasc-m2qpngm1rg7l7c', 'order' => 5], // From HTML
+        ],
+    ],
+    [
+        'code' => 'PRD_ETHICA_HITS_56_WHITE_ALYSSUM',
+        'name' => 'Hits 56 White Alyssum Couple Keluarga Muslim Ethica 2023',
+        'slug' => 'hits-56-white-alyssum-couple-keluarga-muslim-ethica-2023',
+        'description' => 'Hits 56 White Alyssum adalah busana couple keluarga muslim terbaru dari Ethica untuk tahun 2023. Hadir dengan warna White Alyssum yang elegan, koleksi ini ideal untuk tampilan serasi keluarga, tersedia dalam berbagai ukuran untuk dewasa dan anak-anak.',
+        'material' => 'Katun',
+        'selling_price' => 189900,
+        'discount' => 10,
+        'stock' => 82,
+        'min_order' => 1, // Assumed minimum 1 unit
+        'unit' => 'set', // Common unit for couple/family outfits
+        'brand_id' => 5, // Ethica
+        'store_id' => 1, // Not specified
+        'colors' => [
+            [
+                'id' => 6, // White
+                'name' => 'White Alyssum',
+                'hex_code' => '#F0F8FF', // Approximate hex for Alice Blue/Off-white
+            ]
+        ],
+        'categories' => [
+            ['name' => 'Fashion Muslim'],
+            ['name' => 'Set'],
+            ['name' => 'Couple Keluarga'], // Inferred from product name
+        ],
+        'sizes' => [
+            ['name' => 'XS'],
+            ['name' => 'S'],
+            ['name' => 'M'],
+            ['name' => 'L'],
+            ['name' => 'XL'],
+            ['name' => 'XXL'],
+        ],
+        'links' => [
+            [
+                'platform_id' => 1, // Shopee
+                'url' => 'https://shopee.co.id/Hits-56-White-Alyssum-Couple-Keluarga-Muslim-Ethica-2023-i.17828602.20662450040',
+            ],
+        ],
+        'images' => [
+            ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22110-k188r6f7qwjvee', 'order' => 1],
+            ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22110-evf0x5f7qwjv2c', 'order' => 2],
+            ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22110-k90aq3f7qwjv0f', 'order' => 3],
+            ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22110-4pna54f7qwjvf2', 'order' => 4],
+            ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22110-asiew037qwjv69', 'order' => 5],
+        ],
+    ],
+    [
+        'code' => 'PRD_HAITWO_ASTER_VEST_005',
+        'name' => 'Aster Vest 005 Setelan Gamis Set Hijab Muslim Syar\'i Haitwo',
+        'slug' => 'aster-vest-005-setelan-gamis-set-hijab-muslim-syari-haitwo',
+        'description' => 'Aster Vest 005 adalah setelan gamis dengan vest dan hijab syar\'i terbaru dari Haitwo. Desain modern dan bahan nyaman, cocok untuk tampilan muslimah yang anggun dan stylish.',
+        'material' => 'Morelli Stretch, Diamond Cerruty',
+        'selling_price' => 385000,
+        'discount' => 10,
+        'stock' => 70,
+        'min_order' => 1,
+        'unit' => 'set',
+        'brand_id' => null, // Brand 'Haitwo' is not in the predefined list, so brand_id is null.
+        'brand' => [ // Brand object for 'Haitwo' is inserted.
+            'name' => 'Haitwo',
+            'description' => 'Brand busana muslim Haitwo', // Placeholder description
+            'website' => 'url(\'catalog?brands=Haitwo\')', // Placeholder website URL
+        ],
+        'store_id' => 1,
+        'colors' => [
+            [
+                'name' => 'Dusty Blue',
+                'hex_code' => '#6E8898',
+            ],
+            [
+                'name' => 'Olive',
+                'hex_code' => '#808000',
+            ],
+            [
+                'id' => 5, // Black
+                'name' => 'Black',
+                'hex_code' => '#000000',
+            ],
+            [
+                'name' => 'Navy',
+                'hex_code' => '#000080',
+            ],
+            [
+                'id' => 9, // Coklat
+                'name' => 'Brown',
+                'hex_code' => '#A52A2A',
+            ],
+            [
+                'id' => 8, // Abu-abu
+                'name' => 'Grey',
+                'hex_code' => '#808080',
+            ],
+            [
+                'name' => 'Maroon',
+                'hex_code' => '#800000',
+            ]
+        ],
+        'categories' => [
+            ['name' => 'Fashion Muslim'],
+            ['name' => 'Gamis'],
+            ['name' => 'Set'],
+            ['name' => 'Hijab Syar\'i'],
+        ],
+        'sizes' => [
+            ['name' => 'XS'],
+            ['name' => 'S'],
+            ['name' => 'M'],
+            ['name' => 'L'],
+            ['name' => 'XL'],
+            ['name' => 'XXL'],
+        ],
+        'links' => [
+            [
+                'platform_id' => 1, // Shopee
+                'url' => 'https://shopee.co.id/Aster-Vest-005-Setelan-Gamis-Set-Hijab-Muslim-Syar\'i-Haitwo-i.17828602.18221400141',
+            ],
+        ],
+        'images' => [
+            ['image' => 'https://down-id.img.susercontent.com/file/dbc94c020b6799ab0f9fb8f0bf104ff8', 'order' => 1],
+            ['image' => 'https://down-id.img.susercontent.com/file/107004abdf3cb55a40d30d4cd00616d3', 'order' => 2],
+            ['image' => 'https://down-id.img.susercontent.com/file/33402ae82f446dced6779e3164ed7582', 'order' => 3],
+            ['image' => 'https://down-id.img.susercontent.com/file/842016466ffecda478644b62b3324168', 'order' => 4],
+            ['image' => 'https://down-id.img.susercontent.com/file/8591304a2d117cb2d6699d7248b242b7', 'order' => 5],
+            ['image' => 'https://down-id.img.susercontent.com/file/d5387602153fca48b1eed1bdfb284abb', 'order' => 6],
+            ['image' => 'https://down-id.img.susercontent.com/file/3dad20cf5e28199d877a3bb9f7491fa0', 'order' => 7],
+            ['image' => 'https://down-id.img.susercontent.com/file/9df9993ee1253d6a0178c29ea1c66a73', 'order' => 8],
+        ],
+    ],
     // Koko
     [
         'code' => 'PRD002',
@@ -141,9 +668,11 @@ return [
         'stock' => 15,
         'min_order' => 1,
         'unit' => 'pcs',
-        'color_id' => 2,
         'brand_id' => 1,
         'store_id' => 1,
+        'colors' => [
+            ['id' => 2]
+        ],
         'categories' => [
             ['id' => 1],
             ['id' => 3],
@@ -169,9 +698,11 @@ return [
         'stock' => 10,
         'min_order' => 1,
         'unit' => 'pcs',
-        'color_id' => 3,
         'brand_id' => 2,
         'store_id' => 1,
+        'colors' => [
+            ['id' => 3]
+        ],
         'categories' => [
             ['id' => 2],
             ['id' => 4],
@@ -197,9 +728,11 @@ return [
         'stock' => 50,
         'min_order' => 1,
         'unit' => 'pcs',
-        'color_id' => 4,
         'brand_id' => 3,
         'store_id' => 1,
+        'colors' => [
+            ['id' => 4]
+        ],
         'categories' => [
             ['id' => 5],
         ],
@@ -220,9 +753,11 @@ return [
         'stock' => 30,
         'min_order' => 1,
         'unit' => 'pasang',
-        'color_id' => 5,
         'brand_id' => 4,
         'store_id' => 1,
+        'colors' => [
+            ['id' => 5]
+        ],
         'categories' => [
             ['id' => 6],
         ],
@@ -247,9 +782,11 @@ return [
         'stock' => 10,
         'min_order' => 1,
         'unit' => 'pcs',
-        'color_id' => 2,
         'brand_id' => 1,
         'store_id' => 1,
+        'colors' => [
+            ['id' => 2]
+        ],
         'categories' => [
             ['id' => 7],
         ],

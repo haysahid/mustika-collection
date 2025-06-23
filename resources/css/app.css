@@ -23,7 +23,7 @@ html {
         @apply min-w-full divide-y divide-gray-200;
 
         thead {
-            @apply bg-[#F8DDFF];
+            @apply bg-secondary;
 
             th {
                 @apply px-4 py-2 text-xs font-medium text-center text-gray-700 sm:text-sm sm:px-6 sm:py-3;

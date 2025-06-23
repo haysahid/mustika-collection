@@ -11,6 +11,8 @@ const filters = ref(props.filters);
 
 const showingFilterDropdown = ref(false);
 
+const emit = defineEmits(["change"]);
+
 defineExpose({
     filters,
 });
@@ -41,7 +43,9 @@ defineExpose({
                             @update:checked="
                                 category.selected
                                     ? (category.selected = false)
-                                    : (category.selected = true)
+                                    : (category.selected = true);
+
+                                emit('change', filters.categories);
                             "
                         />
                         <InputLabel
@@ -85,34 +89,30 @@ defineExpose({
             >
                 <h2 class="mb-4 text-xl font-bold">Kategori</h2>
                 <div class="grid grid-cols-2 gap-2">
-                    <div class="flex items-center gap-2">
+                    <label
+                        v-for="category in filters.categories || []"
+                        :key="category.id"
+                        :for="`category-${category.id}`"
+                        class="flex items-center gap-2 cursor-pointer [&>*]:cursor-pointer justify-start"
+                    >
                         <Checkbox
-                            id="filter-dropdown-1"
-                            name="filter-dropdown-1"
+                            :id="`category-${category.id}`"
+                            :label="category.name"
+                            :checked="category.selected"
+                            @update:checked="
+                                category.selected
+                                    ? (category.selected = false)
+                                    : (category.selected = true);
+
+                                emit('change', filters.categories);
+                            "
                         />
-                        <label for="filter-dropdown-1">Filter 1</label>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <Checkbox
-                            id="filter-dropdown-2"
-                            name="filter-dropdown-2"
+                        <InputLabel
+                            :for="`category-${category.id}`"
+                            :value="category.name"
+                            class="text-sm text-gray-500"
                         />
-                        <label for="filter-dropdown-2">Filter 2</label>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <Checkbox
-                            id="filter-dropdown-3"
-                            name="filter-dropdown-3"
-                        />
-                        <label for="filter-dropdown-3">Filter 3</label>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <Checkbox
-                            id="filter-dropdown-4"
-                            name="filter-dropdown-4"
-                        />
-                        <label for="filter-dropdown-4">Filter 4</label>
-                    </div>
+                    </label>
                 </div>
             </div>
         </div>

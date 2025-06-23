@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('store_id')->constrained('stores')->onDelete('cascade');
             $table->string('code')->unique()->nullable();
             $table->string('name');
+            $table->string('slug')->unique()->index();
             $table->text('description')->nullable();
             $table->text('material')->nullable();
             $table->integer('selling_price')->unsigned()->default(0);
@@ -23,7 +24,6 @@ return new class extends Migration
             $table->integer('stock')->unsigned()->default(0);
             $table->integer('min_order')->unsigned()->nullable();
             $table->string('unit')->nullable();
-            $table->foreignId('color_id')->nullable()->constrained('colors')->onDelete('set null');
             $table->foreignId('brand_id')->nullable()->constrained('brands')->onDelete('set null');
             $table->timestamp('disabled_at')->nullable();
             $table->timestamps();

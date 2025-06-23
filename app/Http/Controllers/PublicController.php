@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\Size;
 use App\Models\Store;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class PublicController extends Controller
@@ -44,9 +45,9 @@ class PublicController extends Controller
             'social_links',
         ])->first();
 
-        $limit = $request->input('limit', 5);
-        $sortBy = $request->input('order_by', 'created_at');
-        $sortDirection = $request->input('order_direction', 'desc');
+        $limit = $request->input('limit', 10);
+        $orderBy = $request->input('order_by', 'created_at');
+        $orderDirection = $request->input('order_direction', 'desc');
         $search = $request->input('search');
 
         $brands = $request->input('brands');
@@ -55,7 +56,7 @@ class PublicController extends Controller
         $sizes = $request->input('sizes');
 
         $products = Product::query();
-        $products->with(['brand', 'color', 'categories', 'sizes', 'images',]);
+        $products->with(['brand', 'colors', 'categories', 'sizes', 'images',]);
 
         if ($brands) {
             if (is_string($brands)) {
@@ -76,8 +77,10 @@ class PublicController extends Controller
         if ($categories) {
             if (is_string($categories)) {
                 $categories = explode(',', $categories);
+                Log::info('Categories input:', ['categories' => $categories]);
                 $categories = Category::whereIn('name', $categories)->pluck('id')->toArray();
             }
+            Log::info('Categories input:', ['categories' => $categories]);
             $products->whereHas('categories', function ($query) use ($categories) {
                 $query->whereIn('category_id', $categories);
             });
@@ -94,11 +97,14 @@ class PublicController extends Controller
         }
 
         if ($search) {
-            $products->where('name', 'like', '%' . $search . '%')
-                ->orWhere('description', 'like', '%' . $search . '%');
+            $search = trim($search);
+            $products->where(function ($query) use ($search) {
+                $query->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('description', 'like', '%' . $search . '%');
+            });
         }
 
-        $products->orderBy($sortBy, $sortDirection);
+        $products->orderBy($orderBy, $orderDirection);
 
         $products->get();
 
@@ -125,7 +131,7 @@ class PublicController extends Controller
         ])->first();
 
         $product = Product::where('slug', $slug)
-            ->with(['brand', 'color', 'categories', 'sizes', 'images', 'links'])
+            ->with(['brand', 'colors', 'categories', 'sizes', 'images', 'links.platform'])
             ->firstOrFail();
 
         $relatedProducts = Product::where('id', '!=', $product->id)
