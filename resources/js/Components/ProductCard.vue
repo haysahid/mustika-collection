@@ -20,11 +20,12 @@ const props = defineProps({
 <template>
     <Link :href="route('product.show', { slug: props.slug })">
         <div
-            class="bg-white shadow-md rounded-lg outline outline-1 outline-gray-100 hover:outline-[#F8E4F3] hover:outline-2 transition duration-300 cursor-pointer h-full"
+            class="bg-white shadow-md rounded-lg outline outline-1 outline-gray-100 hover:outline-[#F8E4F3] hover:outline-2 transition duration-300 cursor-pointer h-full hover:scale-105"
         >
             <img
+                v-if="props.image"
                 :src="props.image"
-                alt="Product 1"
+                :alt="props.name"
                 class="object-cover w-full rounded-t-lg aspect-square"
             />
             <div class="px-4 pt-2.5 pb-4 md:px-6 md:py-4 flex flex-col gap-1">

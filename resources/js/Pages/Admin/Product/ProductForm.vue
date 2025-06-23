@@ -112,10 +112,17 @@ function uploadNewImage(image, index) {
 }
 
 function updateImage(index, image) {
+    if (typeof image.image === "string" && image.order == index) {
+        return;
+    }
+
     const token = `Bearer ${localStorage.getItem("access_token")}`;
 
     const formData = new FormData();
     formData.append("_method", "PUT");
+    if (image.image instanceof File) {
+        formData.append("image", image.image);
+    }
     formData.append("order", index);
 
     axios
@@ -146,10 +153,10 @@ function updateImages() {
     const images = form.images || [];
 
     images.forEach((image, index) => {
+        console.log("Processing image:", image, "at index:", index);
         if (isNewImage(image) && image.image instanceof File) {
             uploadNewImage(image, index);
         } else if (isExistingImage(image)) {
-            if (image.order == index) return;
             updateImage(index, image);
         }
     });
@@ -297,7 +304,7 @@ const isNewImage = (image) => {
 };
 
 const isExistingImage = (image) => {
-    return typeof image.id == "number" && typeof image.image == "string";
+    return typeof image.id == "number";
 };
 
 const imagesToDelete = ref([]);
