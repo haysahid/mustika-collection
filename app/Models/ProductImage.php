@@ -15,6 +15,10 @@ class ProductImage extends Model
         'order',
     ];
 
+    protected $casts = [
+        'order' => 'integer',
+    ];
+
     public function product()
     {
         return $this->belongsTo(Product::class);

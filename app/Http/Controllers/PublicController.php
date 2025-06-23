@@ -36,6 +36,14 @@ class PublicController extends Controller
 
     public function catalog(Request $request)
     {
+        $store = Store::with([
+            'advantages',
+            'certificates' => function ($query) {
+                $query->limit(5);
+            },
+            'social_links',
+        ])->first();
+
         $limit = $request->input('limit', 5);
         $sortBy = $request->input('order_by', 'created_at');
         $sortDirection = $request->input('order_direction', 'desc');
@@ -95,6 +103,7 @@ class PublicController extends Controller
         $products->get();
 
         return Inertia::render('Catalog', [
+            'store' => $store,
             'products' => $products->paginate($limit),
             'filters' => [
                 'brands' => Brand::get(),
@@ -107,6 +116,14 @@ class PublicController extends Controller
 
     public function productDetail($slug)
     {
+        $store = Store::with([
+            'advantages',
+            'certificates' => function ($query) {
+                $query->limit(5);
+            },
+            'social_links',
+        ])->first();
+
         $product = Product::where('slug', $slug)
             ->with(['brand', 'color', 'categories', 'sizes', 'images', 'links'])
             ->firstOrFail();
@@ -117,6 +134,7 @@ class PublicController extends Controller
             ->get();
 
         return Inertia::render('ProductDetail', [
+            'store' => $store,
             'product' => $product,
             'relatedProducts' => $relatedProducts,
         ]);

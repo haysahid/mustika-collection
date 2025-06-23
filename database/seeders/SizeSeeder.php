@@ -14,6 +14,7 @@ class SizeSeeder extends Seeder
     public function run(): void
     {
         Size::insert([
+            ['name' => 'XS'],
             ['name' => 'S'],
             ['name' => 'M'],
             ['name' => 'L'],

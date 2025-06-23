@@ -53,8 +53,8 @@ class StoreSeeder extends Seeder
         StoreCertificate::insert([
             [
                 'store_id' => 1,
-                'name' => 'Sertifikat Halal',
-                'description' => 'Produk kami telah mendapatkan sertifikasi halal dari lembaga terpercaya.',
+                'name' => 'Distributor Resmi',
+                'description' => 'Kami adalah distributor resmi busana muslim terkemuka di Indonesia.',
                 'image' => 'certificate.png',
             ],
             [

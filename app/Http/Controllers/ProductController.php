@@ -271,8 +271,18 @@ class ProductController extends Controller
                 'slug' => str($validated['name'])->slug(),
             ]);
 
-            $product->categories()->sync($validated['categories']);
-            $product->sizes()->sync($validated['sizes']);
+
+            if ($request->has('categories')) {
+                $product->categories()->sync($validated['categories']);
+            } else {
+                $product->categories()->detach();
+            }
+
+            if ($request->has('sizes')) {
+                $product->sizes()->sync($validated['sizes']);
+            } else {
+                $product->sizes()->detach();
+            }
 
             Log::info('Product links: ' . json_encode($request->input('links')));
 

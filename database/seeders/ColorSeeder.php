@@ -34,6 +34,38 @@ class ColorSeeder extends Seeder
                 'name' => 'Hitam',
                 'hex_code' => '#000000',
             ],
+            [
+                'name' => 'Putih',
+                'hex_code' => '#FFFFFF',
+            ],
+            [
+                'name' => 'Ungu',
+                'hex_code' => '#800080',
+            ],
+            [
+                'name' => 'Abu-abu',
+                'hex_code' => '#808080',
+            ],
+            [
+                'name' => 'Coklat',
+                'hex_code' => '#A52A2A',
+            ],
+            [
+                'name' => 'Oranye',
+                'hex_code' => '#FFA500',
+            ],
+            [
+                'name' => 'Pink',
+                'hex_code' => '#FFC0CB',
+            ],
+            [
+                'name' => 'Emas',
+                'hex_code' => '#FFD700',
+            ],
+            [
+                'name' => 'Olive',
+                'hex_code' => '#808000',
+            ],
         ]);
     }
 }

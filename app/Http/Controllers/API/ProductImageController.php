@@ -108,7 +108,14 @@ class ProductImageController extends Controller
             if (isset($validatedData['image'])) {
                 // Delete the old image if it exists
                 if ($productImage->image) {
-                    Storage::delete($productImage->image);
+                    // Check if the file used by another product
+                    $otherImages = ProductImage::where('image', $productImage->image)
+                        ->where('id', '!=', $productImage->id)
+                        ->count();
+
+                    if ($otherImages === 0) {
+                        Storage::delete($productImage->image);
+                    }
                 }
 
                 $productImage->image = $request->file('image')->store('product');
@@ -155,7 +162,15 @@ class ProductImageController extends Controller
         try {
             DB::beginTransaction();
 
-            Storage::delete($productImage->image);
+            // Check if the file used by another product
+            $otherImages = ProductImage::where('image', $productImage->image)
+                ->where('id', '!=', $productImage->id)
+                ->count();
+
+            if ($otherImages === 0) {
+                Storage::delete($productImage->image);
+            }
+
             $productImage->delete();
 
             DB::commit();
