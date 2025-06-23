@@ -1,5 +1,9 @@
 <script setup>
 import { Link } from "@inertiajs/vue3";
+import { usePage } from "@inertiajs/vue3";
+
+const page = usePage();
+const store = page.props.store || {};
 </script>
 
 <template>
@@ -20,24 +24,24 @@ import { Link } from "@inertiajs/vue3";
                         />
                     </Link>
                     <div class="text-center sm:text-start">
-                        <p class="mb-2 text-gray-100">
+                        <p v-if="store.email" class="mb-2 text-gray-100">
                             <a
-                                href="mailto:hay.sahid@gmail.com"
+                                :href="`mailto:${store.email}`"
                                 class="text-gray-100 hover:text-white"
                             >
-                                hay.sahid@gmail.com
+                                {{ store.email }}
                             </a>
                         </p>
-                        <p class="mb-2 text-gray-100">
+                        <p v-if="store.phone" class="mb-2 text-gray-100">
                             <a
                                 href="tel:+6281234567890"
                                 class="text-gray-100 hover:text-white"
                             >
-                                +62 812-3456-7890
+                                {{ store.phone }}
                             </a>
                         </p>
-                        <p class="text-gray-100">
-                            Jl. Contoh No. 123, Jakarta, Indonesia
+                        <p v-if="store.address" class="text-gray-100">
+                            {{ store.address }}
                         </p>
                     </div>
                 </div>
@@ -48,7 +52,7 @@ import { Link } from "@inertiajs/vue3";
                 >
                     <div class="text-center sm:text-start">
                         <h3 class="mb-4 text-lg font-semibold text-white">
-                            Navigasi
+                            Identitas Toko
                         </h3>
                         <ul class="space-y-2">
                             <li>
@@ -56,7 +60,7 @@ import { Link } from "@inertiajs/vue3";
                                     href="#about"
                                     class="text-gray-100 hover:text-white"
                                 >
-                                    Tentang Kami
+                                    Keunggulan
                                 </Link>
                             </li>
                             <li>
@@ -64,7 +68,30 @@ import { Link } from "@inertiajs/vue3";
                                     :href="route('home')"
                                     class="text-gray-100 hover:text-white"
                                 >
-                                    Katalog
+                                    Sertifikasi
+                                </Link>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="text-center sm:text-start">
+                        <h3 class="mb-4 text-lg font-semibold text-white">
+                            Katalog Produk
+                        </h3>
+                        <ul class="space-y-2">
+                            <li>
+                                <Link
+                                    href="#about"
+                                    class="text-gray-100 hover:text-white"
+                                >
+                                    Gamis
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
+                                    :href="route('home')"
+                                    class="text-gray-100 hover:text-white"
+                                >
+                                    Aksesoris
                                 </Link>
                             </li>
                             <li>
@@ -72,14 +99,14 @@ import { Link } from "@inertiajs/vue3";
                                     href="#join"
                                     class="text-gray-100 hover:text-white"
                                 >
-                                    Gabung
+                                    Baju Anak
                                 </Link>
                             </li>
                         </ul>
                     </div>
                     <div class="text-center sm:text-start">
                         <h3 class="mb-4 text-lg font-semibold text-white">
-                            Navigasi
+                            Gabung
                         </h3>
                         <ul class="space-y-2">
                             <li>
@@ -87,7 +114,7 @@ import { Link } from "@inertiajs/vue3";
                                     href="#about"
                                     class="text-gray-100 hover:text-white"
                                 >
-                                    Tentang Kami
+                                    Agen
                                 </Link>
                             </li>
                             <li>
@@ -95,38 +122,7 @@ import { Link } from "@inertiajs/vue3";
                                     :href="route('home')"
                                     class="text-gray-100 hover:text-white"
                                 >
-                                    Katalog
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href="#join"
-                                    class="text-gray-100 hover:text-white"
-                                >
-                                    Gabung
-                                </Link>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="text-center sm:text-start">
-                        <h3 class="mb-4 text-lg font-semibold text-white">
-                            Navigasi
-                        </h3>
-                        <ul class="space-y-2">
-                            <li>
-                                <Link
-                                    href="#about"
-                                    class="text-gray-100 hover:text-white"
-                                >
-                                    Tentang Kami
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    :href="route('home')"
-                                    class="text-gray-100 hover:text-white"
-                                >
-                                    Katalog
+                                    Reseller
                                 </Link>
                             </li>
                             <li>
@@ -143,7 +139,7 @@ import { Link } from "@inertiajs/vue3";
             </div>
             <div class="text-center">
                 <p class="text-sm text-gray-100 sm:text-base">
-                    &copy; {{ new Date().getFullYear() }} Your Company. All
+                    &copy; {{ new Date().getFullYear() }} {{ store.name }}. All
                     rights reserved.
                 </p>
             </div>
