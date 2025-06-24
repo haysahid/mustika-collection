@@ -164,6 +164,8 @@ function onChangeSearch() {
 
                     <!-- Products -->
                     <div
+                        data-aos="fade-up"
+                        data-aos-duration="600"
                         class="flex flex-col items-start w-full gap-12 md:w-2/3 lg:w-4/5"
                     >
                         <div

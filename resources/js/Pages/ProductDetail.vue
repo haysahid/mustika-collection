@@ -83,6 +83,8 @@ function closeProductLinkDialog() {
         <div class="p-6 sm:p-12 md:p-[100px] flex flex-col gap-12 lg:gap-20">
             <!-- Detail -->
             <div
+                data-aos="fade-up"
+                data-aos-duration="600"
                 class="grid grid-cols-1 gap-8 mx-auto lg:grid-cols-2 lg:gap-14 max-w-7xl"
             >
                 <div
@@ -90,7 +92,7 @@ function closeProductLinkDialog() {
                     class="flex flex-col items-start justify-start gap-4"
                 >
                     <div
-                        class="relative flex items-center justify-center w-full overflow-hidden group"
+                        class="relative flex items-center justify-center w-full overflow-hidden group rounded-2xl"
                     >
                         <img
                             :src="'/storage/' + image.image"
@@ -372,6 +374,8 @@ function closeProductLinkDialog() {
             <!-- Related Products -->
             <LandingSection>
                 <div
+                    data-aos="fade-up"
+                    data-aos-duration="600"
                     class="flex flex-col items-start justify-center gap-4 mx-auto max-w-7xl"
                 >
                     <div class="flex items-center justify-between w-full gap-4">

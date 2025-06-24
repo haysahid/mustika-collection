@@ -45,18 +45,32 @@ const filteredPlatforms = computed(() => {
 const platformSearch = ref("");
 const isPlatformDropdownOpen = ref(false);
 
-const form = useForm({
-    id: props.link?.id || null,
-    url: props.link?.url || null,
-    product_id: props.link?.product_id || null,
-    platform_id: props.link?.platform_id || null,
-    platform: props.link?.platform || null,
-});
+const form = useForm(
+    props.link
+        ? {
+              id: props.link?.id || null,
+              url: props.link?.url || null,
+              product_id: props.link?.product_id || null,
+              platform_id: props.link?.platform_id || null,
+              platform: props.link?.platform || null,
+          }
+        : {
+              id: null,
+              url: null,
+              product_id: null,
+              platform_id: null,
+              platform: null,
+          }
+);
 
 function validate() {
     if (form.url == null || form.url.trim() === "") {
         form.errors.url = "URL tidak boleh kosong.";
-    } else if (!/^[\w\d\-_.~:/?#\[\]@!$&'()*+,;=%]+$/.test(form.url.trim())) {
+    } else if (
+        !/^(https?:\/\/)?([\w-]+\.)+[\w-]{2,}(\/[^\s]*)?$/i.test(
+            form.url.trim()
+        )
+    ) {
         form.errors.url = "URL tidak valid.";
     } else {
         form.errors.url = null;
@@ -65,6 +79,7 @@ function validate() {
 
 function submit() {
     validate();
+    console.log(form.errors);
     if (form.errors.url) return;
 
     emit("submit", form.data());

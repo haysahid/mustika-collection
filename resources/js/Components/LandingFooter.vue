@@ -1,9 +1,12 @@
 <script setup>
 import { Link } from "@inertiajs/vue3";
 import { usePage } from "@inertiajs/vue3";
+import NavLink from "@/Components/NavLink.vue";
 
 const page = usePage();
 const store = page.props.store || {};
+
+const isHome = route().current("home");
 </script>
 
 <template>
@@ -51,87 +54,103 @@ const store = page.props.store || {};
                     class="flex flex-wrap justify-center w-full grid-cols-1 gap-y-8 gap-x-12 sm:grid md:grid-cols-3 sm:1/3 md:w-2/3"
                 >
                     <div class="text-center sm:text-start">
-                        <h3 class="mb-4 text-lg font-semibold text-white">
+                        <h3 class="mb-4 text-lg font-semibold text-white/90">
                             Identitas Toko
                         </h3>
                         <ul class="space-y-2">
                             <li>
-                                <Link
-                                    href="#about"
+                                <NavLink
+                                    :href="
+                                        isHome
+                                            ? '#advantages'
+                                            : route('home') + '#advantages'
+                                    "
                                     class="text-gray-100 hover:text-white"
                                 >
                                     Keunggulan
-                                </Link>
+                                </NavLink>
                             </li>
                             <li>
-                                <Link
-                                    :href="route('home')"
+                                <NavLink
+                                    :href="
+                                        isHome
+                                            ? '#certificates'
+                                            : route('home') + '#certificates'
+                                    "
                                     class="text-gray-100 hover:text-white"
                                 >
                                     Sertifikasi
-                                </Link>
+                                </NavLink>
                             </li>
                         </ul>
                     </div>
                     <div class="text-center sm:text-start">
-                        <h3 class="mb-4 text-lg font-semibold text-white">
-                            Katalog Produk
-                        </h3>
+                        <NavLink :href="route('catalog')">
+                            <h3
+                                class="mb-4 text-lg font-semibold text-white/90 hover:text-white"
+                            >
+                                Katalog Produk
+                            </h3>
+                        </NavLink>
                         <ul class="space-y-2">
                             <li>
-                                <Link
-                                    href="#about"
+                                <NavLink
+                                    :href="
+                                        route('catalog', {
+                                            categories: 'Gamis',
+                                        })
+                                    "
                                     class="text-gray-100 hover:text-white"
                                 >
                                     Gamis
-                                </Link>
+                                </NavLink>
                             </li>
                             <li>
-                                <Link
-                                    :href="route('home')"
+                                <NavLink
+                                    :href="
+                                        route('catalog', {
+                                            categories: 'Aksesoris',
+                                        })
+                                    "
                                     class="text-gray-100 hover:text-white"
                                 >
                                     Aksesoris
-                                </Link>
+                                </NavLink>
                             </li>
                             <li>
-                                <Link
-                                    href="#join"
+                                <NavLink
+                                    :href="
+                                        route('catalog', {
+                                            categories: 'Baju Anak',
+                                        })
+                                    "
                                     class="text-gray-100 hover:text-white"
                                 >
                                     Baju Anak
-                                </Link>
+                                </NavLink>
                             </li>
                         </ul>
                     </div>
                     <div class="text-center sm:text-start">
-                        <h3 class="mb-4 text-lg font-semibold text-white">
+                        <h3 class="mb-4 text-lg font-semibold text-white/90">
                             Gabung
                         </h3>
                         <ul class="space-y-2">
                             <li>
-                                <Link
+                                <NavLink
                                     href="#about"
                                     class="text-gray-100 hover:text-white"
                                 >
                                     Agen
-                                </Link>
+                                </NavLink>
                             </li>
                             <li>
-                                <Link
+                                <NavLink
                                     :href="route('home')"
                                     class="text-gray-100 hover:text-white"
                                 >
                                     Reseller
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href="#join"
-                                    class="text-gray-100 hover:text-white"
-                                >
-                                    Gabung
-                                </Link>
+                                </NavLink>
                             </li>
                         </ul>
                     </div>

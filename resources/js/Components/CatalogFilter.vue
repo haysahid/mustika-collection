@@ -60,6 +60,8 @@ defineExpose({
 
         <!-- Filter Dropdown -->
         <div
+            data-aos="fade-up"
+            data-aos-duration="300"
             class="w-full bg-white rounded-lg shadow-md md:hidden outline outline-1 outline-gray-100"
         >
             <button

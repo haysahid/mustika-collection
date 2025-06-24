@@ -19,12 +19,20 @@ const props = defineProps({
     },
 });
 
-const form = useForm({
-    ...props.certificate,
-    image: props.certificate.image
-        ? "/storage/" + props.certificate.image
-        : null,
-});
+const form = useForm(
+    props.certificate
+        ? {
+              ...props.certificate,
+              image: props.certificate.image
+                  ? "/storage/" + props.certificate.image
+                  : null,
+          }
+        : {
+              name: null,
+              description: null,
+              image: null,
+          }
+);
 
 const submit = () => {
     if (props.certificate.id) {

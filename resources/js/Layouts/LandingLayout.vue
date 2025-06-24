@@ -21,7 +21,7 @@ defineProps({
 
         <Banner />
 
-        <div class="relative min-h-screen bg-white">
+        <div class="relative w-full min-h-screen bg-white">
             <!-- Header -->
             <LandingHeader />
 

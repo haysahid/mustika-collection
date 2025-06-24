@@ -26,7 +26,9 @@ const menus = [
 </script>
 
 <template>
-    <nav class="fixed top-0 z-50 py-1 bg-primary sm:px-12 md:px-[100px] w-full">
+    <nav
+        class="sticky top-0 z-50 py-1 bg-primary sm:px-12 md:px-[100px] w-full"
+    >
         <!-- Primary Navigation Menu -->
         <div class="px-6 mx-auto max-w-7xl sm:px-0">
             <div class="flex justify-between h-16">

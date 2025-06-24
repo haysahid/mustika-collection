@@ -8,6 +8,8 @@ import JoinUs from "@/Components/JoinUs.vue";
 import TextInput from "@/Components/TextInput.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import { Link } from "@inertiajs/vue3";
+import AOS from "aos";
+AOS.init();
 
 const props = defineProps({
     store: Object,
@@ -36,6 +38,10 @@ const certificate = ref(props.store?.certificates[0] || null);
                 :key="brand.id"
                 :src="'/storage/' + brand.logo"
                 :alt="brand.name"
+                data-aos="zoom-in"
+                data-aos-duration="600"
+                data-aos-delay="100"
+                data-aos-once="true"
             />
         </div>
 
@@ -43,6 +49,10 @@ const certificate = ref(props.store?.certificates[0] || null);
             <!-- Best Seller Products -->
             <LandingSection>
                 <div
+                    data-aos="fade-up"
+                    data-aos-duration="600"
+                    data-aos-delay="200"
+                    data-aos-once="true"
                     class="flex flex-col items-start justify-center gap-4 mx-auto max-w-7xl"
                 >
                     <div class="flex flex-col items-start justify-center gap-4">
@@ -121,11 +131,18 @@ const certificate = ref(props.store?.certificates[0] || null);
                     class="grid grid-cols-1 gap-8 mx-auto lg:grid-cols-2 lg:gap-14 max-w-7xl"
                 >
                     <img
+                        data-aos="fade-up"
+                        data-aos-duration="600"
                         :src="'/storage/' + props.store.banner"
                         alt=""
                         class="rounded-2xl"
                     />
-                    <div class="flex flex-col justify-center">
+                    <div
+                        data-aos="fade-up"
+                        data-aos-duration="600"
+                        data-aos-delay="100"
+                        class="flex flex-col justify-center"
+                    >
                         <h1 class="mb-4 text-2xl font-bold sm:text-3xl">
                             Tentang Kami
                         </h1>
@@ -137,11 +154,16 @@ const certificate = ref(props.store?.certificates[0] || null);
             </LandingSection>
 
             <!-- Store Advantages -->
-            <LandingSection>
+            <LandingSection id="advantages">
                 <div
                     class="grid grid-cols-1 gap-8 mx-auto lg:gap-14 xl:grid-cols-2 max-w-7xl"
                 >
-                    <div class="flex flex-col justify-center">
+                    <div
+                        data-aos="fade-up"
+                        data-aos-duration="600"
+                        data-aos-delay="200"
+                        class="flex flex-col justify-center"
+                    >
                         <h1 class="mb-4 text-2xl font-bold sm:text-3xl">
                             Kenapa memilih Kami?
                         </h1>
@@ -149,9 +171,15 @@ const certificate = ref(props.store?.certificates[0] || null);
                             Kami memiliki keunggulan antara lain:
                         </p>
                     </div>
-                    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-9">
+                    <div
+                        data-aos="fade-up"
+                        data-aos-duration="600"
+                        data-aos-delay="300"
+                        class="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-9"
+                    >
                         <AdvantageCard
-                            v-for="advantage in props.store?.advantages || []"
+                            v-for="(advantage, index) in props.store
+                                ?.advantages || []"
                             :key="advantage.id"
                             :title="advantage.name"
                             :description="advantage.description"
@@ -161,8 +189,10 @@ const certificate = ref(props.store?.certificates[0] || null);
             </LandingSection>
 
             <!-- Certificates -->
-            <LandingSection>
+            <LandingSection id="certificates">
                 <div
+                    data-aos="fade-up"
+                    data-aos-duration="600"
                     class="grid grid-cols-1 gap-8 mx-auto lg:grid-cols-2 lg:gap-14 max-w-7xl"
                 >
                     <div class="flex flex-col items-start w-full gap-4">

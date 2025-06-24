@@ -8,6 +8,8 @@ const phone = store.phone?.replace(/[^0-9]/g, "");
 
 <template>
     <div
+        data-aos="fade-up"
+        data-aos-duration="600"
         class="w-full max-w-7xl mx-auto rounded-xl bg-[url(/storage/join_banner.png)] bg-cover bg-center bg-no-repeat h-[612px] flex items-center justify-center"
     >
         <div

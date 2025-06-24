@@ -13,6 +13,8 @@
             class="absolute bottom-0 right-0 hidden object-cover h-auto md:block md:w-1/3"
         />
         <div
+            data-aos="fade-up"
+            data-aos-duration="300"
             class="z-10 w-full px-8 py-8 overflow-hidden bg-white shadow-md sm:max-w-sm rounded-2xl"
         >
             <div class="w-full mx-auto">
