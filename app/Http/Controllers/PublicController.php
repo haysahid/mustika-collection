@@ -101,6 +101,15 @@ class PublicController extends Controller
             $products->where(function ($query) use ($search) {
                 $query->where('name', 'like', '%' . $search . '%')
                     ->orWhere('description', 'like', '%' . $search . '%');
+                $query->orWhereHas('brand', function ($q) use ($search) {
+                    $q->where('name', 'like', '%' . $search . '%');
+                });
+                $query->orWhereHas('categories', function ($q) use ($search) {
+                    $q->where('name', 'like', '%' . $search . '%');
+                });
+                $query->orWhereHas('colors', function ($q) use ($search) {
+                    $q->where('name', 'like', '%' . $search . '%');
+                });
             });
         }
 

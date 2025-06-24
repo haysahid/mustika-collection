@@ -125,7 +125,7 @@ class ProductSeeder extends Seeder
 
             // Add images
             if (isset($productData['images'])) {
-                foreach ($productData['images'] as $image) {
+                foreach ($productData['images'] as $key => $image) {
                     // If image is a URL, download it and store it
                     if (filter_var($image['image'], FILTER_VALIDATE_URL)) {
                         $imageUrl = $image['image'];
@@ -144,7 +144,12 @@ class ProductSeeder extends Seeder
                         }
                     }
 
-                    $product->images()->create(['image' => $image['image']]);
+                    $product->images()->create(
+                        [
+                            'image' => $image['image'],
+                            'order' => $key
+                        ]
+                    );
                 }
             }
 
