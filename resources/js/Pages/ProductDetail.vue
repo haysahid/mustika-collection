@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed } from "vue";
-import { usePage } from "@inertiajs/vue3";
+import { Link, usePage } from "@inertiajs/vue3";
 import LandingLayout from "@/Layouts/LandingLayout.vue";
 import LandingSection from "@/Components/LandingSection.vue";
 import ProductCard from "@/Components/ProductCard.vue";
@@ -382,8 +382,8 @@ function closeProductLinkDialog() {
                         <h1 class="mb-4 text-2xl font-bold sm:text-3xl">
                             Produk Terkait
                         </h1>
-                        <a
-                            href="#"
+                        <Link
+                            :href="route('catalog')"
                             class="flex items-center justify-center gap-1 text-sm text-primary hover:underline"
                         >
                             <p>Selengkapnya</p>
@@ -401,7 +401,7 @@ function closeProductLinkDialog() {
                                     d="m5.25 4.5 7.5 7.5-7.5 7.5m6-15 7.5 7.5-7.5 7.5"
                                 />
                             </svg>
-                        </a>
+                        </Link>
                     </div>
                     <div
                         class="grid w-full grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-4 sm:gap-9"
