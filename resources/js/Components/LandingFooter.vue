@@ -29,9 +29,15 @@ const isHome = route().current("home");
                             class="h-24 mb-8"
                         />
                     </Link>
-                    <h2 class="mb-4 text-2xl font-semibold text-yellow-400">
-                        {{ store.name }}
-                    </h2>
+
+                    <Link :href="route('home')">
+                        <h2
+                            class="mb-4 text-2xl font-semibold text-yellow-400 sm:hidden"
+                        >
+                            {{ store.name }}
+                        </h2>
+                    </Link>
+
                     <div class="text-start">
                         <p v-if="store.email" class="mb-2 text-gray-100">
                             <a
