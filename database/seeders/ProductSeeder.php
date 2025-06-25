@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Jobs\DownloadProductImage;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Color;
@@ -9,6 +10,7 @@ use App\Models\Product;
 use App\Models\Size;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class ProductSeeder extends Seeder
@@ -29,12 +31,17 @@ class ProductSeeder extends Seeder
         shuffle($products);
 
         foreach ($products as $productData) {
+            $brandId = $productData['brand_id'];
+
+            Log::info('Processing product: ' . $productData['code']);
+
             // Ensure brand exists or create it
             if (!isset($productData['brand_id']) && isset($productData['brand'])) {
+                Log::info('Brand not found, creating brand: ' . $productData['brand']['name']);
                 $brand = Brand::firstOrCreate(
                     ['name' => $productData['brand']['name']]
                 );
-                $productData['brand_id'] = $brand->id;
+                $brandId = $brand->id;
             }
 
             // Create the product
@@ -49,7 +56,7 @@ class ProductSeeder extends Seeder
                 'stock' => $productData['stock'],
                 'min_order' => $productData['min_order'],
                 'unit' => $productData['unit'],
-                'brand_id' => $productData['brand_id'],
+                'brand_id' => $brandId,
                 'store_id' => $productData['store_id'],
             ]);
 
@@ -128,28 +135,15 @@ class ProductSeeder extends Seeder
                 foreach ($productData['images'] as $key => $image) {
                     // If image is a URL, download it and store it
                     if (filter_var($image['image'], FILTER_VALIDATE_URL)) {
-                        $imageUrl = $image['image'];
-                        $imageContents = @file_get_contents($imageUrl);
-                        if ($imageContents !== false) {
-                            $basename = basename(parse_url($imageUrl, PHP_URL_PATH));
-                            // If the basename does not have an extension, add .jpg
-                            if (!preg_match('/\.[a-zA-Z0-9]+$/', $basename)) {
-                                $basename .= '.jpg';
-                            }
-                            $imagePath = 'product/' . $basename;
-                            Storage::put($imagePath, $imageContents);
-                            $image['image'] = $imagePath;
-                        } else {
-                            continue;
-                        }
+                        DownloadProductImage::dispatch($image['image'], $product->id, $key);
+                    } else {
+                        $product->images()->create(
+                            [
+                                'image' => $image['image'],
+                                'order' => $key
+                            ]
+                        );
                     }
-
-                    $product->images()->create(
-                        [
-                            'image' => $image['image'],
-                            'order' => $key
-                        ]
-                    );
                 }
             }
 

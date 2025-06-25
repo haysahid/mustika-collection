@@ -69,17 +69,20 @@ class StoreSeeder extends Seeder
             [
                 'store_id' => 1,
                 'name' => 'Facebook',
-                'url' => 'https://www.facebook.com/mustikacollection',
+                'url' => 'https://facebook.com/nhs.pasarkemis1',
+                'icon' => 'icon/ic_facebook.svg',
             ],
             [
                 'store_id' => 1,
                 'name' => 'Instagram',
-                'url' => 'https://www.instagram.com/mustikacollection',
+                'url' => 'https://www.instagram.com/mustika.gamis',
+                'icon' => 'icon/ic_instagram.svg',
             ],
             [
                 'store_id' => 1,
-                'name' => 'Twitter',
-                'url' => 'https://www.twitter.com/mustikacollection',
+                'name' => 'TikTok',
+                'url' => 'https://www.tiktok.com/@nhspasarkemis1',
+                'icon' => 'icon/ic_tiktok.svg',
             ],
         ]);
     }

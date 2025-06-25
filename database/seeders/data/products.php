@@ -332,7 +332,10 @@ return [
         'stock' => 28,
         'min_order' => 1, // Assumed minimum 1 unit
         'unit' => 'set', // Common unit for couple/family outfits
-        'brand_id' => 6, // Seply (newly added brand ID)
+        'brand_id' => null,
+        'brand' => [
+            'name' => 'Seply',
+        ],
         'store_id' => 1,
         'colors' => [
             [
@@ -394,7 +397,10 @@ return [
         'stock' => 54,
         'min_order' => 1, // Assumed minimum 1 unit
         'unit' => 'set', // Common unit for couple/family outfits
-        'brand_id' => 6, // Seply
+        'brand_id' => null,
+        'brand' => [
+            'name' => 'Seply',
+        ],
         'store_id' => 1,
         'colors' => [
             [
