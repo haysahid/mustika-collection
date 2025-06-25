@@ -1,6 +1,6 @@
 <script setup>
 import DialogModal from "@/Components/DialogModal.vue";
-import ProductLinkItem from "./ProductLinkItem.vue";
+import LinkItem from "@/Components/LinkItem.vue";
 
 const props = defineProps({
     title: {
@@ -17,7 +17,7 @@ const props = defineProps({
     },
 });
 
-const emit = defineEmits(["close", "delete"]);
+const emit = defineEmits(["close"]);
 
 const close = () => {
     emit("close");
@@ -45,7 +45,14 @@ const close = () => {
                         :href="link.url"
                         target="_blank"
                     >
-                        <ProductLinkItem :link="link" />
+                        <LinkItem
+                            :name="link.name"
+                            :url="link.url"
+                            :icon="link.platform?.icon"
+                            :index="link.id"
+                            drag
+                            showDeleteButton
+                        />
                     </a>
                 </div>
             </div>

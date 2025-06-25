@@ -8,6 +8,8 @@ import TextAreaInput from "@/Components/TextAreaInput.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import SuccessDialog from "@/Components/SuccessDialog.vue";
 import ErrorDialog from "@/Components/ErrorDialog.vue";
+import DialogModal from "@/Components/DialogModal.vue";
+import LinkItem from "@/Components/LinkItem.vue";
 
 const props = defineProps({
     store: {
@@ -245,6 +247,24 @@ const openErrorDialog = (message) => {
                             autocomplete="description"
                             :error="form.errors.description"
                             @update:modelValue="form.errors.description = null"
+                        />
+                    </div>
+
+                    <!-- Social Links -->
+                    <div
+                        v-for="(link, index) in form.social_links"
+                        :key="index"
+                        class="flex flex-col items-start w-full gap-2"
+                    >
+                        <LinkItem
+                            :name="link.name"
+                            :url="link.url"
+                            :icon="link.platform?.icon"
+                            :index="index"
+                            :drag="drag"
+                            :showDeleteButton="true"
+                            @click="link.showEditForm = true"
+                            @delete="form.links.splice(index, 1)"
                         />
                     </div>
 

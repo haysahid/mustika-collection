@@ -12,7 +12,7 @@ import ErrorDialog from "@/Components/ErrorDialog.vue";
 import { useDraggable, VueDraggable } from "vue-draggable-plus";
 import ProductLinkForm from "./ProductLinkForm.vue";
 import DialogModal from "@/Components/DialogModal.vue";
-import ProductLinkItem from "@/Components/ProductLinkItem.vue";
+import LinkItem from "@/Components/LinkItem.vue";
 
 const props = defineProps({
     product: {
@@ -336,13 +336,6 @@ const draggableLinks = useDraggable(linksContainer, form.links, {
         item.style.opacity = "1";
     },
 });
-
-const getPlatformNameFromUrl = (url) => {
-    return (
-        url.match(/^(https?:\/\/)?(www\.)?([^\/]+)/)?.[3] ||
-        "Platform Tidak Diketahui"
-    );
-};
 
 const showErrorDialog = ref(false);
 const errorMessage = ref(null);
@@ -839,8 +832,10 @@ const openErrorDialog = (message) => {
                         :key="index"
                         class="w-full"
                     >
-                        <ProductLinkItem
-                            :link="link"
+                        <LinkItem
+                            :name="link.name"
+                            :url="link.url"
+                            :icon="link.platform?.icon"
                             :index="index"
                             :drag="drag"
                             :showDeleteButton="true"
