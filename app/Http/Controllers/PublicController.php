@@ -123,7 +123,7 @@ class PublicController extends Controller
             'filters' => [
                 'brands' => Brand::get(),
                 'colors' => Color::get(),
-                'categories' => Category::get(),
+                'categories' => Category::orderBy('name', 'asc')->get(),
                 'sizes' => Size::get(),
             ],
         ]);

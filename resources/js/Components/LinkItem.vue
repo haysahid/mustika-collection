@@ -1,4 +1,6 @@
 <script setup>
+import { useSlots } from "vue";
+
 const props = defineProps({
     name: {
         type: String,
@@ -28,6 +30,8 @@ const props = defineProps({
 
 const emit = defineEmits(["click", "delete"]);
 
+const slots = useSlots();
+
 const getPlatformNameFromUrl = (url) => {
     return (
         url.match(/^(https?:\/\/)?(www\.)?([^\/]+)/)?.[3] ||
@@ -46,11 +50,12 @@ const getPlatformNameFromUrl = (url) => {
         }"
         @click="emit('click')"
     >
+        <slot v-if="slots.icon" name="icon" />
         <img
-            v-if="props.icon"
+            v-else-if="props.icon"
             :src="props.icon"
             alt="Platform Icon"
-            class="size-8"
+            class="text-blue-500 size-8 !fill-blue-500"
         />
         <div v-else>
             <svg

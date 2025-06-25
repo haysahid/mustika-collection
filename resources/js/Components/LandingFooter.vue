@@ -2,6 +2,9 @@
 import { Link } from "@inertiajs/vue3";
 import { usePage } from "@inertiajs/vue3";
 import NavLink from "@/Components/NavLink.vue";
+import IconTikTok from "@/Icons/IconTikTok.vue";
+import IconFacebook from "@/Icons/IconFacebook.vue";
+import IconInstagram from "@/Icons/IconInstagram.vue";
 
 const page = usePage();
 const store = page.props.store || {};
@@ -46,6 +49,30 @@ const isHome = route().current("home");
                         <p v-if="store.address" class="text-gray-100">
                             {{ store.address }}
                         </p>
+                        <div
+                            class="flex items-center justify-start mt-4 space-x-4"
+                        >
+                            <template
+                                v-for="(link, index) in $page.props.store
+                                    .social_links"
+                                :key="index"
+                            >
+                                <a :href="link.url" target="_blank">
+                                    <IconInstagram
+                                        v-if="link.name == 'Instagram'"
+                                        class="!fill-white/80 hover:!fill-white"
+                                    />
+                                    <IconFacebook
+                                        v-else-if="link.name == 'Facebook'"
+                                        class="!fill-white/80 hover:!fill-white"
+                                    />
+                                    <IconTikTok
+                                        v-else-if="link.name == 'TikTok'"
+                                        class="!fill-white/80 hover:!fill-white"
+                                    />
+                                </a>
+                            </template>
+                        </div>
                     </div>
                 </div>
 
@@ -109,7 +136,7 @@ const isHome = route().current("home");
                                 <NavLink
                                     :href="
                                         route('catalog', {
-                                            categories: 'Aksesoris',
+                                            categories: 'Aksesoris Muslim',
                                         })
                                     "
                                     class="text-gray-100 hover:text-white"

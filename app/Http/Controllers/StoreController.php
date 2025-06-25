@@ -49,7 +49,6 @@ class StoreController extends Controller
     {
         $store = Store::with([
             'advantages',
-            'certificates',
             'social_links',
         ])->first();
 
@@ -63,15 +62,22 @@ class StoreController extends Controller
      */
     public function update(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'address' => 'nullable|string|max:255',
-            'email' => 'nullable|email|max:255',
-            'phone' => 'nullable|string|max:20',
-            'advantages' => 'array',
-            'social_links' => 'array',
-        ]);
+        $request->validate(
+            [
+                'name' => 'required|string|max:255',
+                'description' => 'nullable|string',
+                'address' => 'nullable|string|max:255',
+                'email' => 'nullable|email|max:255',
+                'phone' => 'nullable|string|max:20',
+                'advantages' => 'array',
+                'social_links' => 'array',
+            ],
+            [
+                'name.required' => 'Nama toko harus diisi.',
+                'email.email' => 'Format email tidak valid.',
+                'phone.max' => 'Nomor telepon tidak boleh lebih dari 20 karakter.',
+            ]
+        );
 
         try {
             DB::beginTransaction();
@@ -102,6 +108,19 @@ class StoreController extends Controller
                             'store_id' => $store->id,
                             'name' => $advantage['name'],
                             'description' => $advantage['description'] ?? null,
+                        ]);
+                    }
+                }
+            }
+
+            // Update social links
+            if ($request->has('social_links')) {
+                $currentLinks = $store->social_links()->pluck('id')->toArray();
+                foreach ($request->input('social_links') as $link) {
+                    if (isset($link['id']) && in_array($link['id'], $currentLinks)) {
+                        // Update existing social link
+                        $store->social_links()->where('id', $link['id'])->update([
+                            'url' => $link['url'],
                         ]);
                     }
                 }

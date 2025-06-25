@@ -10,6 +10,10 @@ import SuccessDialog from "@/Components/SuccessDialog.vue";
 import ErrorDialog from "@/Components/ErrorDialog.vue";
 import DialogModal from "@/Components/DialogModal.vue";
 import LinkItem from "@/Components/LinkItem.vue";
+import IconTikTok from "@/Icons/IconTikTok.vue";
+import IconInstagram from "@/Icons/IconInstagram.vue";
+import IconFacebook from "@/Icons/IconFacebook.vue";
+import SocialLinkForm from "./Store/SocialLinkForm.vue";
 
 const props = defineProps({
     store: {
@@ -18,7 +22,18 @@ const props = defineProps({
     },
 });
 
-const form = useForm(props.store);
+const form = useForm({
+    ...props.store,
+    social_links: [
+        ...props.store.social_links.map(function (link) {
+            if (!link.icon) return link;
+            return {
+                ...link,
+                icon: "/storage/" + link.icon,
+            };
+        }),
+    ],
+});
 
 const submit = () => {
     form.post(route("admin.store.update"), {
@@ -251,23 +266,54 @@ const openErrorDialog = (message) => {
                     </div>
 
                     <!-- Social Links -->
-                    <div
-                        v-for="(link, index) in form.social_links"
-                        :key="index"
-                        class="flex flex-col items-start w-full gap-2"
-                    >
-                        <LinkItem
-                            :name="link.name"
-                            :url="link.url"
-                            :icon="link.platform?.icon"
-                            :index="index"
-                            :drag="drag"
-                            :showDeleteButton="true"
-                            @click="link.showEditForm = true"
-                            @delete="form.links.splice(index, 1)"
-                        />
+                    <div class="flex flex-col items-start w-full gap-2 mt-4">
+                        <h2 class="text-lg font-semibold">Tautan Sosial</h2>
+                        <div
+                            v-for="(link, index) in form.social_links"
+                            :key="index"
+                            class="flex flex-col items-start w-full gap-2"
+                        >
+                            <LinkItem
+                                :name="link.name"
+                                :url="link.url"
+                                :index="index"
+                                :showDeleteButton="false"
+                                @click="link.showEditForm = true"
+                            >
+                                <template v-if="link.name == 'Instagram'" #icon>
+                                    <IconInstagram />
+                                </template>
+                                <template
+                                    v-else-if="link.name == 'Facebook'"
+                                    #icon
+                                >
+                                    <IconFacebook />
+                                </template>
+                                <template
+                                    v-else-if="link.name == 'TikTok'"
+                                    #icon
+                                >
+                                    <IconTikTok />
+                                </template>
+                            </LinkItem>
+                            <DialogModal
+                                :show="link.showEditForm"
+                                title="Tambah Tautan Produk"
+                                maxWidth="sm"
+                                @close="link.showEditForm = false"
+                            >
+                                <template #content>
+                                    <SocialLinkForm
+                                        :link="link"
+                                        @submit="
+                                            form.social_links[index] = $event
+                                        "
+                                        @close="link.showEditForm = false"
+                                    />
+                                </template>
+                            </DialogModal>
+                        </div>
                     </div>
-
                     <PrimaryButton type="submit" class="mt-4">
                         Simpan Data
                     </PrimaryButton>

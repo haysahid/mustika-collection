@@ -766,6 +766,7 @@ return [
         ],
         'categories' => [
             ['id' => 6],
+            ['name' => 'Sepatu'],
         ],
         'sizes' => [
             ['id' => 2],
@@ -794,7 +795,8 @@ return [
             ['id' => 2]
         ],
         'categories' => [
-            ['id' => 7],
+            ['id' => 6],
+            ['id' => 8],
         ],
         'sizes' => [],
         'images' => [

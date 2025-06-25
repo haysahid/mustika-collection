@@ -68,15 +68,15 @@ class StoreSeeder extends Seeder
         StoreSocialLink::insert([
             [
                 'store_id' => 1,
-                'name' => 'Facebook',
-                'url' => 'https://facebook.com/nhs.pasarkemis1',
-                'icon' => 'icon/ic_facebook.svg',
-            ],
-            [
-                'store_id' => 1,
                 'name' => 'Instagram',
                 'url' => 'https://www.instagram.com/mustika.gamis',
                 'icon' => 'icon/ic_instagram.svg',
+            ],
+            [
+                'store_id' => 1,
+                'name' => 'Facebook',
+                'url' => 'https://facebook.com/nhs.pasarkemis1',
+                'icon' => 'icon/ic_facebook.svg',
             ],
             [
                 'store_id' => 1,

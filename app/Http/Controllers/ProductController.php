@@ -68,7 +68,7 @@ class ProductController extends Controller
 
         return Inertia::render('Admin/Product', [
             'products' => $products->paginate($limit),
-            'brands' => Brand::get(),
+            'brands' => Brand::orderBy('name', 'asc')->get(),
         ]);
     }
 
@@ -214,11 +214,11 @@ class ProductController extends Controller
     {
         $product->load(['brand', 'colors', 'categories', 'sizes', 'images', 'links.platform']);
 
-        $brands = Brand::class::get();
-        $categories = Category::get();
+        $brands = Brand::class::orderBy('name', 'asc')->get();
+        $categories = Category::orderBy('name', 'asc')->get();
         $sizes = Size::get();
-        $colors = Color::get();
-        $platforms = Platform::get();
+        $colors = Color::orderBy('name', 'asc')->get();
+        $platforms = Platform::orderBy('name', 'asc')->get();
 
         return Inertia::render('Admin/Product/EditProduct', [
             'product' => $product,
