@@ -50,8 +50,6 @@ const close = () => {
                             :url="link.url"
                             :icon="link.platform?.icon"
                             :index="link.id"
-                            drag
-                            showDeleteButton
                         />
                     </a>
                 </div>
