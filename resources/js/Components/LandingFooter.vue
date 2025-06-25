@@ -20,19 +20,23 @@ const isHome = route().current("home");
             >
                 <!-- Identity -->
                 <div
-                    class="flex flex-col items-center w-full text-center md:text-start sm:2/3 md:w-1/3 sm:items-start"
+                    class="flex flex-col items-start w-full text-start sm:2/3 md:w-1/3"
                 >
-                    <Link :href="route('home')">
+                    <Link :href="route('home')" class="hidden sm:block">
                         <img
                             src="/storage/logo_yellow.png"
                             alt="Logo"
                             class="h-24 mb-8"
                         />
                     </Link>
-                    <div class="text-center sm:text-start">
+                    <h2 class="mb-4 text-2xl font-semibold text-yellow-400">
+                        {{ store.name }}
+                    </h2>
+                    <div class="text-start">
                         <p v-if="store.email" class="mb-2 text-gray-100">
                             <a
                                 :href="`mailto:${store.email}`"
+                                target="_blank"
                                 class="text-gray-100 hover:text-white"
                             >
                                 {{ store.email }}
@@ -40,7 +44,8 @@ const isHome = route().current("home");
                         </p>
                         <p v-if="store.phone" class="mb-2 text-gray-100">
                             <a
-                                href="tel:+6281234567890"
+                                :href="`https://wa.me/${store.phone}`"
+                                target="_blank"
                                 class="text-gray-100 hover:text-white"
                             >
                                 {{ store.phone }}
@@ -60,15 +65,15 @@ const isHome = route().current("home");
                                 <a :href="link.url" target="_blank">
                                     <IconInstagram
                                         v-if="link.name == 'Instagram'"
-                                        class="!fill-white/80 hover:!fill-white"
+                                        class="!fill-white/80 hover:!fill-white max-sm:!size-6"
                                     />
                                     <IconFacebook
                                         v-else-if="link.name == 'Facebook'"
-                                        class="!fill-white/80 hover:!fill-white"
+                                        class="!fill-white/80 hover:!fill-white max-sm:!size-7"
                                     />
                                     <IconTikTok
                                         v-else-if="link.name == 'TikTok'"
-                                        class="!fill-white/80 hover:!fill-white"
+                                        class="!fill-white/80 hover:!fill-white max-sm:!size-7"
                                     />
                                 </a>
                             </template>
@@ -78,9 +83,9 @@ const isHome = route().current("home");
 
                 <!-- Quick Access -->
                 <div
-                    class="flex flex-wrap justify-center w-full grid-cols-1 gap-y-8 gap-x-12 sm:grid md:grid-cols-3 sm:1/3 md:w-2/3"
+                    class="flex flex-wrap justify-start w-full grid-cols-1 gap-y-8 gap-x-12 sm:grid md:grid-cols-3 sm:1/3 md:w-2/3"
                 >
-                    <div class="text-center sm:text-start">
+                    <div class="text-start sm:text-start">
                         <h3 class="mb-4 text-lg font-semibold text-white/90">
                             Identitas Toko
                         </h3>
@@ -111,7 +116,7 @@ const isHome = route().current("home");
                             </li>
                         </ul>
                     </div>
-                    <div class="text-center sm:text-start">
+                    <div class="text-start">
                         <NavLink :href="route('catalog')">
                             <h3
                                 class="mb-4 text-lg font-semibold text-white/90 hover:text-white"
@@ -158,7 +163,7 @@ const isHome = route().current("home");
                             </li>
                         </ul>
                     </div>
-                    <div class="text-center sm:text-start">
+                    <div class="text-start">
                         <h3 class="mb-4 text-lg font-semibold text-white/90">
                             Gabung
                         </h3>
