@@ -11,18 +11,13 @@ class Product extends Model
 
     protected $fillable = [
         'store_id',
-        'code',
+        'brand_id',
         'name',
         'slug',
+        'sku_prefix',
         'description',
-        'material',
-        'selling_price',
+        'discount_type',
         'discount',
-        'stock',
-        'min_order',
-        'unit',
-        'color_id',
-        'brand_id',
         'disabled_at',
     ];
 
@@ -36,19 +31,9 @@ class Product extends Model
         return $this->belongsTo(Brand::class);
     }
 
-    public function colors()
-    {
-        return $this->belongsToMany(Color::class, 'product_color');
-    }
-
     public function categories()
     {
         return $this->belongsToMany(Category::class, 'product_category');
-    }
-
-    public function sizes()
-    {
-        return $this->belongsToMany(Size::class, 'product_size');
     }
 
     public function images()
@@ -59,5 +44,10 @@ class Product extends Model
     public function links()
     {
         return $this->hasMany(ProductLink::class);
+    }
+
+    public function variants()
+    {
+        return $this->hasMany(ProductVariant::class);
     }
 }
