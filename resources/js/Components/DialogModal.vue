@@ -29,6 +29,7 @@ const close = () => {
 
 const slots = useSlots();
 
+const hasIconSlot = !!slots.icon;
 const hasTitleSlot = !!slots.title;
 const hasContentSlot = !!slots.content;
 const hasFooterSlot = !!slots.footer;
@@ -64,6 +65,13 @@ const hasFooterSlot = !!slots.footer;
                 </svg>
             </button>
             <div class="flex flex-col items-center p-6">
+                <div
+                    v-if="hasIconSlot"
+                    class="mb-2 text-lg font-medium text-center text-gray-900"
+                >
+                    <slot name="icon" />
+                </div>
+
                 <div
                     v-if="hasTitleSlot"
                     class="mb-2 text-lg font-medium text-center text-gray-900"

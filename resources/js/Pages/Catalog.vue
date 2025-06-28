@@ -173,13 +173,14 @@ function onChangeSearch() {
                             class="grid w-full grid-cols-2 gap-6 lg:gap-8 lg:grid-cols-3"
                         >
                             <ProductCard
-                                v-for="product in products"
+                                v-for="product in products || []"
                                 :key="product.id"
                                 :name="product.name"
-                                :description="product.brand?.name"
-                                :image="product.images[0]?.image"
-                                :price="product.selling_price"
+                                :basePrice="product.lowest_base_selling_price"
                                 :discount="product.discount"
+                                :finalPrice="product.lowest_final_selling_price"
+                                :image="product.images[0]?.image"
+                                :description="product.brand?.name"
                                 :slug="product.slug"
                             />
                         </div>

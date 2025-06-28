@@ -29,6 +29,27 @@ class ProductVariant extends Model
         'disabled_at',
     ];
 
+    protected $appends = [
+        'name',
+    ];
+
+    // Additional attributes
+    public function getNameAttribute()
+    {
+        $name = $this->product->name;
+        if ($this->motif) {
+            $name .= ' - ' . $this->motif;
+        }
+        if ($this->color) {
+            $name .= ' - ' . $this->color->name;
+        }
+        if ($this->size) {
+            $name .= ' - ' . $this->size->name;
+        }
+        return $name;
+    }
+
+    // Relationships
     public function product()
     {
         return $this->belongsTo(Product::class);
@@ -41,7 +62,7 @@ class ProductVariant extends Model
 
     public function size()
     {
-        return $this->belongsTo(Size::class);
+        return $this->belongsTo(Size::class)->orderBy('id', 'asc');
     }
 
     public function images()

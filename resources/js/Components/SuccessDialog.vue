@@ -25,8 +25,7 @@ const close = () => {
         @close="close"
         maxWidth="sm"
     >
-        <template #title>{{ props.title }}</template>
-        <template #content>
+        <template #icon>
             <div class="p-2">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -44,5 +43,6 @@ const close = () => {
                 </svg>
             </div>
         </template>
+        <template #title>{{ props.title }}</template>
     </DialogModal>
 </template>

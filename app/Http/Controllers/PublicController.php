@@ -56,7 +56,7 @@ class PublicController extends Controller
         $sizes = $request->input('sizes');
 
         $products = Product::query();
-        $products->with(['brand', 'colors', 'categories', 'sizes', 'images',]);
+        $products->with(['brand', 'categories', 'images']);
 
         if ($brands) {
             if (is_string($brands)) {
@@ -139,9 +139,24 @@ class PublicController extends Controller
             'social_links',
         ])->first();
 
-        $product = Product::where('slug', $slug)
-            ->with(['brand', 'colors', 'categories', 'sizes', 'images', 'links.platform'])
-            ->firstOrFail();
+        $product = Product::with(
+            [
+                'brand',
+                'categories',
+                'images',
+                'links.platform',
+                'variants' => function ($query) {
+                    $query->with(['color', 'size', 'images']);
+                }
+            ]
+        )->where('slug', $slug)->firstOrFail();
+
+        $accumulatedStock = $product->variants->sum('current_stock_level');
+        $minOrder = $product->variants->min('min_order');
+        $variants = $product->variants;
+        $motifs = $variants->pluck('motif')->unique()->filter()->sort()->values();
+        $colors = $variants->pluck('color')->unique();
+        $sizes = $variants->pluck('size')->filter()->unique('id')->sortBy('id')->values();
 
         $relatedProducts = Product::where('id', '!=', $product->id)
             ->with(['brand', 'categories', 'images'])
@@ -151,6 +166,11 @@ class PublicController extends Controller
         return Inertia::render('ProductDetail', [
             'store' => $store,
             'product' => $product,
+            'accumulatedStock' => $accumulatedStock,
+            'minOrder' => $minOrder,
+            'motifs' => $motifs,
+            'colors' => $colors,
+            'sizes' => $sizes,
             'relatedProducts' => $relatedProducts,
         ]);
     }

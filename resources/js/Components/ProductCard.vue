@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { Link } from "@inertiajs/vue3";
 
 const props = defineProps({
@@ -7,20 +7,23 @@ const props = defineProps({
         type: String,
         default: "product-slug",
     },
-    price: Number,
-    image: String,
-    description: String,
+    basePrice: {
+        type: Number,
+        default: 0,
+    },
     discount: {
         type: Number,
         default: null,
     },
+    finalPrice: {
+        type: Number,
+        default: 0,
+    },
+    image: String,
+    description: String,
 });
 
-function formatPrice(price, discount = 0) {
-    if (discount > 0) {
-        price = price - (price * discount) / 100;
-    }
-
+function formatPrice(price) {
     return price.toLocaleString("id-ID", {
         style: "currency",
         currency: "IDR",
@@ -72,14 +75,14 @@ function formatPrice(price, discount = 0) {
                 >
                     <div>
                         <p class="font-semibold sm:text-lg text-primary">
-                            {{ formatPrice(props.price, props.discount) }}
+                            {{ formatPrice(props.finalPrice) }}
                         </p>
 
                         <p
                             v-if="props.discount"
                             class="text-sm text-gray-500 line-through"
                         >
-                            {{ formatPrice(props.price) }}
+                            {{ formatPrice(props.basePrice) }}
                         </p>
                     </div>
 

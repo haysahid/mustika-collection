@@ -40,6 +40,10 @@ const props = defineProps({
         type: String,
         default: null,
     },
+    containerClass: {
+        type: String,
+        default: "",
+    },
     bgClass: {
         type: String,
         default: "",
@@ -47,6 +51,10 @@ const props = defineProps({
     textClass: {
         type: String,
         default: "",
+    },
+    hideArrows: {
+        type: Boolean,
+        default: false,
     },
     modelValue: {
         type: [String, Number],
@@ -82,7 +90,11 @@ defineExpose({ focus: () => input.value.focus() });
 
 <template>
     <div>
-        <label :for="id" class="relative flex items-center p-0 border-none">
+        <label
+            :for="id"
+            class="relative flex items-center p-0 border-none"
+            :class="containerClass"
+        >
             <slot name="prefix"></slot>
             <input
                 ref="input"
@@ -102,6 +114,11 @@ defineExpose({ focus: () => input.value.focus() });
                         'border-red-500 focus:border-red-500 focus:ring-red-500':
                             props.error,
                     },
+                    {
+                        'no-arrows':
+                            props.hideArrows && props.type === 'number',
+                    },
+
                     props.bgClass,
                     props.textClass,
                 ]"

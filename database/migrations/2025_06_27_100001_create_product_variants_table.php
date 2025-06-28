@@ -29,6 +29,7 @@ return new class extends Migration
             $table->integer('current_stock_level')->default(0);
             $table->timestamp('last_stock_update')->nullable();
             $table->string('unit', 20)->default('pcs');
+            $table->integer('min_order')->unsigned()->default(1);
             $table->timestamp('disabled_at')->nullable();
             $table->timestamps();
             $table->softDeletes();

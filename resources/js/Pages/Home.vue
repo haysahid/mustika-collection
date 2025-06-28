@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue";
 import LandingLayout from "@/Layouts/LandingLayout.vue";
 import AdvantageCard from "@/Components/AdvantageCard.vue";
@@ -8,13 +8,16 @@ import JoinUs from "@/Components/JoinUs.vue";
 import TextInput from "@/Components/TextInput.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import { Link } from "@inertiajs/vue3";
-import AOS from "aos";
-AOS.init();
 
 const props = defineProps({
     store: Object,
-    brands: Array,
-    popularProducts: Array,
+    brands: {
+        type: Array as () => BrandEntity[],
+    },
+    popularProducts: {
+        type: Array as () => ProductEntity[],
+        default: () => [],
+    },
 });
 
 const certificate = ref(props.store?.certificates[0] || null);
@@ -106,14 +109,15 @@ const certificate = ref(props.store?.certificates[0] || null);
                                 v-for="product in props.popularProducts || []"
                                 :key="product.id"
                                 :name="product.name"
-                                :price="product.selling_price"
+                                :basePrice="product.lowest_base_selling_price"
+                                :discount="product.discount"
+                                :finalPrice="product.lowest_final_selling_price"
                                 :image="
                                     product.images && product.images.length > 0
                                         ? '/storage/' + product.images[0].image
                                         : null
                                 "
                                 :description="product.brand?.name"
-                                :discount="product.discount"
                                 :slug="product.slug"
                             />
                         </div>

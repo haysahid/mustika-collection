@@ -25,8 +25,7 @@ const close = () => {
         @close="close"
         maxWidth="sm"
     >
-        <template #title>{{ props.title }}</template>
-        <template #content>
+        <template #icon>
             <div class="flex flex-col items-center justify-center gap-3 p-2">
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -43,5 +42,6 @@ const close = () => {
                 <slot name="content"></slot>
             </div>
         </template>
+        <template #title>{{ props.title }}</template>
     </DialogModal>
 </template>

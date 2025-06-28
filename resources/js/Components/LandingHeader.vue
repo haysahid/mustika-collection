@@ -1,8 +1,9 @@
 <script setup>
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { Link } from "@inertiajs/vue3";
 import NavLink from "@/Components/NavLink.vue";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
+import CartButton from "./CartButton.vue";
 
 const showingNavigationDropdown = ref(false);
 
@@ -23,6 +24,20 @@ const menus = [
         active: false,
     },
 ];
+
+const trailingMenus = [
+    {
+        name: "Masuk",
+        href: route("login"),
+        active: route().current("login"),
+    },
+];
+
+const cartItemsLength = computed(() => {
+    // Get from localStorage
+    const cartItems = JSON.parse(localStorage.getItem("cart_items")) || [];
+    return cartItems.length;
+});
 </script>
 
 <template>
@@ -44,19 +59,51 @@ const menus = [
                         </Link>
                     </div>
 
-                    <!-- Navigation Links -->
-                    <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                        <NavLink
-                            v-for="menu in menus"
-                            :key="menu.name"
-                            :href="menu.href"
-                            :active="menu.active"
-                            :class="{
-                                '!text-white': menu.active,
-                            }"
+                    <div class="flex items-center gap-4 sm:gap-6">
+                        <!-- Navigation Links -->
+                        <div
+                            class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex sm:items-center"
                         >
-                            {{ menu.name }}
-                        </NavLink>
+                            <!-- Menus -->
+                            <NavLink
+                                v-for="menu in menus"
+                                :key="menu.name"
+                                :href="menu.href"
+                                :active="menu.active"
+                                :class="{
+                                    '!text-white': menu.active,
+                                }"
+                            >
+                                {{ menu.name }}
+                            </NavLink>
+                        </div>
+
+                        <!-- Divider -->
+                        <span
+                            class="hidden w-px h-6 sm:inline-block bg-white/20"
+                        ></span>
+
+                        <CartButton
+                            :length="cartItemsLength"
+                            class="me-2 sm:me-0"
+                        />
+
+                        <!-- Trailing Menus -->
+                        <div
+                            class="hidden space-x-8 sm:-my-px sm:flex sm:items-center"
+                        >
+                            <NavLink
+                                v-for="menu in trailingMenus"
+                                :key="menu.name"
+                                :href="menu.href"
+                                :active="menu.active"
+                                :class="{
+                                    '!text-white': menu.active,
+                                }"
+                            >
+                                {{ menu.name }}
+                            </NavLink>
+                        </div>
                     </div>
                 </div>
 
@@ -107,10 +154,29 @@ const menus = [
                 block: showingNavigationDropdown,
                 hidden: !showingNavigationDropdown,
             }"
-            class="sm:hidden"
+            class="pb-2 sm:hidden"
         >
             <ul>
                 <li v-for="menu in menus" :key="menu.name">
+                    <NavLink
+                        :href="menu.href"
+                        :active="menu.active"
+                        active-class="!bg-secondary !border-[#CE4DB1] text-primary"
+                        class="px-4 py-2.5 w-full bg-transparent hover:bg-secondary/10 hover:border-l-4 hover:border-[#CE4DB1] border-l-4 transition-all duration-300 ease-in-out border-primary"
+                        :class="{
+                            '!text-primary': menu.active,
+                        }"
+                    >
+                        {{ menu.name }}
+                    </NavLink>
+                </li>
+            </ul>
+
+            <div class="h-px mx-5 my-2 bg-white/10"></div>
+
+            <!-- Trailing Menus -->
+            <ul>
+                <li v-for="menu in trailingMenus" :key="menu.name">
                     <NavLink
                         :href="menu.href"
                         :active="menu.active"

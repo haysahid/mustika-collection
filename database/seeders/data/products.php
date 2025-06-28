@@ -12,6 +12,23 @@ return [
         'description' => 'Eksis 194 Windsor Wine adalah koleksi sarimbit couple keluarga terbaru dari Seply untuk tahun 2023. Koleksi ini tersedia untuk Koko Dewasa/Anak, Gamis Dewasa/Anak, serta Hijab Sara Square. Didesain dengan nuansa Windsor Wine yang elegan, Eksis 194 cocok untuk tampilan serasi keluarga muslim.',
         'discount_type' => 'percentage',
         'discount' => 10,
+        'categories' => [
+            ['name' => 'Fashion Muslim'],
+            ['name' => 'Set'],
+            ['name' => 'Koko Dewasa / Anak'],
+            ['name' => 'Gamis Dewasa / Anak'],
+            ['name' => 'Hijab Sara Square'],
+        ],
+        'images' => [
+            ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22110-ruo8w52wsvjv6f.jpg'],
+            ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22110-akky702wsvjvd6.jpg'],
+        ],
+        'links' => [
+            [
+                'platform_id' => 1, // Shopee
+                'url' => 'https://shopee.co.id/Eksis-194-Windsor-Wine-Couple-Keluarga-Muslim-Seply-2023-i.17828602.16289722954',
+            ],
+        ],
         'variants' => [
             // Ayah L
             [

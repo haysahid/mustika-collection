@@ -41,7 +41,7 @@ class DownloadProductVariantImage implements ShouldQueue
         $existingImage = Storage::exists($imagePath);
 
         if ($existingImage) {
-            Log::info('Image already exists: ' . $this->imageUrl);
+            Log::info('Image already exists: ' . $imagePath);
 
             // Save image path to database
             ProductVariantImage::create([
@@ -50,6 +50,8 @@ class DownloadProductVariantImage implements ShouldQueue
                 'image' => $imagePath,
                 'order' => $this->order,
             ]);
+
+            Log::info('Image path saved to database: ' . $imagePath);
 
             return;
         }
@@ -69,6 +71,8 @@ class DownloadProductVariantImage implements ShouldQueue
                 'image' => $imagePath,
                 'order' => $this->order,
             ]);
+        } else {
+            Log::error('Failed to download image: ' . $this->imageUrl);
         }
     }
 }
