@@ -73,7 +73,9 @@ class PublicController extends Controller
                 $colors = explode(',', $colors);
                 $colors = Color::whereIn('name', $colors)->pluck('id')->toArray();
             }
-            $products->whereIn('color_id', $colors);
+            $products->whereHas('variants', function ($query) use ($colors) {
+                $query->whereIn('color_id', $colors);
+            });
         }
 
         if ($categories) {
@@ -93,7 +95,7 @@ class PublicController extends Controller
                 $sizes = explode(',', $sizes);
                 $sizes = Size::whereIn('name', $sizes)->pluck('id')->toArray();
             }
-            $products->whereHas('sizes', function ($query) use ($sizes) {
+            $products->whereHas('variants', function ($query) use ($sizes) {
                 $query->whereIn('size_id', $sizes);
             });
         }
@@ -109,8 +111,14 @@ class PublicController extends Controller
                 $query->orWhereHas('categories', function ($q) use ($search) {
                     $q->where('name', 'like', '%' . $search . '%');
                 });
-                $query->orWhereHas('colors', function ($q) use ($search) {
-                    $q->where('name', 'like', '%' . $search . '%');
+                $query->orWhereHas('variants', function ($q) use ($search) {
+                    $q->where('motif', 'like', '%' . $search . '%');
+                    $q->orWhereHas('color', function ($q2) use ($search) {
+                        $q2->where('name', 'like', '%' . $search . '%');
+                    });
+                    $q->orWhereHas('size', function ($q2) use ($search) {
+                        $q2->where('name', 'like', '%' . $search . '%');
+                    });
                 });
             });
         }
