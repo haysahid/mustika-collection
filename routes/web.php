@@ -5,6 +5,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\StoreCertificateController;
 use App\Http\Controllers\StoreController;
+use App\Http\Controllers\UserController;
 use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -15,6 +16,9 @@ Route::get('/', [PublicController::class, 'home'])->name('home');
 Route::get('/catalog', [PublicController::class, 'catalog'])->name('catalog');
 Route::get('/product/{slug}', [PublicController::class, 'productDetail'])->name('product.show');
 Route::get('/cart', [PublicController::class, 'cart'])->name('cart');
+
+Route::get('/login', [UserController::class, 'login'])->name('login');
+Route::post('/login', [UserController::class, 'loginProcess'])->name('login.process');
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/login', [AdminController::class, 'login'])->name('login');

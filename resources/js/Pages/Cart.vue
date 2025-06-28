@@ -91,92 +91,99 @@ function formatPrice(price = 0) {
         >
             <LandingSection class="!items-start !justify-start">
                 <div
-                    class="flex flex-col items-center justify-center w-full gap-6 mx-auto lg:flex-row lg:items-start sm:gap-14 max-w-7xl"
+                    class="flex flex-col items-center justify-center w-full gap-6 mx-auto lg:flex-row lg:items-start sm:gap-12 max-w-7xl"
                 >
                     <!-- Cart Items -->
-                    <div v-for="(item, index) in cartStore.items" :key="index">
-                        <CartItem
-                            :item="item"
-                            @toggleItem="cartStore.toggleItem(item)"
-                            @subtract="
-                                cartStore.updateItem({
-                                    ...item,
-                                    quantity: item.quantity - 1,
-                                })
-                            "
-                            @updateQuantity="
-                                cartStore.updateItem({
-                                    ...item,
-                                    quantity: parseInt($event),
-                                })
-                            "
-                            @add="
-                                cartStore.updateItem({
-                                    ...item,
-                                    quantity: item.quantity + 1,
-                                })
-                            "
-                            @remove="item.showDeleteConfirmation = true"
+                    <div>
+                        <div
+                            v-for="(item, index) in cartStore.items"
+                            :key="index"
                         >
-                            <template #actions>
-                                <div
-                                    class="flex items-center justify-between w-full gap-4 xl:flex-col xl:items-end xl:justify-normal xl:w-fit"
-                                >
-                                    <button
-                                        class="text-sm text-gray-500 sm:block sm:text-base hover:text-red-500 sm:w-fit text-start"
-                                        @click="
-                                            item.showDeleteConfirmation = true
-                                        "
-                                    >
-                                        Hapus
-                                    </button>
-
+                            <CartItem
+                                :item="item"
+                                @toggleItem="cartStore.toggleItem(item)"
+                                @subtract="
+                                    cartStore.updateItem({
+                                        ...item,
+                                        quantity: item.quantity - 1,
+                                    })
+                                "
+                                @updateQuantity="
+                                    cartStore.updateItem({
+                                        ...item,
+                                        quantity: parseInt($event),
+                                    })
+                                "
+                                @add="
+                                    cartStore.updateItem({
+                                        ...item,
+                                        quantity: item.quantity + 1,
+                                    })
+                                "
+                                @remove="item.showDeleteConfirmation = true"
+                            >
+                                <template #actions>
                                     <div
-                                        class="flex items-center justify-end w-full gap-y-2 gap-x-4 xl:flex-col xl:items-end xl:w-fit"
+                                        class="flex items-center justify-between w-full gap-4 xl:flex-col xl:items-end xl:justify-normal xl:w-fit"
                                     >
-                                        <QuantityInput
-                                            :modelValue="item.quantity"
-                                            :unit="item.variant.unit"
-                                            :max="
-                                                item.variant.current_stock_level
+                                        <button
+                                            class="text-sm text-gray-500 sm:block sm:text-base hover:text-red-500 sm:w-fit text-start"
+                                            @click="
+                                                item.showDeleteConfirmation = true
                                             "
-                                            :showAvailability="false"
-                                            :label="null"
-                                            @update:modelValue="
-                                                cartStore.updateItem({
-                                                    ...item,
-                                                    quantity: $event,
-                                                })
-                                            "
-                                        />
-
-                                        <p
-                                            class="text-base font-semibold text-gray-800 sm:text-lg text-end w-[110px]"
                                         >
-                                            {{
-                                                formatPrice(
+                                            Hapus
+                                        </button>
+
+                                        <div
+                                            class="flex items-center justify-end w-full gap-y-2 gap-x-4 xl:flex-col xl:items-end xl:w-fit"
+                                        >
+                                            <QuantityInput
+                                                :modelValue="item.quantity"
+                                                :unit="item.variant.unit"
+                                                :max="
                                                     item.variant
-                                                        .final_selling_price *
-                                                        item.quantity
-                                                )
-                                            }}
-                                        </p>
+                                                        .current_stock_level
+                                                "
+                                                :showAvailability="false"
+                                                :label="null"
+                                                @update:modelValue="
+                                                    cartStore.updateItem({
+                                                        ...item,
+                                                        quantity: $event,
+                                                    })
+                                                "
+                                            />
+
+                                            <p
+                                                class="text-base font-semibold text-gray-800 sm:text-lg text-end w-[110px]"
+                                            >
+                                                {{
+                                                    formatPrice(
+                                                        item.variant
+                                                            .final_selling_price *
+                                                            item.quantity
+                                                    )
+                                                }}
+                                            </p>
+                                        </div>
                                     </div>
-                                </div>
-                            </template>
-                        </CartItem>
-                        <DeleteConfirmationDialog
-                            :show="item.showDeleteConfirmation"
-                            :item="item"
-                            title="Hapus produk ini dari keranjang?"
-                            :description="item.variant.name"
-                            positiveButtonText="Hapus"
-                            @delete="
-                                cartStore.removeItem(item);
-                                item.showDeleteConfirmation = false;
-                            "
-                            @close="item.showDeleteConfirmation = false"
-                        />
+                                </template>
+                            </CartItem>
+
+                            <DeleteConfirmationDialog
+                                :show="item.showDeleteConfirmation"
+                                :item="item"
+                                title="Hapus produk ini dari keranjang?"
+                                :description="item.variant.name"
+                                positiveButtonText="Hapus"
+                                @delete="
+                                    cartStore.removeItem(item);
+                                    item.showDeleteConfirmation = false;
+                                "
+                                @close="item.showDeleteConfirmation = false"
+                            />
+                        </div>
                     </div>
 
                     <!-- Detail Order -->

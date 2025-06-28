@@ -1,12 +1,9 @@
 <script setup>
 import { defineProps, ref } from "vue";
 import { Head, Link, router } from "@inertiajs/vue3";
-import ApplicationMark from "@/Components/ApplicationMark.vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
-import NavLink from "@/Components/NavLink.vue";
 import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
-import Banner from "@/Components/Banner.vue";
 import AdminSidebar from "./AdminSidebar.vue";
 
 const props = defineProps({
@@ -17,7 +14,7 @@ const showingNavigationDropdown = ref(false);
 
 const logout = () => {
     localStorage.removeItem("access_token");
-    router.post(route("admin.logout"));
+    router.post(route("logout"));
 };
 </script>
 

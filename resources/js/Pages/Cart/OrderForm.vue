@@ -11,6 +11,8 @@ import { usePage } from "@inertiajs/vue3";
 import { useCartStore } from "@/stores/cart-store";
 import { useOrderStore } from "@/stores/order-store";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
+import DialogModal from "@/Components/DialogModal.vue";
+import BaseDialog from "@/Components/BaseDialog.vue";
 
 const page = usePage();
 const cartStore = useCartStore();
@@ -166,11 +168,20 @@ watch(
 const total = computed(() => {
     return cartStore.subTotal + (form.shipping_cost || 0);
 });
+
+const showAuthWarning = ref(false);
+
+const submit = () => {
+    if (!page.props.auth.user) {
+        showAuthWarning.value = true;
+        return;
+    }
+};
 </script>
 
 <template>
     <div
-        class="w-full sm:w-[400px] outline outline-1 -outline-offset-1 outline-gray-300 rounded-2xl p-4 gap-y-4 flex flex-col gap-4"
+        class="w-full lg:w-[400px] outline outline-1 -outline-offset-1 outline-gray-300 rounded-2xl p-4 gap-y-4 flex flex-col gap-4"
     >
         <h3 class="text-lg font-semibold text-gray-700">Detail Pemesanan</h3>
 
@@ -515,7 +526,7 @@ const total = computed(() => {
                 <PrimaryButton
                     class="w-full py-3 mt-2"
                     :disabled="!form.payment_method || !form.shipping_method"
-                    @click="$emit('submit')"
+                    @click="submit"
                 >
                     Pesan Sekarang
                 </PrimaryButton>
@@ -536,5 +547,30 @@ const total = computed(() => {
                 <li>Total harga belum termasuk biaya layanan transfer.</li>
             </ul>
         </div>
+
+        <BaseDialog
+            :show="showAuthWarning"
+            title="Masuk untuk Melanjutkan"
+            description="Anda harus masuk untuk melanjutkan pemesanan. Silakan masuk atau daftar akun terlebih dahulu."
+            positiveButtonText="Masuk"
+            negativeButtonText="Daftar"
+            @close="showAuthWarning = false"
+            @positiveClicked="
+                showAuthWarning = false;
+                $inertia.visit(
+                    route('login', {
+                        redirect: route('cart'),
+                    })
+                );
+            "
+            @negativeClicked="
+                showAuthWarning = false;
+                $inertia.visit(
+                    route('register', {
+                        redirect: route('cart'),
+                    })
+                );
+            "
+        />
     </div>
 </template>
