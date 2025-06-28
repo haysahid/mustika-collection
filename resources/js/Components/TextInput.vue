@@ -18,7 +18,7 @@ const props = defineProps({
     },
     placeholder: {
         type: String,
-        default: "Masukkan teks...",
+        default: null,
     },
     autofocus: {
         type: Boolean,
@@ -49,6 +49,10 @@ const props = defineProps({
         default: "",
     },
     textClass: {
+        type: String,
+        default: "",
+    },
+    errorClass: {
         type: String,
         default: "",
     },
@@ -127,6 +131,10 @@ defineExpose({ focus: () => input.value.focus() });
             />
             <slot name="suffix"></slot>
         </label>
-        <InputError class="px-4 mt-1" :message="props.error" />
+        <InputError
+            :message="props.error"
+            class="px-4 mt-1"
+            :class="[props.errorClass]"
+        />
     </div>
 </template>

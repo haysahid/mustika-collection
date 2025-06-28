@@ -13,8 +13,8 @@ use Inertia\Inertia;
 Route::get('/', [PublicController::class, 'home'])->name('home');
 
 Route::get('/catalog', [PublicController::class, 'catalog'])->name('catalog');
-
 Route::get('/product/{slug}', [PublicController::class, 'productDetail'])->name('product.show');
+Route::get('/cart', [PublicController::class, 'cart'])->name('cart');
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/login', [AdminController::class, 'login'])->name('login');

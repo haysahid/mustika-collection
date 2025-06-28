@@ -8,6 +8,10 @@ import ProductLinkDialog from "@/Components/ProductLinkDialog.vue";
 import TextInput from "@/Components/TextInput.vue";
 import SuccessDialog from "@/Components/SuccessDialog.vue";
 import ErrorDialog from "@/Components/ErrorDialog.vue";
+import { useCartStore } from "@/stores/cart-store";
+import QuantityInput from "@/Components/QuantityInput.vue";
+
+const cartStore = useCartStore();
 
 const page = usePage();
 const store = page.props.store as StoreEntity;
@@ -46,6 +50,19 @@ const filter = useForm(
               size: null,
           }
 );
+
+// Set initial filter based on URL parameters
+if (route().params) {
+    const sku = route().params.sku;
+    const variant_id = route().params.variant_id;
+
+    const variant = variants.find((v) => v.sku === sku || v.id === variant_id);
+    if (variant) {
+        filter.motif = variant.motif;
+        filter.color = variant.color;
+        filter.size = variant.size;
+    }
+}
 
 const filteredVariants = computed(() => {
     return variants.filter((variant) => {
@@ -87,38 +104,16 @@ const selectedVariant = computed(() => {
 });
 
 const availableStock = computed(() => {
-    return selectedVariant.value?.current_stock_level;
+    return selectedVariant.value?.current_stock_level || 0;
 });
 
 const quantity = ref(1);
 
-const isVariantInCart = ref(false);
-
-const checkIsVariantInCart = () => {
-    const cartItems = JSON.parse(localStorage.getItem("cart_items") || "[]");
-    const inCart = cartItems.some(
-        (item) =>
-            item.product_id === props.product.id &&
-            item.variant_id === selectedVariant.value?.id
-    );
-
-    // Update quantity if variant is in cart
-    if (inCart) {
-        quantity.value =
-            cartItems.find(
-                (item) =>
-                    item.product_id === props.product.id &&
-                    item.variant_id === selectedVariant.value?.id
-            )?.quantity || 1;
-    } else {
-        quantity.value = 1; // Reset quantity if not in cart
-    }
-
-    isVariantInCart.value = inCart;
-
-    return inCart;
-};
-checkIsVariantInCart();
+const isVariantInCart = computed(() => {
+    const item = cartStore.getItemByVariant(selectedVariant.value);
+    quantity.value = item ? item.quantity : 1;
+    return !!item;
+});
 
 function addToCart() {
     if (!selectedVariant.value) {
@@ -133,21 +128,13 @@ function addToCart() {
         return;
     }
 
-    if (isVariantInCart.value) {
-        const cartItems = JSON.parse(
-            localStorage.getItem("cart_items") || "[]"
-        );
-        cartItems.forEach((item) => {
-            if (
-                item.product_id === props.product.id &&
-                item.variant_id === selectedVariant.value.id
-            ) {
-                item.quantity = quantity.value;
-            }
-        });
+    const existingCartItem = cartStore.getItemByVariant(selectedVariant.value);
 
-        localStorage.setItem("cart_items", JSON.stringify(cartItems));
-        checkIsVariantInCart();
+    if (existingCartItem) {
+        cartStore.updateItem({
+            ...existingCartItem,
+            quantity: quantity.value,
+        });
 
         openSuccessDialog(`Berhasil memperbarui jumlah produk di keranjang.`);
         return;
@@ -157,28 +144,18 @@ function addToCart() {
         product_id: props.product.id,
         variant_id: selectedVariant.value.id,
         quantity: quantity.value,
+        image:
+            selectedVariant.value.images[0]?.image ||
+            props.product.images[0]?.image,
         variant: selectedVariant.value,
         created_at: new Date().toISOString(),
+        selected: true,
     };
 
-    localStorage.setItem(
-        "cart_items",
-        JSON.stringify([
-            ...(JSON.parse(localStorage.getItem("cart_items")) || []),
-            cartItem,
-        ])
-    );
+    cartStore.addItem(cartItem);
 
-    checkIsVariantInCart();
     openSuccessDialog(`Berhasil menambahkan produk ke keranjang.`);
 }
-
-watch(
-    () => selectedVariant.value,
-    (newVariant) => {
-        checkIsVariantInCart();
-    }
-);
 
 const showSuccessDialog = ref(false);
 const successMessage = ref(null);
@@ -221,6 +198,8 @@ function openProductLinkDialog() {
 function closeProductLinkDialog() {
     showProductLinkDialog.value = false;
 }
+
+console.log("Selected Variant:", selectedVariant.value);
 
 defineExpose({
     filter,
@@ -302,83 +281,12 @@ defineExpose({
                 </div>
             </div>
 
-            <!-- Quantity Selector -->
-            <div class="flex gap-4">
-                <InputLabel
-                    for="quantity"
-                    value="Jumlah"
-                    class="!text-gray-500 min-w-[80px] py-3 h-min !text-base"
-                />
-                <div class="flex items-center gap-4">
-                    <TextInput
-                        v-model="quantity"
-                        type="number"
-                        min="1"
-                        :hide-arrows="true"
-                        class="w-[152px] grow-0"
-                        bgClass="rounded-lg bg-white px-3.5 py-3 border-gray-400"
-                        textClass="text-center"
-                        :error="
-                            quantity <= 0 || quantity > availableStock
-                                ? 'Jumlah tidak valid'
-                                : ''
-                        "
-                        @input="quantity = Math.max(1, quantity)"
-                    >
-                        <template #prefix>
-                            <button
-                                class="absolute p-1 text-gray-600 left-2 hover:text-gray-800 disabled:opacity-30"
-                                @click="quantity--"
-                                :disabled="quantity <= 1"
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="16"
-                                    height="17"
-                                    viewBox="0 0 16 17"
-                                    fill="none"
-                                >
-                                    <path
-                                        d="M12 8.69482H4"
-                                        stroke="black"
-                                        stroke-width="1.2381"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                    />
-                                </svg>
-                            </button>
-                        </template>
-                        <template #suffix>
-                            <button
-                                class="absolute p-1 text-gray-600 right-2 size-6 hover:text-gray-800 disabled:opacity-30"
-                                @click="quantity++"
-                                :disabled="quantity >= availableStock"
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="16"
-                                    height="17"
-                                    viewBox="0 0 16 17"
-                                    fill="none"
-                                >
-                                    <path
-                                        d="M13.3334 8.69491H2.66669M8.00002 3.36157V14.0282V3.36157Z"
-                                        stroke="black"
-                                        stroke-width="1.2381"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                    />
-                                </svg>
-                            </button>
-                        </template>
-                    </TextInput>
-
-                    <p v-if="availableStock" class="text-gray-600">
-                        Tersedia {{ availableStock }}
-                        {{ selectedVariant?.unit }}
-                    </p>
-                </div>
-            </div>
+            <!-- Quantity -->
+            <QuantityInput
+                v-model="quantity"
+                :unit="selectedVariant?.unit"
+                :max="availableStock"
+            />
         </div>
 
         <!-- Call to Actions -->

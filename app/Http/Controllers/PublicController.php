@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Color;
+use App\Models\PaymentMethod;
 use App\Models\Product;
+use App\Models\ShippingMethod;
 use App\Models\Size;
 use App\Models\Store;
 use Illuminate\Http\Request;
@@ -172,6 +174,26 @@ class PublicController extends Controller
             'colors' => $colors,
             'sizes' => $sizes,
             'relatedProducts' => $relatedProducts,
+        ]);
+    }
+
+    public function cart()
+    {
+        $store = Store::with([
+            'advantages',
+            'certificates' => function ($query) {
+                $query->limit(5);
+            },
+            'social_links',
+        ])->first();
+
+        $paymentMethods = PaymentMethod::get();
+        $shippingMethods = ShippingMethod::get();
+
+        return Inertia::render('Cart', [
+            'store' => $store,
+            'paymentMethods' => $paymentMethods,
+            'shippingMethods' => $shippingMethods,
         ]);
     }
 }

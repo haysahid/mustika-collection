@@ -5,7 +5,7 @@ import LandingLayout from "@/Layouts/LandingLayout.vue";
 import LandingSection from "@/Components/LandingSection.vue";
 import ProductCard from "@/Components/ProductCard.vue";
 import JoinUs from "@/Components/JoinUs.vue";
-import ProductOrderForm from "./Product/ProductOrderForm.vue";
+import ProductSelectionForm from "./Product/ProductSelectionForm.vue";
 import ProductGallery from "./Product/ProductGallery.vue";
 import ProductDetailTable from "./Product/ProductDetailTable.vue";
 
@@ -192,7 +192,7 @@ const images = computed(() => {
                         </div>
                     </div>
                     <div class="flex flex-col gap-6">
-                        <ProductOrderForm
+                        <ProductSelectionForm
                             ref="orderForm"
                             :product="props.product"
                             :accumulated-stock="props.accumulatedStock"

@@ -1,9 +1,11 @@
-<script setup>
+<script setup lang="ts">
 import { computed, ref } from "vue";
 import { Link } from "@inertiajs/vue3";
 import NavLink from "@/Components/NavLink.vue";
-import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
 import CartButton from "./CartButton.vue";
+import { useCartStore } from "@/stores/cart-store";
+
+const cartStore = useCartStore();
 
 const showingNavigationDropdown = ref(false);
 
@@ -32,12 +34,6 @@ const trailingMenus = [
         active: route().current("login"),
     },
 ];
-
-const cartItemsLength = computed(() => {
-    // Get from localStorage
-    const cartItems = JSON.parse(localStorage.getItem("cart_items")) || [];
-    return cartItems.length;
-});
 </script>
 
 <template>
@@ -84,8 +80,9 @@ const cartItemsLength = computed(() => {
                         ></span>
 
                         <CartButton
-                            :length="cartItemsLength"
+                            :length="cartStore.items.length"
                             class="me-2 sm:me-0"
+                            @click="$inertia.get(route('cart'))"
                         />
 
                         <!-- Trailing Menus -->
