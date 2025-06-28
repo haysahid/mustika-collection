@@ -129,7 +129,11 @@ const submit = () => {
                 <p class="text-sm text-gray-600">
                     Belum punya akun?
                     <Link
-                        href="/admin/register"
+                        :href="
+                            route('register', {
+                                redirect: route().params.redirect,
+                            })
+                        "
                         class="font-medium text-primary hover:font-semibold"
                     >
                         Daftar disini

@@ -19,6 +19,9 @@ Route::get('/cart', [PublicController::class, 'cart'])->name('cart');
 
 Route::get('/login', [UserController::class, 'login'])->name('login');
 Route::post('/login', [UserController::class, 'loginProcess'])->name('login.process');
+Route::get('/register', [UserController::class, 'register'])->name('register');
+Route::post('/register', [UserController::class, 'registerProcess'])->name('register.process');
+Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/login', [AdminController::class, 'login'])->name('login');

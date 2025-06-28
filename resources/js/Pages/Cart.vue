@@ -156,7 +156,7 @@ function formatPrice(price = 0) {
                                             />
 
                                             <p
-                                                class="text-base font-semibold text-gray-800 sm:text-lg text-end w-[110px]"
+                                                class="text-base font-semibold text-gray-800 text-end w-[110px]"
                                             >
                                                 {{
                                                     formatPrice(

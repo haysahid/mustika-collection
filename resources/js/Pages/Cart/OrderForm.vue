@@ -477,7 +477,7 @@ const submit = () => {
                 <!-- Sub Total -->
                 <div class="flex items-center justify-between">
                     <p class="text-gray-700">Sub Total</p>
-                    <p class="text-gray-700">
+                    <p class="font-semibold text-gray-700">
                         {{
                             cartStore.subTotal.toLocaleString("id-ID", {
                                 style: "currency",
