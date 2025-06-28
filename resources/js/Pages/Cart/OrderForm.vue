@@ -198,7 +198,7 @@ const submit = () => {
                         v-for="payment in paymentMethods"
                         :key="payment.id"
                         :label="payment.name"
-                        :selected="form.payment_method.id == payment.id"
+                        :selected="form.payment_method?.id == payment.id"
                         @click="form.payment_method = payment"
                     />
                 </div>
@@ -216,7 +216,7 @@ const submit = () => {
                         v-for="shipping in shippingMethods"
                         :key="shipping.id"
                         :label="shipping.name"
-                        :selected="form.shipping_method.id == shipping.id"
+                        :selected="form.shipping_method?.id == shipping.id"
                         @click="form.shipping_method = shipping"
                     />
                 </div>
