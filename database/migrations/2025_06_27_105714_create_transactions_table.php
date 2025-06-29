@@ -25,7 +25,8 @@ return new class extends Migration
             $table->string('city_name')->nullable();
             $table->string('address')->nullable();
             $table->integer('shipping_cost')->nullable();
-            $table->enum('status', ['pending', 'processing', 'completed', 'cancelled'])->default('pending');
+            $table->string('shipping_estimate')->nullable();
+            $table->enum('status', ['pending', 'paid', 'processing', 'completed', 'cancelled'])->default('pending');
             $table->timestamps();
             $table->softDeletes();
         });

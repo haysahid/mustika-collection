@@ -19,21 +19,21 @@ const props = defineProps({
 </script>
 
 <template>
-    <LandingLayout title="Berhasil Membuat Pesanan">
+    <LandingLayout title="Order Success">
         <div
-            class="p-6 sm:p-12 md:px-[100px] md:py-[60px] flex flex-col gap-2 sm:gap-3"
+            class="p-6 sm:p-12 md:px-[100px] md:py-[60px] flex flex-col gap-2 sm:gap-3 sm:items-center"
         >
             <h1
                 class="text-2xl font-bold text-start sm:text-center sm:text-3xl"
             >
-                Pesanan Berhasil!
+                #{{ props.transaction.code }}
             </h1>
 
             <p
-                class="text-sm text-gray-700 text-start sm:text-center sm:text-base"
+                class="max-w-lg text-sm text-gray-700 text-start sm:text-center sm:text-base"
             >
-                Terima kasih telah melakukan pemesanan. Pesanan Anda telah
-                berhasil dibuat.
+                Terima kasih telah melakukan pemesanan di Mustika Collection.
+                Silakan cek detail pesanan Anda di bawah ini.
             </p>
         </div>
 

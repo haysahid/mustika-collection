@@ -271,6 +271,7 @@ class OrderController extends Controller
                 $cityName = $shippingData['city_name'] ?? null;
                 $address = $shippingData['address'] ?? null;
                 $shippingCost = $shipping['value'] ?? 0;
+                $shippingEstimate = $shipping['etd'] ?? null;
             } else {
                 $provinceId = null;
                 $provinceName = null;
@@ -278,6 +279,7 @@ class OrderController extends Controller
                 $cityName = null;
                 $address = null;
                 $shippingCost = 0;
+                $shippingEstimate = null;
             }
 
             // Create transaction
@@ -294,6 +296,7 @@ class OrderController extends Controller
                 'city_name' => $cityName,
                 'address' => $address,
                 'shipping_cost' => $shippingCost,
+                'shipping_estimate' => $shippingEstimate,
                 'status' => 'pending',
             ]);
 

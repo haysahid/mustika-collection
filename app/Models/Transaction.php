@@ -21,11 +21,10 @@ class Transaction extends Model
         'city_id',
         'city_name',
         'address',
+        'shipping_estimate',
         'shipping_cost',
         'status',
     ];
-
-
 
     // Relationships
     public function user()

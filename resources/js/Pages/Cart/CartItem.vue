@@ -101,7 +101,7 @@ const hasActions = computed(() => {
                         "
                     >
                         <h3
-                            class="text-base font-medium text-gray-800 sm:text-lg"
+                            class="text-base font-medium text-gray-800 sm:text-lg hover:text-primary-dark"
                         >
                             {{ props.item.variant.name }}
                         </h3>

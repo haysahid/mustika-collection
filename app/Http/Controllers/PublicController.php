@@ -185,7 +185,7 @@ class PublicController extends Controller
         ]);
     }
 
-    public function cart()
+    public function myCart()
     {
         $store = Store::with([
             'advantages',
@@ -198,7 +198,7 @@ class PublicController extends Controller
         $paymentMethods = PaymentMethod::get();
         $shippingMethods = ShippingMethod::get();
 
-        return Inertia::render('Cart', [
+        return Inertia::render('MyCart', [
             'store' => $store,
             'paymentMethods' => $paymentMethods,
             'shippingMethods' => $shippingMethods,

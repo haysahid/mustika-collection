@@ -11,6 +11,7 @@ import axios from "axios";
 import { usePage } from "@inertiajs/vue3";
 import QuantityInput from "@/Components/QuantityInput.vue";
 import DeleteConfirmationDialog from "@/Components/DeleteConfirmationDialog.vue";
+import JoinUs from "@/Components/JoinUs.vue";
 
 const page = usePage();
 if (page.props.flash.access_token) {
@@ -90,12 +91,14 @@ function formatPrice(price = 0) {
         </div>
 
         <div
-            v-if="cartStore.items.length > 0"
             data-aos="fade-up"
             data-aos-duration="600"
             class="p-6 !pt-0 sm:p-12 md:p-[100px] flex flex-col gap-12 lg:gap-20"
         >
-            <LandingSection class="!items-start !justify-start">
+            <LandingSection
+                v-if="cartStore.items.length > 0"
+                class="!items-start !justify-start"
+            >
                 <div
                     class="flex flex-col items-center justify-center w-full gap-5 mx-auto lg:flex-row lg:items-start sm:gap-12 max-w-7xl"
                 >
@@ -198,6 +201,11 @@ function formatPrice(price = 0) {
                     <!-- Detail Order -->
                     <OrderForm />
                 </div>
+            </LandingSection>
+
+            <!-- Join Us -->
+            <LandingSection id="join">
+                <JoinUs />
             </LandingSection>
         </div>
     </LandingLayout>

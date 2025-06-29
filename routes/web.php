@@ -16,7 +16,7 @@ Route::get('/', [PublicController::class, 'home'])->name('home');
 
 Route::get('/catalog', [PublicController::class, 'catalog'])->name('catalog');
 Route::get('/product/{slug}', [PublicController::class, 'productDetail'])->name('product.show');
-Route::get('/cart', [PublicController::class, 'cart'])->name('cart');
+Route::get('/my-cart', [PublicController::class, 'myCart'])->name('my-cart');
 
 Route::get('/login', [UserController::class, 'login'])->name('login');
 Route::post('/login', [UserController::class, 'loginProcess'])->name('login.process');
@@ -25,7 +25,9 @@ Route::post('/register', [UserController::class, 'registerProcess'])->name('regi
 Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 
 Route::middleware(['auth:sanctum'])->group(function () {
-    Route::get('/order-success/{invoice_code}', [OrderController::class, 'orderSuccess'])->name('order.success');
+    Route::get('/order-success', [OrderController::class, 'orderSuccess'])->name('order.success');
+    Route::get('/my-order', [OrderController::class, 'myOrder'])->name('my-order');
+    Route::get('/my-order/{transaction_code}', [OrderController::class, 'myOrderDetail'])->name('my-order.detail');
 });
 
 Route::prefix('admin')->name('admin.')->group(function () {

@@ -22,12 +22,13 @@ onMounted(() => {
     <div
         :data-tooltip-target="props.id"
         :data-tooltip-placement="props.placement"
+        class="relative"
     >
         <slot></slot>
         <div
             :id="props.id"
             role="tooltip"
-            class="absolute z-10 invisible inline-block max-w-xs px-3 py-2 text-sm transition-opacity duration-300 rounded-lg shadow-xs opacity-0 text-primary bg-secondary tooltip dark:bg-secondary dark:text-gray-800 dark:shadow-lg"
+            class="absolute z-10 invisible inline-block max-w-xs px-3 py-2 text-sm text-center transition-opacity duration-300 rounded-lg shadow-xs opacity-0 text-primary bg-secondary tooltip dark:bg-secondary dark:text-gray-800 dark:shadow-lg text-nowrap"
         >
             <slot name="content"></slot>
             <div class="tooltip-arrow" data-popper-arrow></div>

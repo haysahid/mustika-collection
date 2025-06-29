@@ -11,6 +11,7 @@ interface TransactionEntity {
     city_name: string | null;
     address: string | null;
     shipping_cost: number;
+    shipping_estimate: string | null;
     status: string;
     created_at: string | null;
     updated_at: string | null;

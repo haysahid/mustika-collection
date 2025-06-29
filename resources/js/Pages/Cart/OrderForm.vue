@@ -650,7 +650,7 @@ const submit = () => {
                 showAuthWarning = false;
                 $inertia.visit(
                     route('login', {
-                        redirect: route('cart'),
+                        redirect: route('my-cart'),
                     })
                 );
             "
@@ -658,7 +658,7 @@ const submit = () => {
                 showAuthWarning = false;
                 $inertia.visit(
                     route('register', {
-                        redirect: route('cart'),
+                        redirect: route('my-cart'),
                     })
                 );
             "

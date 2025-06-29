@@ -10,7 +10,7 @@ const props = defineProps({
     },
     showDivider: {
         type: Boolean,
-        default: true,
+        default: false,
     },
 });
 
@@ -31,23 +31,25 @@ const discount = computed(() => {
 
 <template>
     <div
-        class="flex flex-col items-center justify-between gap-4 py-4 border-b"
+        class="flex flex-col items-start justify-center w-full gap-4 py-2.5 border-b"
         :class="{
             'border-none': !props.showDivider,
         }"
     >
-        <div class="flex items-start gap-x-4">
-            <div class="flex items-center justify-center flex-shrink-0 gap-4">
+        <div class="flex items-start w-full gap-x-4">
+            <div
+                class="flex items-center justify-center flex-shrink-0 gap-4 max-sm:mt-1"
+            >
                 <!-- Image -->
                 <img
                     v-if="props.item.image"
                     :src="`/storage/${props.item.image}`"
                     alt="Product Image"
-                    class="object-cover size-[80px] sm:size-[120px] rounded-lg outline outline-1 outline-gray-300"
+                    class="object-cover size-[60px] sm:size-[80px] rounded-lg outline outline-1 outline-gray-300"
                 />
                 <div
                     v-else
-                    class="flex items-center justify-center size-[80px] sm:size-[120px] bg-gray-100 rounded-lg aspect-square"
+                    class="flex items-center justify-center size-[60px] sm:size-[80px] bg-gray-100 rounded-lg aspect-square"
                 >
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -63,30 +65,21 @@ const discount = computed(() => {
                 </div>
             </div>
 
-            <div class="flex flex-col gap-2">
+            <div class="flex flex-col w-full">
                 <!-- Detail -->
-                <Link
-                    :href="
-                        route('product.show', props.item.variant.product.slug) +
-                        `?sku=${props.item.variant.sku}`
-                    "
-                >
-                    <h3
-                        class="text-base font-medium text-gray-800 sm:text-lg hover:text-primary-dark"
-                    >
-                        {{ props.item.variant.name }}
-                    </h3>
-                </Link>
+                <p class="text-sm font-medium text-gray-800 sm:text-base">
+                    {{ props.item.variant.name }}
+                </p>
 
                 <div class="flex items-center gap-x-2">
-                    <p class="text-sm text-gray-800 sm:text-base">
+                    <p class="text-xs text-gray-800 sm:text-sm">
                         {{
                             formatPrice(props.item.variant.final_selling_price)
                         }}
                     </p>
                     <p
                         v-if="props.item.variant.discount > 0"
-                        class="text-xs text-gray-500 line-through sm:text-sm"
+                        class="text-xs text-gray-500 line-through"
                     >
                         {{ formatPrice(props.item.variant.base_selling_price) }}
                     </p>
@@ -99,11 +92,11 @@ const discount = computed(() => {
                 </div>
 
                 <div class="flex items-center justify-between w-full gap-x-4">
-                    <p class="text-base font-semibold text-gray-800 text-end">
+                    <p class="text-sm font-semibold text-gray-800 text-end">
                         x {{ props.item.quantity }}
                         {{ props.item.variant.unit }}
                     </p>
-                    <p class="text-base font-semibold text-gray-800 text-end">
+                    <p class="text-sm font-semibold text-gray-800 text-end">
                         {{ $formatCurrency(props.item.subtotal) }}
                     </p>
                 </div>
