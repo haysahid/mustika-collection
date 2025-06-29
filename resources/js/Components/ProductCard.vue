@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Link } from "@inertiajs/vue3";
+import DiscountTag from "@/Components/DiscountTag.vue";
 
 const props = defineProps({
     name: String,
@@ -10,6 +11,10 @@ const props = defineProps({
     basePrice: {
         type: Number,
         default: 0,
+    },
+    discountType: {
+        type: String,
+        default: "percentage", // or "fixed"
     },
     discount: {
         type: Number,
@@ -86,14 +91,12 @@ function formatPrice(price) {
                         </p>
                     </div>
 
-                    <div
+                    <DiscountTag
                         v-if="props.discount"
-                        class="px-1.5 py-0.5 sm:px-2 sm:py-1 text-xs text-white bg-red-500 rounded-md h-fit"
-                    >
-                        {{ props.discount }}%
-                    </div>
+                        :discount-type="props.discountType"
+                        :discount="props.discount"
+                    />
                 </div>
-            </div>
-        </div></Link
-    >
+            </div></div
+    ></Link>
 </template>

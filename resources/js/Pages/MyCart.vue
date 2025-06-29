@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { ref, computed } from "vue";
 import LandingSection from "@/Components/LandingSection.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import LandingLayout from "@/Layouts/LandingLayout.vue";
@@ -12,10 +11,15 @@ import { usePage } from "@inertiajs/vue3";
 import QuantityInput from "@/Components/QuantityInput.vue";
 import DeleteConfirmationDialog from "@/Components/DeleteConfirmationDialog.vue";
 import JoinUs from "@/Components/JoinUs.vue";
+import { router } from "@inertiajs/vue3";
 
 const page = usePage();
 if (page.props.flash.access_token) {
     localStorage.setItem("access_token", page.props.flash.access_token);
+}
+
+if (route().params.order_id) {
+    router.visit(route("order.success", { order_id: route().params.order_id }));
 }
 
 const cartStore = useCartStore();

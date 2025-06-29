@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed, useSlots } from "vue";
-import Checkbox from "@/Components/Checkbox.vue";
+import { computed } from "vue";
+import DiscountTag from "@/Components/DiscountTag.vue";
 import { Link } from "@inertiajs/vue3";
 
 const props = defineProps({
@@ -90,12 +90,11 @@ const discount = computed(() => {
                     >
                         {{ formatPrice(props.item.variant.base_selling_price) }}
                     </p>
-                    <div
+                    <DiscountTag
                         v-if="props.item.variant.discount > 0"
-                        class="px-1.5 py-0.5 sm:px-2 sm:py-1 text-xs text-white bg-red-500 rounded-md h-fit w-fit"
-                    >
-                        {{ discount }}
-                    </div>
+                        :discount-type="props.item.variant.discount_type"
+                        :discount="props.item.variant.discount"
+                    />
                 </div>
 
                 <div class="flex items-center justify-between w-full gap-x-4">

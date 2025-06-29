@@ -13,6 +13,7 @@ import { useOrderStore } from "@/stores/order-store";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import DialogModal from "@/Components/DialogModal.vue";
 import BaseDialog from "@/Components/BaseDialog.vue";
+import ErrorDialog from "@/Components/ErrorDialog.vue";
 
 const page = usePage();
 const cartStore = useCartStore();
@@ -35,40 +36,44 @@ async function initScript() {
 }
 initScript();
 
-async function onMidtransSuccess(result: any) {
-    cartStore.clearSelectedItems();
-
-    await axios
-        .post(
-            `${page.props.ziggy.url}/api/confirm-payment`,
-            {
-                invoice_id: invoice.id,
-            },
-            {
-                headers: {
-                    authorization: `Bearer ${localStorage.getItem(
-                        "access_token"
-                    )}`,
-                },
-            }
-        )
-        .then((response) => {
-            router.visit(
-                route("order.success", {
-                    invoice_code: invoice.code,
-                })
-            );
-        })
-        .catch((error) => {
-            console.error("Error confirming payment", error);
-        });
-}
-
 async function showSnap(invoice: InvoiceEntity) {
     const snapToken = invoice.snap_token;
 
     window.snap.pay(snapToken, {
-        onSuccess: onMidtransSuccess,
+        onSuccess: async function (result) {
+            cartStore.clearSelectedItems();
+
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth",
+            });
+
+            await axios
+                .post(
+                    `${page.props.ziggy.url}/api/confirm-payment`,
+                    {
+                        invoice_id: invoice.id,
+                    },
+                    {
+                        headers: {
+                            authorization: `Bearer ${localStorage.getItem(
+                                "access_token"
+                            )}`,
+                        },
+                    }
+                )
+                .then((response) => {
+                    console.log("Payment confirmed", response.data);
+                    router.visit(
+                        route("order.success", {
+                            invoice_code: invoice.code,
+                        })
+                    );
+                })
+                .catch((error) => {
+                    console.error("Error confirming payment", error);
+                });
+        },
         onPending: async function (result) {
             console.log("pending", result);
         },
@@ -81,6 +86,19 @@ async function showSnap(invoice: InvoiceEntity) {
             );
         },
     });
+}
+
+const showErrorDialog = ref(false);
+const errorMessage = ref(null);
+
+function openErrorDialog(message: string) {
+    errorMessage.value = message;
+    showErrorDialog.value = true;
+}
+
+function closeErrorDialog() {
+    showErrorDialog.value = false;
+    errorMessage.value = null;
 }
 
 const paymentMethods = page.props.paymentMethods as PaymentMethodEntity[];
@@ -168,65 +186,23 @@ if (form.city_id) {
     getShippingCost();
 }
 
-watch(
-    () => form.payment_method,
-    (newPaymentMethod) => {
-        orderStore.updateForm({
-            ...orderStore.form,
-            payment_method: newPaymentMethod,
-        } as OrderDetailFormModel);
-    }
-);
+const updateLocalForm = () => {
+    orderStore.updateForm({
+        payment_method: form.payment_method,
+        shipping_method: form.shipping_method,
+        province_id: form.province_id,
+        province: form.province,
+        city_id: form.city_id,
+        city: form.city,
+        address: form.address,
+        shipping_cost: form.shipping_cost,
+    } as OrderDetailFormModel);
+};
 
 watch(
-    () => form.shipping_method,
-    (newShippingMethod) => {
-        orderStore.updateForm({
-            ...orderStore.form,
-            shipping_method: newShippingMethod,
-        } as OrderDetailFormModel);
-    }
-);
-
-watch(
-    () => form.province_id,
-    (newProvinceId) => {
-        orderStore.updateForm({
-            ...orderStore.form,
-            province_id: newProvinceId,
-            province: form.province,
-        } as OrderDetailFormModel);
-    }
-);
-
-watch(
-    () => form.city_id,
-    (newCityId) => {
-        orderStore.updateForm({
-            ...orderStore.form,
-            city_id: newCityId,
-            city: form.city,
-        } as OrderDetailFormModel);
-    }
-);
-
-watch(
-    () => form.address,
-    (newAddress) => {
-        orderStore.updateForm({
-            ...orderStore.form,
-            address: newAddress,
-        } as OrderDetailFormModel);
-    }
-);
-
-watch(
-    () => form.shipping_cost,
-    (newShippingCost) => {
-        orderStore.updateForm({
-            ...orderStore.form,
-            shipping_cost: newShippingCost,
-        } as OrderDetailFormModel);
+    () => form.data(),
+    (newForm) => {
+        updateLocalForm();
     }
 );
 
@@ -283,6 +259,11 @@ const submit = () => {
         })
         .catch((error) => {
             console.error("Checkout error:", error);
+            if (error.response.status == 422) {
+                form.errors = error.response.data.errors || {};
+            } else {
+                openErrorDialog("Terjadi kesalahan");
+            }
         });
 };
 </script>
@@ -367,6 +348,11 @@ const submit = () => {
                                 "
                                 class="w-full"
                                 placeholder="Pilih Provinsi"
+                                :error="
+                                    form.errors?.province_id
+                                        ? form.errors?.province_id[0] || null
+                                        : null
+                                "
                             >
                                 <template #suffix>
                                     <button
@@ -483,6 +469,11 @@ const submit = () => {
                                 "
                                 class="w-full"
                                 placeholder="Pilih Kota/Kabupaten"
+                                :error="
+                                    form.errors?.city_id
+                                        ? form.errors?.city_id[0] || null
+                                        : null
+                                "
                             >
                                 <template #suffix>
                                     <button
@@ -565,8 +556,12 @@ const submit = () => {
                         v-model="form.address"
                         class="w-full"
                         placeholder="Masukkan alamat lengkap"
-                        :error="form.errors.address"
                         @update:modelValue="form.errors.address = null"
+                        :error="
+                            form.errors?.address
+                                ? form.errors?.address[0] || null
+                                : null
+                        "
                     />
                     <p
                         v-if="form.estimated_delivery"
@@ -635,7 +630,7 @@ const submit = () => {
                     class="w-full py-3 mt-2"
                     :disabled="
                         !form.payment_method ||
-                        !form ||
+                        !form.shipping_method ||
                         cartStore.selectedItems.length == 0
                     "
                     @click="submit"
@@ -683,6 +678,13 @@ const submit = () => {
                     })
                 );
             "
+        />
+
+        <ErrorDialog
+            v-if="showErrorDialog"
+            :title="errorMessage"
+            :show="showErrorDialog"
+            @close="closeErrorDialog"
         />
     </div>
 </template>

@@ -2,6 +2,7 @@
 import { computed, useSlots } from "vue";
 import Checkbox from "@/Components/Checkbox.vue";
 import { Link } from "@inertiajs/vue3";
+import DiscountTag from "@/Components/DiscountTag.vue";
 
 const props = defineProps({
     item: {
@@ -125,12 +126,11 @@ const hasActions = computed(() => {
                                 )
                             }}
                         </p>
-                        <div
+                        <DiscountTag
                             v-if="props.item.variant.discount > 0"
-                            class="px-1.5 py-0.5 sm:px-2 sm:py-1 text-xs text-white bg-red-500 rounded-md h-fit w-fit"
-                        >
-                            {{ discount }}
-                        </div>
+                            :discount-type="props.item.variant.discount_type"
+                            :discount="props.item.variant.discount"
+                        />
                     </div>
                 </div>
 

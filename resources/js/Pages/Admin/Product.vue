@@ -9,6 +9,7 @@ import DeleteConfirmationDialog from "@/Components/DeleteConfirmationDialog.vue"
 import SuccessDialog from "@/Components/SuccessDialog.vue";
 import TextInput from "@/Components/TextInput.vue";
 import Dropdown from "@/Components/Dropdown.vue";
+import DiscountTag from "@/Components/DiscountTag.vue";
 
 const props = defineProps({
     products: null,
@@ -494,11 +495,11 @@ onMounted(() => {
                                             )
                                         }}
                                     </p>
-                                    <div
-                                        class="px-1.5 py-0.5 text-xs text-white bg-red-500 rounded-md h-fit"
-                                    >
-                                        {{ product.discount }}%
-                                    </div>
+                                    <DiscountTag
+                                        v-if="product.discount > 0"
+                                        :discount-type="product.discount_type"
+                                        :discount="product.discount"
+                                    />
                                 </div>
                             </td>
                             <td class="text-center">

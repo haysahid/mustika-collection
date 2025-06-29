@@ -100,11 +100,11 @@ const histories = ref([
 const status = props.transaction.status;
 const shippingEstimate = props.transaction.shipping_estimate;
 
-// example shipping_estimate: '1 - 5'
+// example shipping_estimate: '1-3'
 // calculate the average shipping estimate
 const dayShippingEstimate = computed(() => {
     if (!shippingEstimate) return 0;
-    const [min, max] = shippingEstimate.split(" - ").map(Number);
+    const [min, max] = shippingEstimate.split("-").map(Number);
     return Math.round((min + max) / 2);
 });
 
@@ -381,6 +381,17 @@ function buildHistories() {
 }
 
 histories.value = buildHistories();
+
+const progress = ref(0);
+
+// Delay 100 ms
+setTimeout(() => {
+    // Calculate progress based on done histories
+    progress.value =
+        (histories.value.filter((h) => h.done).length /
+            histories.value.length) *
+        100;
+}, 100);
 </script>
 
 <template>
@@ -409,7 +420,7 @@ histories.value = buildHistories();
                         }"
                     ></div>
 
-                    <div class="flex flex-col items-center text-center">
+                    <div class="flex flex-col items-center gap-0 text-center">
                         <p
                             class="text-sm font-semibold text-gray-800 sm:text-base"
                             :class="{ 'text-primary': history.done }"
@@ -429,13 +440,9 @@ histories.value = buildHistories();
             <!-- Line -->
             <div class="relative w-full h-1.5 bg-gray-200 rounded-full">
                 <div
-                    class="absolute top-0 left-0 h-full rounded-full bg-primary"
+                    class="absolute top-0 left-0 h-full transition-all ease-out rounded-full bg-primary duration-[1s]"
                     :style="{
-                        width: `${
-                            (histories.filter((h) => h.done).length /
-                                histories.length) *
-                            100
-                        }%`,
+                        width: `${progress > 100 ? 100 : progress}%`,
                     }"
                 ></div>
             </div>

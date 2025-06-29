@@ -9,6 +9,7 @@ import ProductSelectionForm from "./Product/ProductSelectionForm.vue";
 import ProductGallery from "./Product/ProductGallery.vue";
 import ProductDetailTable from "./Product/ProductDetailTable.vue";
 import { usePage } from "@inertiajs/vue3";
+import DiscountTag from "@/Components/DiscountTag.vue";
 
 const page = usePage();
 if (page.props.flash.access_token) {
@@ -190,11 +191,12 @@ const images = computed(() => {
                             >
                                 {{ basePrice }}
                             </p>
-                            <div
-                                class="bg-red-500 text-white px-1.5 py-0.5 rounded-md text-sm"
-                            >
-                                {{ discount }}
-                            </div>
+                            <DiscountTag
+                                v-if="props.product.discount"
+                                :discount-type="props.product.discount_type"
+                                :discount="props.product.discount"
+                                class="!px-1.5 !py-0.5 !rounded-md !text-sm !font-medium"
+                            />
                         </div>
                     </div>
                     <div class="flex flex-col gap-6">

@@ -40,6 +40,10 @@ const props = defineProps({
         type: String,
         default: "max-h-[300px]",
     },
+    errorClass: {
+        type: String,
+        default: "",
+    },
     preventNewLine: {
         type: Boolean,
         default: false,
@@ -109,6 +113,10 @@ defineExpose({ focus: () => input.value.focus() });
                 @input="updateValue($event.target.value)"
             />
         </label>
-        <InputError class="mt-1" :message="props.error" />
+        <InputError
+            :message="props.error"
+            class="px-4 mt-1"
+            :class="[props.errorClass]"
+        />
     </div>
 </template>

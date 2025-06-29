@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Invoice;
+use App\Models\Payment;
 use App\Models\Store;
 use App\Models\Transaction;
 use App\Models\TransactionItem;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -24,8 +26,60 @@ class OrderController extends Controller
             'social_links',
         ])->first();
 
+        $orderId = $request->query('order_id');
+        $transactionStatus = $request->query('transaction_status');
+
+        if ($transactionStatus === 'settlement') {
+            $transactionId = $orderId;
+
+            $transaction = Transaction::with(['payment_method', 'shipping_method'])->findOrFail($transactionId);
+            $invoice = Invoice::where('transaction_id', $transaction->id)->latest()->firstOrFail();
+
+            // Check midtrans payment status
+            if ($transaction->payment_method->slug === 'transfer') {
+                \Midtrans\Config::$serverKey = env('MIDTRANS_SERVER_KEY');
+                \Midtrans\Config::$isProduction = env('MIDTRANS_IS_PRODUCTION', false);
+                \Midtrans\Config::$is3ds = true;
+
+                $response = (object) \Midtrans\Transaction::status($transaction->code);
+
+                if ($response->transaction_status !== 'settlement') {
+                    throw new Exception('Pembayaran belum terkonfirmasi');
+                }
+
+                // Create payment record
+                Payment::create([
+                    'invoice_id' => $invoice->id,
+                    'transaction_id' => $transaction->id,
+                    'payment_method_id' => $transaction->payment_method_id,
+                    'amount' => $invoice->amount,
+                    'midtrans_response' => json_encode($response),
+                    'status' => 'completed',
+                ]);
+
+                // Update invoice paid_at
+                $invoice->paid_at = now();
+                $invoice->save();
+
+                // Update transaction status
+                $transaction->paid_at = now();
+                $transaction->status = 'paid';
+                $transaction->save();
+
+                $items = TransactionItem::where('transaction_id', $transaction->id)->get();
+
+                return Inertia::render('OrderSuccess', [
+                    'invoice' => $invoice,
+                    'transaction' => $transaction,
+                    'items' => $items,
+                    'store' => $store,
+                ]);
+            }
+        }
+
         $invoice_code = $request->query('invoice_code');
-        $transaction_code = $request->query('transaction_code');
+        $transaction_code = $request->query('transaction_code') ?? $orderId;
+
 
         if ($invoice_code) {
             $invoice = Invoice::where('code', $invoice_code)->firstOrFail();

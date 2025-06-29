@@ -233,55 +233,55 @@ class OrderController extends Controller
             'note.string' => 'Catatan harus berupa string',
         ]);
 
+        $paymentMethod = PaymentMethod::findOrFail($validated['payment_method_id']);
+        $shippingMethod = ShippingMethod::findOrFail($validated['shipping_method_id']);
+
+        if ($shippingMethod->slug === 'courier') {
+            $shippingData = $request->validate([
+                'province_id' => 'required|integer',
+                'province_name' => 'required|string',
+                'city_id' => 'required|integer',
+                'city_name' => 'required|string',
+                'address' => 'required|string',
+            ], [
+                'province_id.required' => 'ID provinsi harus diisi',
+                'province_id.integer' => 'ID provinsi harus berupa angka',
+                'province_name.required' => 'Nama provinsi harus diisi',
+                'province_name.string' => 'Nama provinsi harus berupa string',
+                'city_id.required' => 'ID kota tujuan harus diisi',
+                'city_id.integer' => 'ID kota tujuan harus berupa angka',
+                'city_name.required' => 'Nama kota tujuan harus diisi',
+                'city_name.string' => 'Nama kota tujuan harus berupa string',
+                'address.required' => 'Alamat harus diisi',
+                'address.string' => 'Alamat harus berupa string',
+            ]);
+
+            // Get shipping cost
+            $origin = $this->origin;
+            $weight = $this->weight;
+            $courier = $this->courier;
+            $destination = $shippingData['city_id'];
+            $shipping = $this->getShipping($origin, $destination, $weight, $courier);
+
+            $provinceId = $shippingData['province_id'] ?? null;
+            $provinceName = $shippingData['province_name'] ?? null;
+            $cityId = $shippingData['city_id'] ?? null;
+            $cityName = $shippingData['city_name'] ?? null;
+            $address = $shippingData['address'] ?? null;
+            $shippingCost = $shipping['value'] ?? 0;
+            $shippingEstimate = $shipping['etd'] ?? null;
+        } else {
+            $provinceId = null;
+            $provinceName = null;
+            $cityId = null;
+            $cityName = null;
+            $address = null;
+            $shippingCost = 0;
+            $shippingEstimate = null;
+        }
+
         try {
             DB::beginTransaction();
-
-            $paymentMethod = PaymentMethod::findOrFail($validated['payment_method_id']);
-            $shippingMethod = ShippingMethod::findOrFail($validated['shipping_method_id']);
-
-            if ($shippingMethod->slug === 'courier') {
-                $shippingData = $request->validate([
-                    'province_id' => 'required|integer',
-                    'province_name' => 'required|string',
-                    'city_id' => 'required|integer',
-                    'city_name' => 'required|string',
-                    'address' => 'required|string',
-                ], [
-                    'province_id.required' => 'ID provinsi harus diisi',
-                    'province_id.integer' => 'ID provinsi harus berupa angka',
-                    'province_name.required' => 'Nama provinsi harus diisi',
-                    'province_name.string' => 'Nama provinsi harus berupa string',
-                    'city_id.required' => 'ID kota tujuan harus diisi',
-                    'city_id.integer' => 'ID kota tujuan harus berupa angka',
-                    'city_name.required' => 'Nama kota tujuan harus diisi',
-                    'city_name.string' => 'Nama kota tujuan harus berupa string',
-                    'address.required' => 'Alamat harus diisi',
-                    'address.string' => 'Alamat harus berupa string',
-                ]);
-
-                // Get shipping cost
-                $origin = $this->origin;
-                $weight = $this->weight;
-                $courier = $this->courier;
-                $destination = $shippingData['city_id'];
-                $shipping = $this->getShipping($origin, $destination, $weight, $courier);
-
-                $provinceId = $shippingData['province_id'] ?? null;
-                $provinceName = $shippingData['province_name'] ?? null;
-                $cityId = $shippingData['city_id'] ?? null;
-                $cityName = $shippingData['city_name'] ?? null;
-                $address = $shippingData['address'] ?? null;
-                $shippingCost = $shipping['value'] ?? 0;
-                $shippingEstimate = $shipping['etd'] ?? null;
-            } else {
-                $provinceId = null;
-                $provinceName = null;
-                $cityId = null;
-                $cityName = null;
-                $address = null;
-                $shippingCost = 0;
-                $shippingEstimate = null;
-            }
 
             // Create transaction
             $transaction = Transaction::create([
@@ -342,6 +342,18 @@ class OrderController extends Controller
                         'url' => $item->variant->product->url,
                     ];
                 })->toArray();
+
+                if ($shippingMethod->slug === 'courier') {
+                    $itemDetails[] = [
+                        'id' => 'shipping',
+                        'price' => $shippingCost,
+                        'quantity' => 1,
+                        'name' => 'Biaya Pengiriman',
+                        'brand' => null,
+                        'merchant_name' => 'Mustika Collection',
+                        'url' => null,
+                    ];
+                }
 
                 $customer = User::find(Auth::id());
 
