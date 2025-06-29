@@ -1,19 +1,20 @@
 interface TransactionItemEntity {
     id: number;
     transaction_id: number;
-    product_id: number;
-    product_variant_id: number | null;
+    variant_id: number;
     quantity: number;
-    base_selling_price: number;
-    final_selling_price: number;
-    discount_type: string | null;
-    discount: number | null;
-    total_amount: number;
-    created_at: string | null;
-    updated_at: string | null;
-    deleted_at: string | null;
+    unit_base_price: number;
+    unit_discount_type: string;
+    unit_discount: number;
+    unit_final_price: number;
+    subtotal: number;
+    created_at: string;
+    updated_at: string;
+
+    // Additional attributes
+    image?: string | null;
 
     // Relationships
-    product: ProductEntity | null;
-    product_variant: ProductVariantEntity | null;
+    transaction?: TransactionEntity | null;
+    variant?: ProductVariantEntity | null;
 }

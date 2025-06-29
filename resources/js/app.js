@@ -9,9 +9,12 @@ import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 import { createPinia } from 'pinia'
 import AOS from 'aos';
 
-AOS.init();
-
 // My plugins
+import formatDate from './plugins/date-formatter';
+import numberFormatter from './plugins/number-formatter';
+
+
+AOS.init();
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 
@@ -23,9 +26,11 @@ createInertiaApp({
 
         const app = createApp({ render: () => h(App, props) })
             .use(plugin)
-            .use(ZiggyVue);
+            .use(ZiggyVue)
+            .use(pinia);
 
-        app.use(pinia);
+        app.config.globalProperties.$formatDate = formatDate;
+        app.config.globalProperties.$formatCurrency = numberFormatter.formatCurrency;
         app.mount(el);
     },
     progress: {

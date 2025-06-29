@@ -51,7 +51,7 @@ function formatPrice(price = 0) {
 <template>
     <LandingLayout :title="`Keranjang Saya (${cartStore.items.length})`">
         <div
-            class="p-6 sm:p-12 md:px-[100px] md:py-[80px] flex flex-col gap-2 sm:gap-3"
+            class="p-6 sm:p-12 md:px-[100px] md:py-[60px] flex flex-col gap-2 sm:gap-3"
             :class="{
                 'min-h-[60vh] items-center justify-center gap-4':
                     cartStore.items.length == 0,
@@ -97,7 +97,7 @@ function formatPrice(price = 0) {
         >
             <LandingSection class="!items-start !justify-start">
                 <div
-                    class="flex flex-col items-center justify-center w-full gap-6 mx-auto lg:flex-row lg:items-start sm:gap-12 max-w-7xl"
+                    class="flex flex-col items-center justify-center w-full gap-5 mx-auto lg:flex-row lg:items-start sm:gap-12 max-w-7xl"
                 >
                     <!-- Cart Items -->
                     <div>
@@ -107,6 +107,9 @@ function formatPrice(price = 0) {
                         >
                             <CartItem
                                 :item="item"
+                                :showDivider="
+                                    index !== cartStore.items.length - 1
+                                "
                                 @toggleItem="cartStore.toggleItem(item)"
                                 @subtract="
                                     cartStore.updateItem({

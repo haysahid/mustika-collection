@@ -7,7 +7,7 @@ import TextAreaInput from "@/Components/TextAreaInput.vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import { useForm } from "@inertiajs/vue3";
 import axios from "axios";
-import { usePage } from "@inertiajs/vue3";
+import { usePage, router } from "@inertiajs/vue3";
 import { useCartStore } from "@/stores/cart-store";
 import { useOrderStore } from "@/stores/order-store";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
@@ -35,13 +35,12 @@ async function initScript() {
 }
 initScript();
 
-async function showSnap(snapToken) {
+async function showSnap(invoice: InvoiceEntity) {
+    const snapToken = invoice.snap_token;
+
     window.snap.pay(snapToken, {
         onSuccess: async function (result) {
             console.log("success", result);
-
-            // Remove selected items from cart
-            cartStore.clearSelectedItems();
 
             // Scroll to top
             window.scrollTo({ top: 0, behavior: "smooth" });
@@ -248,10 +247,17 @@ const submit = () => {
             }
         )
         .then((response) => {
-            console.log("Checkout successful:", response.data);
-            const snapToken = response.data.result.snap_token;
-            if (snapToken) {
-                showSnap(snapToken);
+            // Remove selected items from cart
+            cartStore.clearSelectedItems();
+
+            const invoice = response.data.result as InvoiceEntity;
+            if (invoice.snap_token) {
+                showSnap(invoice);
+            } else {
+                console.log("Invoice without snap token:", invoice);
+                router.visit(
+                    route("order.success", { invoice_code: invoice.code })
+                );
             }
         })
         .catch((error) => {
@@ -606,7 +612,11 @@ const submit = () => {
 
                 <PrimaryButton
                     class="w-full py-3 mt-2"
-                    :disabled="!form.payment_method || !form.shipping_method"
+                    :disabled="
+                        !form.payment_method ||
+                        !form ||
+                        cartStore.selectedItems.length == 0
+                    "
                     @click="submit"
                 >
                     Pesan Sekarang

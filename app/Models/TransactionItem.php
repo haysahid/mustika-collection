@@ -20,6 +20,16 @@ class TransactionItem extends Model
         'subtotal'
     ];
 
+    protected $appends = [
+        'image'
+    ];
+
+    protected function getImageAttribute()
+    {
+        return $this->variant->images[0]->image ?? $this->variant->product->images[0]->image ?? null;
+    }
+
+    // Relationships
     public function transaction()
     {
         return $this->belongsTo(Transaction::class);

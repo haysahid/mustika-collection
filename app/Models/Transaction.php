@@ -25,6 +25,9 @@ class Transaction extends Model
         'status',
     ];
 
+
+
+    // Relationships
     public function user()
     {
         return $this->belongsTo(User::class);

@@ -8,6 +8,10 @@ const props = defineProps({
         type: Object as () => CartItemModel,
         required: true,
     },
+    showDivider: {
+        type: Boolean,
+        default: true,
+    },
 });
 
 const emit = defineEmits([
@@ -39,7 +43,12 @@ const hasActions = computed(() => {
 </script>
 
 <template>
-    <div class="flex flex-col items-center justify-between gap-4 py-4 border-b">
+    <div
+        class="flex flex-col items-center justify-between gap-4 py-4 border-b"
+        :class="{
+            'border-none': !props.showDivider,
+        }"
+    >
         <div class="flex items-start gap-x-4">
             <div class="flex items-center justify-center flex-shrink-0 gap-4">
                 <!-- Checkbox -->

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\StoreCertificateController;
@@ -22,6 +23,10 @@ Route::post('/login', [UserController::class, 'loginProcess'])->name('login.proc
 Route::get('/register', [UserController::class, 'register'])->name('register');
 Route::post('/register', [UserController::class, 'registerProcess'])->name('register.process');
 Route::post('/logout', [UserController::class, 'logout'])->name('logout');
+
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('/order-success/{invoice_code}', [OrderController::class, 'orderSuccess'])->name('order.success');
+});
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/login', [AdminController::class, 'login'])->name('login');
