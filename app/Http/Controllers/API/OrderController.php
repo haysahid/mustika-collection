@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Models\Invoice;
+use App\Models\Payment;
 use App\Models\PaymentMethod;
 use App\Models\Product;
 use App\Models\ProductVariant;
@@ -352,9 +353,10 @@ class OrderController extends Controller
                     'amount' => $total,
                     'tax' => 0,
                     'due_date' =>  now()->addDays(1),
-                    'snap_token' => null, // No snap token for transfer payments
+                    'snap_token' => null,
                 ]);
 
+                // Create snap token for Midtrans
                 $snapToken = $this->createMidtransSnapToken(
                     $transaction->code,
                     $itemDetails,
@@ -390,6 +392,66 @@ class OrderController extends Controller
             DB::rollBack();
             return ResponseFormatter::error(
                 'Checkout failed' . $e->getMessage(),
+                500
+            );
+        }
+    }
+
+    public function confirmPayment(Request $request)
+    {
+        $validated = $request->validate([
+            'invoice_id' => 'required|integer|exists:invoices,id',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            $invoice = Invoice::findOrFail($validated['invoice_id']);
+            $transaction = Transaction::with('payment_method')->findOrFail($invoice->transaction_id);
+
+            // Check midtrans payment status
+            if ($transaction->payment_method->slug === 'transfer') {
+                \Midtrans\Config::$serverKey = env('MIDTRANS_SERVER_KEY');
+                \Midtrans\Config::$isProduction = env('MIDTRANS_IS_PRODUCTION', false);
+                \Midtrans\Config::$is3ds = true;
+
+                $response = (object) \Midtrans\Transaction::status($transaction->code);
+
+                if ($response->transaction_status !== 'settlement') {
+                    throw new Exception('Pembayaran belum terkonfirmasi');
+                }
+
+                // Create payment record
+                Payment::create([
+                    'invoice_id' => $invoice->id,
+                    'transaction_id' => $transaction->id,
+                    'payment_method_id' => $transaction->payment_method_id,
+                    'amount' => $invoice->amount,
+                    'midtrans_response' => json_encode($response),
+                    'status' => 'completed',
+                ]);
+
+                // Update invoice paid_at
+                $invoice->paid_at = now();
+                $invoice->save();
+
+                // Update transaction status
+                $transaction->paid_at = now();
+                $transaction->status = 'paid';
+                $transaction->save();
+            }
+
+            DB::commit();
+
+            return ResponseFormatter::success(
+                null,
+                'Pembayaran berhasil dikonfirmasi',
+                200
+            );
+        } catch (Exception $e) {
+            DB::rollBack();
+            return ResponseFormatter::error(
+                'Gagal mengonfirmasi pembayaran: ' . $e->getMessage(),
                 500
             );
         }

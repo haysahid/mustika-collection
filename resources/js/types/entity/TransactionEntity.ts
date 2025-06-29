@@ -1,5 +1,6 @@
 interface TransactionEntity {
     id: number;
+    user_id: number;
     type_id: number;
     code: string;
     note: string | null;
@@ -12,6 +13,10 @@ interface TransactionEntity {
     address: string | null;
     shipping_cost: number;
     shipping_estimate: string | null;
+    paid_at: string | null;
+    shipped_at: string | null;
+    picked_up_at: string | null;
+    delivered_at: string | null;
     status: string;
     created_at: string | null;
     updated_at: string | null;

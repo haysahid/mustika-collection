@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { computed, useSlots } from "vue";
-import Checkbox from "@/Components/Checkbox.vue";
+import { computed } from "vue";
 import { Link } from "@inertiajs/vue3";
 import OrderItemSmall from "./OrderItemSmall.vue";
+import OrderStatusChip from "./OrderStatusChip.vue";
 
 const props = defineProps({
     transaction: {
@@ -68,23 +68,10 @@ const total = computed(() => {
                 </p>
 
                 <!-- Status -->
-                <div
-                    class="flex items-center justify-center px-2 py-1 text-xs font-semibold rounded-md h-fit"
-                    :class="{
-                        'text-gray-500 bg-gray-100':
-                            props.transaction.status === 'pending',
-                        'text-orange-500 bg-orange-100':
-                            props.transaction.status === 'paid',
-                        'text-indigo-500 bg-indigo-100':
-                            props.transaction.status === 'processing',
-                        'text-green-500 bg-green-100':
-                            props.transaction.status === 'completed',
-                        'text-red-500 bg-red-100':
-                            props.transaction.status === 'cancelled',
-                    }"
-                >
-                    {{ props.transaction.status?.toUpperCase() }}
-                </div>
+                <OrderStatusChip
+                    :status="props.transaction.status"
+                    :label="props.transaction.status?.toUpperCase()"
+                />
             </div>
         </div>
 

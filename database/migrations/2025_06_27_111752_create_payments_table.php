@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('note')->nullable();
             $table->string('reason')->nullable();
             $table->string('image')->nullable();
-            $table->string('midtrans_response')->nullable();
+            $table->text('midtrans_response')->nullable();
             $table->enum('status', ['pending', 'completed', 'failed'])->default('pending');
             $table->timestamps();
             $table->softDeletes();

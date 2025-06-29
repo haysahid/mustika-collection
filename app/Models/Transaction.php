@@ -23,6 +23,10 @@ class Transaction extends Model
         'address',
         'shipping_estimate',
         'shipping_cost',
+        'paid_at',
+        'shipped_at',
+        'picked_up_at',
+        'delivered_at',
         'status',
     ];
 

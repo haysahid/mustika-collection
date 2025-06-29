@@ -35,16 +35,40 @@ async function initScript() {
 }
 initScript();
 
+async function onMidtransSuccess(result: any) {
+    cartStore.clearSelectedItems();
+
+    await axios
+        .post(
+            `${page.props.ziggy.url}/api/confirm-payment`,
+            {
+                invoice_id: invoice.id,
+            },
+            {
+                headers: {
+                    authorization: `Bearer ${localStorage.getItem(
+                        "access_token"
+                    )}`,
+                },
+            }
+        )
+        .then((response) => {
+            router.visit(
+                route("order.success", {
+                    invoice_code: invoice.code,
+                })
+            );
+        })
+        .catch((error) => {
+            console.error("Error confirming payment", error);
+        });
+}
+
 async function showSnap(invoice: InvoiceEntity) {
     const snapToken = invoice.snap_token;
 
     window.snap.pay(snapToken, {
-        onSuccess: async function (result) {
-            console.log("success", result);
-
-            // Scroll to top
-            window.scrollTo({ top: 0, behavior: "smooth" });
-        },
+        onSuccess: onMidtransSuccess,
         onPending: async function (result) {
             console.log("pending", result);
         },
@@ -247,14 +271,11 @@ const submit = () => {
             }
         )
         .then((response) => {
-            // Remove selected items from cart
-            cartStore.clearSelectedItems();
-
             const invoice = response.data.result as InvoiceEntity;
             if (invoice.snap_token) {
                 showSnap(invoice);
             } else {
-                console.log("Invoice without snap token:", invoice);
+                cartStore.clearSelectedItems();
                 router.visit(
                     route("order.success", { invoice_code: invoice.code })
                 );

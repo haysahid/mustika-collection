@@ -18,7 +18,9 @@ const props = defineProps({
 <template>
     <div class="flex items-center justify-between gap-2">
         <p class="text-gray-700">{{ props.label }}</p>
+        <slot v-if="$slots.value" name="value" />
         <p
+            v-else
             class="font-semibold text-right text-gray-700"
             :class="[props.valueClass]"
         >

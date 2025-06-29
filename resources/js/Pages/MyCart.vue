@@ -71,9 +71,7 @@ function formatPrice(price = 0) {
                 v-if="cartStore.items.length == 0"
                 class="flex flex-col items-center gap-y-6"
             >
-                <p
-                    class="text-sm text-gray-700 text-start sm:text-center sm:text-base"
-                >
+                <p class="text-sm text-center text-gray-700 sm:text-base">
                     Anda belum menambahkan produk ke keranjang.
                 </p>
                 <Link :href="route('catalog')">

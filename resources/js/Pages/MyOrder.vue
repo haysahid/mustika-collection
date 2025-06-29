@@ -51,7 +51,7 @@ const transactions = props.transactions.data;
                 class="flex flex-col items-center gap-y-6"
             >
                 <p
-                    class="text-sm text-gray-700 text-start sm:text-center sm:text-base"
+                    class="max-w-md text-sm text-center text-gray-700 sm:text-base"
                 >
                     Saat ini Anda belum memiliki pesanan. Silakan mulai belanja
                     untuk melihat pesanan Anda di sini.

@@ -3,6 +3,7 @@ import { ref, computed } from "vue";
 import LandingSection from "@/Components/LandingSection.vue";
 import OrderItem from "./OrderItem.vue";
 import OrderContentRow from "@/Components/OrderContentRow.vue";
+import OrderStatusChip from "./OrderStatusChip.vue";
 import formatDate from "@/plugins/date-formatter";
 
 const props = defineProps({
@@ -107,227 +108,279 @@ const dayShippingEstimate = computed(() => {
     return Math.round((min + max) / 2);
 });
 
-if (props.transaction.payment_method?.slug == "tansfer") {
-    if (props.transaction.shipping_method?.slug == "courier") {
-        switch (status) {
-            case "pending":
-                histories.value = [
-                    ...histories.value,
+function buildHistories() {
+    const {
+        payment_method,
+        shipping_method,
+        paid_at,
+        shipped_at,
+        picked_up_at,
+        delivered_at,
+        updated_at,
+    } = props.transaction;
+    const paymentSlug = payment_method?.slug;
+    const shippingSlug = shipping_method?.slug;
+
+    function getDateOrFallback(date, fallback) {
+        return formatDate(date ?? fallback);
+    }
+
+    // Helper for estimate
+    const estimateText = `Estimasi ${dayShippingEstimate.value} hari`;
+
+    // Payment Transfer
+    if (paymentSlug === "transfer") {
+        if (shippingSlug === "courier") {
+            if (status === "pending") {
+                return [
+                    orderCreated(
+                        formatDate(props.transaction?.created_at),
+                        true
+                    ),
                     paymentReceived("Segera", false),
                     orderShipped("Segera", false),
-                    orderDelivered(
-                        `Estimasi ${dayShippingEstimate.value} hari`,
-                        false
-                    ),
+                    orderDelivered(estimateText, false),
                 ];
-                break;
-            case "paid":
-                histories.value = [
-                    ...histories.value,
-                    paymentReceived(
-                        formatDate(props.transaction.updated_at),
+            }
+            if (status === "paid") {
+                return [
+                    orderCreated(
+                        formatDate(props.transaction?.created_at),
                         true
                     ),
-                    orderShipped("Hari ini", true),
-                    orderDelivered(
-                        `Estimasi ${dayShippingEstimate.value} hari`,
-                        false
-                    ),
-                ];
-                break;
-            case "processing":
-                histories.value = [
-                    ...histories.value,
                     paymentReceived(
-                        formatDate(props.transaction.updated_at),
+                        getDateOrFallback(paid_at, updated_at),
+                        true
+                    ),
+                    orderShipped("Hari ini", false),
+                    orderDelivered(estimateText, false),
+                ];
+            }
+            if (status === "processing") {
+                return [
+                    orderCreated(
+                        formatDate(props.transaction?.created_at),
+                        true
+                    ),
+                    paymentReceived(
+                        getDateOrFallback(paid_at, updated_at),
                         true
                     ),
                     orderShipped(
-                        formatDate(props.transaction.updated_at),
+                        getDateOrFallback(shipped_at, updated_at),
                         true
                     ),
-                    orderDelivered(
-                        `Estimasi ${dayShippingEstimate.value} hari`,
-                        false
-                    ),
+                    orderDelivered(estimateText, false),
                 ];
-                break;
-            case "completed":
-                histories.value = [
-                    ...histories.value,
+            }
+            if (status === "completed") {
+                return [
+                    orderCreated(
+                        formatDate(props.transaction?.created_at),
+                        true
+                    ),
                     paymentReceived(
-                        formatDate(props.transaction.updated_at),
+                        getDateOrFallback(paid_at, updated_at),
                         true
                     ),
                     orderShipped(
-                        formatDate(props.transaction.updated_at),
+                        getDateOrFallback(shipped_at, updated_at),
                         true
                     ),
                     orderDelivered(
-                        formatDate(props.transaction.updated_at),
+                        getDateOrFallback(delivered_at, updated_at),
                         true
                     ),
                 ];
-                break;
-        }
-    } else if (props.transaction.shipping_method?.slug == "pickup") {
-        switch (status) {
-            case "pending":
-                histories.value = [
-                    ...histories.value,
+            }
+        } else if (shippingSlug === "pickup") {
+            if (status === "pending") {
+                return [
+                    orderCreated(
+                        formatDate(props.transaction?.created_at),
+                        true
+                    ),
                     paymentReceived("Segera", false),
                     orderPickedUp("Ambil di toko", false),
                     orderDelivered("Saat barang diambil", false),
                 ];
-                break;
-            case "paid":
-                histories.value = [
-                    ...histories.value,
-                    paymentReceived(
-                        formatDate(props.transaction.updated_at),
+            }
+            if (status === "paid") {
+                return [
+                    orderCreated(
+                        formatDate(props.transaction?.created_at),
                         true
                     ),
-                    orderPickedUp("Ambil di toko", true),
-                    orderDelivered("Saat barang diambil", false),
-                ];
-                break;
-            case "processing":
-                histories.value = [
-                    ...histories.value,
                     paymentReceived(
-                        formatDate(props.transaction.updated_at),
+                        getDateOrFallback(paid_at, updated_at),
                         true
                     ),
                     orderPickedUp("Ambil di toko", false),
                     orderDelivered("Saat barang diambil", false),
                 ];
-                break;
-            case "completed":
-                histories.value = [
-                    ...histories.value,
+            }
+            if (status === "processing") {
+                return [
+                    orderCreated(
+                        formatDate(props.transaction?.created_at),
+                        true
+                    ),
                     paymentReceived(
-                        formatDate(props.transaction.updated_at),
+                        getDateOrFallback(paid_at, updated_at),
                         true
                     ),
                     orderPickedUp(
-                        formatDate(props.transaction.updated_at),
+                        getDateOrFallback(picked_up_at, updated_at),
+                        true
+                    ),
+                    orderDelivered("Saat barang diambil", false),
+                ];
+            }
+            if (status === "completed") {
+                return [
+                    orderCreated(
+                        formatDate(props.transaction?.created_at),
+                        true
+                    ),
+                    paymentReceived(
+                        getDateOrFallback(paid_at, updated_at),
+                        true
+                    ),
+                    orderPickedUp(
+                        getDateOrFallback(picked_up_at, updated_at),
                         true
                     ),
                     orderDelivered(
-                        formatDate(props.transaction.updated_at),
+                        getDateOrFallback(delivered_at, updated_at),
                         true
                     ),
                 ];
-                break;
+            }
         }
     }
-} else if (props.transaction.payment_method?.slug == "cod") {
-    if (props.transaction.shipping_method?.slug == "courier") {
-        switch (status) {
-            case "pending":
-                histories.value = [
-                    ...histories.value,
+
+    // Payment COD
+    if (paymentSlug === "cod") {
+        if (shippingSlug === "courier") {
+            if (status === "pending") {
+                return [
+                    orderCreated(
+                        formatDate(props.transaction?.created_at),
+                        true
+                    ),
                     orderShipped("Segera", false),
                     paymentReceived("Saat barang diterima", false),
-                    orderDelivered(
-                        `Estimasi ${dayShippingEstimate.value} hari`,
-                        false
-                    ),
+                    orderDelivered(estimateText, false),
                 ];
-                break;
-            case "processing":
-                histories.value = [
-                    ...histories.value,
+            }
+            if (status === "processing") {
+                return [
+                    orderCreated(
+                        formatDate(props.transaction?.created_at),
+                        true
+                    ),
                     orderShipped(
-                        formatDate(props.transaction.updated_at),
+                        getDateOrFallback(shipped_at, updated_at),
                         true
                     ),
                     paymentReceived("Saat barang diterima", false),
-                    orderDelivered(
-                        `Estimasi ${dayShippingEstimate.value} hari`,
-                        false
-                    ),
+                    orderDelivered(estimateText, false),
                 ];
-                break;
-            case "paid":
-                histories.value = [
-                    ...histories.value,
+            }
+            if (status === "paid") {
+                return [
+                    orderCreated(
+                        formatDate(props.transaction?.created_at),
+                        true
+                    ),
                     orderShipped(
-                        formatDate(props.transaction.updated_at),
+                        getDateOrFallback(shipped_at, updated_at),
                         true
                     ),
                     paymentReceived(
-                        formatDate(props.transaction.updated_at),
+                        getDateOrFallback(paid_at, updated_at),
                         true
                     ),
-                    orderDelivered(
-                        `Estimasi ${dayShippingEstimate.value} hari`,
-                        false
-                    ),
+                    orderDelivered(estimateText, false),
                 ];
-                break;
-            case "completed":
-                histories.value = [
-                    ...histories.value,
+            }
+            if (status === "completed") {
+                return [
+                    orderCreated(
+                        formatDate(props.transaction?.created_at),
+                        true
+                    ),
                     orderShipped(
-                        formatDate(props.transaction.updated_at),
+                        getDateOrFallback(shipped_at, updated_at),
                         true
                     ),
                     paymentReceived(
-                        formatDate(props.transaction.updated_at),
+                        getDateOrFallback(paid_at, updated_at),
                         true
                     ),
                     orderDelivered(
-                        formatDate(props.transaction.updated_at),
+                        getDateOrFallback(delivered_at, updated_at),
                         true
                     ),
                 ];
-                break;
-        }
-    } else if (props.transaction.shipping_method?.slug == "pickup") {
-        switch (status) {
-            case "pending":
-                histories.value = [
-                    ...histories.value,
+            }
+        } else if (shippingSlug === "pickup") {
+            if (status === "pending") {
+                return [
+                    orderCreated(
+                        formatDate(props.transaction?.created_at),
+                        true
+                    ),
                     orderPickedUp("Ambil di toko", false),
                     paymentReceived("Saat barang diambil", false),
                     orderDelivered("Saat barang diambil", false),
                 ];
-                break;
-            case "paid":
-                histories.value = [
-                    ...histories.value,
+            }
+            if (status === "paid") {
+                return [
+                    orderCreated(
+                        formatDate(props.transaction?.created_at),
+                        true
+                    ),
                     orderPickedUp(
-                        formatDate(props.transaction.updated_at),
+                        getDateOrFallback(picked_up_at, updated_at),
                         true
                     ),
                     paymentReceived(
-                        formatDate(props.transaction.updated_at),
+                        getDateOrFallback(paid_at, updated_at),
                         true
                     ),
                     orderDelivered("Saat barang diambil", false),
                 ];
-                break;
-            case "completed":
-                histories.value = [
-                    ...histories.value,
+            }
+            if (status === "completed") {
+                return [
+                    orderCreated(
+                        formatDate(props.transaction?.created_at),
+                        true
+                    ),
                     orderPickedUp(
-                        formatDate(props.transaction.updated_at),
+                        getDateOrFallback(picked_up_at, updated_at),
                         true
                     ),
                     paymentReceived(
-                        formatDate(props.transaction.updated_at),
+                        getDateOrFallback(paid_at, updated_at),
                         true
                     ),
                     orderDelivered(
-                        formatDate(props.transaction.updated_at),
+                        getDateOrFallback(delivered_at, updated_at),
                         true
                     ),
                 ];
-                break;
+            }
         }
     }
+
+    // Default fallback
+    return [orderCreated(formatDate(props.transaction?.created_at), true)];
 }
+
+histories.value = buildHistories();
 </script>
 
 <template>
@@ -426,7 +479,17 @@ if (props.transaction.payment_method?.slug == "tansfer") {
                             <OrderContentRow
                                 label="Status"
                                 :value="props.transaction.status"
-                            />
+                            >
+                                <template #value>
+                                    <!-- Status -->
+                                    <OrderStatusChip
+                                        :status="props.transaction.status"
+                                        :label="
+                                            props.transaction.status?.toUpperCase()
+                                        "
+                                    />
+                                </template>
+                            </OrderContentRow>
                             <OrderContentRow
                                 label="Metode Pembayaran"
                                 :value="props.transaction.payment_method.name"
