@@ -16,10 +16,11 @@ return new class extends Migration
             $table->foreignId('transaction_id')->constrained()->onDelete('cascade');
             $table->foreignId('variant_id')->constrained('product_variants')->onDelete('cascade');
             $table->integer('quantity');
-            $table->string('base_price')->default(0);
-            $table->enum('discount_type', ['percentage', 'fixed'])->default('fixed');
-            $table->integer('discount')->default(0);
-            $table->integer('final_price')->default(0);
+            $table->string('unit_base_price')->default(0);
+            $table->enum('unit_discount_type', ['percentage', 'fixed'])->default('fixed');
+            $table->integer('unit_discount')->default(0);
+            $table->integer('unit_final_price')->default(0);
+            $table->integer('subtotal')->default(0);
             $table->timestamps();
             $table->softDeletes();
         });

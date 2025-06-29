@@ -6,7 +6,6 @@ use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -35,13 +34,13 @@ class AdminController extends Controller
                 ]);
             }
 
-            // Set cookie with access_token for API
-            $token = $user->createToken('authToken')->plainTextToken;
+            // Create access_token for API
+            $accessToken = $user->createToken('authToken')->plainTextToken;
 
             return redirect()->route('admin.dashboard')
                 ->with([
                     'success' => 'Berhasil masuk sebagai admin.',
-                    'access_token' => $token,
+                    'access_token' => $accessToken,
                 ]);
         }
 

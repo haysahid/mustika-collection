@@ -18,6 +18,48 @@ const page = usePage();
 const cartStore = useCartStore();
 const orderStore = useOrderStore();
 
+async function initScript() {
+    const snapScript = "https://app.sandbox.midtrans.com/snap/snap.js";
+    const clientKey = import.meta.env.VITE_MIDTRANS_CLIENT_KEY;
+
+    const script = document.createElement("script");
+    script.src = snapScript;
+    script.setAttribute("data-client-key", clientKey);
+    script.async = true;
+
+    document.body.appendChild(script);
+
+    return () => {
+        document.body.removeChild(script);
+    };
+}
+initScript();
+
+async function showSnap(snapToken) {
+    window.snap.pay(snapToken, {
+        onSuccess: async function (result) {
+            console.log("success", result);
+
+            // Remove selected items from cart
+            cartStore.clearSelectedItems();
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        },
+        onPending: async function (result) {
+            console.log("pending", result);
+        },
+        onError: async function (result) {
+            console.log("error", result);
+        },
+        onClose: async function () {
+            console.log(
+                "customer closed the popup without finishing the payment"
+            );
+        },
+    });
+}
+
 const paymentMethods = page.props.paymentMethods as PaymentMethodEntity[];
 const shippingMethods = page.props.shippingMethods as ShippingMethodEntity[];
 
@@ -166,7 +208,10 @@ watch(
 );
 
 const total = computed(() => {
-    return cartStore.subTotal + (form.shipping_cost || 0);
+    if (form.shipping_method?.slug == "courier") {
+        return cartStore.subTotal + (form.shipping_cost || 0);
+    }
+    return cartStore.subTotal;
 });
 
 const showAuthWarning = ref(false);
@@ -176,6 +221,42 @@ const submit = () => {
         showAuthWarning.value = true;
         return;
     }
+
+    axios
+        .post(
+            `${page.props.ziggy.url}/api/checkout`,
+            {
+                cart_items: cartStore.selectedItems.map((item) => ({
+                    product_id: item.product_id,
+                    variant_id: item.variant_id,
+                    quantity: item.quantity,
+                })),
+                payment_method_id: form.payment_method?.id,
+                shipping_method_id: form.shipping_method?.id,
+                province_id: form.province_id,
+                province_name: form.province?.province,
+                city_id: form.city_id,
+                city_name: form.city?.city_name,
+                address: form.address,
+            },
+            {
+                headers: {
+                    authorization: `Bearer ${localStorage.getItem(
+                        "access_token"
+                    )}`,
+                },
+            }
+        )
+        .then((response) => {
+            console.log("Checkout successful:", response.data);
+            const snapToken = response.data.result.snap_token;
+            if (snapToken) {
+                showSnap(snapToken);
+            }
+        })
+        .catch((error) => {
+            console.error("Checkout error:", error);
+        });
 };
 </script>
 

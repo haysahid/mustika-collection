@@ -34,7 +34,7 @@ class ProductVariant extends Model
     ];
 
     // Additional attributes
-    public function getNameAttribute()
+    protected function getNameAttribute()
     {
         $name = $this->product->name;
         if ($this->motif) {
@@ -47,6 +47,11 @@ class ProductVariant extends Model
             $name .= ' - ' . $this->size->name;
         }
         return $name;
+    }
+
+    protected function url()
+    {
+        return route('products.show', ['slug' => $this->product->slug, 'sku' => $this->sku]);
     }
 
     // Relationships

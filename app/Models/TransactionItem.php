@@ -13,10 +13,11 @@ class TransactionItem extends Model
         'transaction_id',
         'variant_id',
         'quantity',
-        'base_price',
-        'discount_type',
-        'discount',
-        'final_price',
+        'unit_base_price',
+        'unit_discount_type',
+        'unit_discount',
+        'unit_final_price',
+        'subtotal'
     ];
 
     public function transaction()

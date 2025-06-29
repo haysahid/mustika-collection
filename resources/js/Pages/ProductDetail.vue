@@ -8,6 +8,12 @@ import JoinUs from "@/Components/JoinUs.vue";
 import ProductSelectionForm from "./Product/ProductSelectionForm.vue";
 import ProductGallery from "./Product/ProductGallery.vue";
 import ProductDetailTable from "./Product/ProductDetailTable.vue";
+import { usePage } from "@inertiajs/vue3";
+
+const page = usePage();
+if (page.props.flash.access_token) {
+    localStorage.setItem("access_token", page.props.flash.access_token);
+}
 
 const props = defineProps({
     product: {

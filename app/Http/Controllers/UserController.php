@@ -6,6 +6,7 @@ use App\Models\Store;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Hash;
 use Inertia\Inertia;
 
@@ -31,16 +32,21 @@ class UserController extends Controller
         $credentials = $request->only('username', 'password');
 
         if (Auth::attempt($credentials)) {
+            $user = User::find(Auth::id());
+            $accessToken = $user->createToken('authToken')->plainTextToken;
+
             $redirectUrl = $request->input('redirect');
 
             if ($redirectUrl) {
                 return redirect()->to($redirectUrl)->with([
                     'success' => 'Berhasil masuk.',
+                    'access_token' => $accessToken,
                 ]);
             }
 
             return redirect()->route('home')->with([
                 'success' => 'Berhasil masuk.',
+                'access_token' => $accessToken,
             ]);
         }
 

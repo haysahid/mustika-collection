@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->string('slug')->unique()->index();
+            $table->string('code_prefix')->unique();
             $table->string('description')->nullable();
             $table->enum('effect_on_stock', ['inbound', 'outbound']);
             $table->timestamps();

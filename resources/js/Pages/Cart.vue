@@ -13,25 +13,31 @@ import QuantityInput from "@/Components/QuantityInput.vue";
 import DeleteConfirmationDialog from "@/Components/DeleteConfirmationDialog.vue";
 
 const page = usePage();
+if (page.props.flash.access_token) {
+    localStorage.setItem("access_token", page.props.flash.access_token);
+}
+
 const cartStore = useCartStore();
 
-const syncCart = JSON.parse(
-    JSON.stringify(cartStore.items, (key, value) => {
-        // Remove the 'variant' property from each item
-        if (key === "variant") {
-            return undefined;
-        }
-        return value;
-    })
-);
+if (cartStore.items.length > 0) {
+    const syncCart = JSON.parse(
+        JSON.stringify(cartStore.items, (key, value) => {
+            // Remove the 'variant' property from each item
+            if (key === "variant") {
+                return undefined;
+            }
+            return value;
+        })
+    );
 
-axios
-    .post(`${page.props.ziggy.url}/api/sync-cart`, {
-        cart_items: syncCart,
-    })
-    .then((response) => {
-        cartStore.updateAllItems(response.data.result);
-    });
+    axios
+        .post(`${page.props.ziggy.url}/api/sync-cart`, {
+            cart_items: syncCart,
+        })
+        .then((response) => {
+            cartStore.updateAllItems(response.data.result);
+        });
+}
 
 function formatPrice(price = 0) {
     return price.toLocaleString("id-ID", {

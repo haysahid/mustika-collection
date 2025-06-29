@@ -8,6 +8,11 @@ import { ref, onMounted, watch, computed } from "vue";
 import { usePage, router } from "@inertiajs/vue3";
 import CatalogPagination from "@/Components/CatalogPagination.vue";
 
+const page = usePage();
+if (page.props.flash.access_token) {
+    localStorage.setItem("access_token", page.props.flash.access_token);
+}
+
 const props = defineProps({
     products: null,
     filters: null,

@@ -14,10 +14,12 @@ Route::name('api.')->group(function () {
     Route::get('/provinces', [OrderController::class, 'provinces'])->name('provinces');
     Route::get('/cities', [OrderController::class, 'cities'])->name('cities');
     Route::get('/shipping-cost', [OrderController::class, 'shippingCost'])->name('shipping_cost');
+
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/checkout', [OrderController::class, 'checkout'])->name('checkout');
+    });
 });
 
-Route::middleware('auth:sanctum')->group(function () {
-    Route::prefix('admin')->name('api.admin.')->group(function () {
-        Route::apiResource('product-image', ProductImageController::class);
-    });
+Route::name('api.admin.')->prefix('admin')->middleware('auth:sanctum')->group(function () {
+    Route::apiResource('product-image', ProductImageController::class);
 });

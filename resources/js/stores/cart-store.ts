@@ -77,6 +77,11 @@ export const useCartStore = defineStore("cart_items", () => {
         localStorage.setItem("cart_items", JSON.stringify(items.value));
     };
 
+    const clearSelectedItems = () => {
+        items.value = items.value.filter((item) => !item.selected);
+        localStorage.setItem("cart_items", JSON.stringify(items.value));
+    };
+
     return {
         items,
         selectedItems,
@@ -89,5 +94,6 @@ export const useCartStore = defineStore("cart_items", () => {
         clearCart,
         getItemByVariant,
         updateAllItems,
+        clearSelectedItems,
     };
 });
