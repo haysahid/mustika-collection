@@ -409,6 +409,46 @@ class OrderController extends Controller
         }
     }
 
+    public function cancelOrder(Request $request)
+    {
+        $validated = $request->validate([
+            'invoice_id' => 'required|integer|exists:invoices,id',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            $invoice = Invoice::findOrFail($validated['invoice_id']);
+            $transaction = Transaction::findOrFail($invoice->transaction_id);
+
+            // Check if transaction is already paid
+            if ($transaction->status === 'paid') {
+                return ResponseFormatter::error(
+                    'Transaksi sudah dibayar, tidak dapat dibatalkan',
+                    400
+                );
+            }
+
+            // Update transaction status to cancelled
+            $transaction->status = 'cancelled';
+            $transaction->save();
+
+            DB::commit();
+
+            return ResponseFormatter::success(
+                null,
+                'Pesanan berhasil dibatalkan',
+                200
+            );
+        } catch (Exception $e) {
+            DB::rollBack();
+            return ResponseFormatter::error(
+                'Gagal membatalkan pesanan: ' . $e->getMessage(),
+                500
+            );
+        }
+    }
+
     public function confirmPayment(Request $request)
     {
         $validated = $request->validate([

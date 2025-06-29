@@ -36,8 +36,12 @@ async function initScript() {
 }
 initScript();
 
+const checkoutStatus = ref(null);
+
 async function showSnap(invoice: InvoiceEntity) {
     const snapToken = invoice.snap_token;
+
+    checkoutStatus.value = "loading";
 
     window.snap.pay(snapToken, {
         onSuccess: async function (result) {
@@ -73,20 +77,46 @@ async function showSnap(invoice: InvoiceEntity) {
                 .catch((error) => {
                     console.error("Error confirming payment", error);
                 });
+
+            checkoutStatus.value = "success";
         },
         onPending: async function (result) {
             console.log("pending", result);
         },
         onError: async function (result) {
             console.log("error", result);
+            openErrorDialog("Terjadi kesalahan saat memproses pembayaran");
+            await cancelOrder(invoice.id);
+            checkoutStatus.value = "error";
         },
         onClose: async function () {
-            console.log(
-                "customer closed the popup without finishing the payment"
+            openErrorDialog(
+                "Anda membatalkan pembayaran. Pesanan tidak akan diproses."
             );
+            await cancelOrder(invoice.id);
+            checkoutStatus.value = "error";
         },
     });
 }
+
+const cancelOrder = async (invoiceId: number) => {
+    try {
+        await axios.post(
+            `${page.props.ziggy.url}/api/cancel-order`,
+            { invoice_id: invoiceId },
+            {
+                headers: {
+                    authorization: `Bearer ${localStorage.getItem(
+                        "access_token"
+                    )}`,
+                },
+            }
+        );
+    } catch (error) {
+        console.error("Error cancelling order:", error);
+        openErrorDialog("Gagal membatalkan pesanan");
+    }
+};
 
 const showErrorDialog = ref(false);
 const errorMessage = ref(null);
@@ -221,6 +251,8 @@ const submit = () => {
         return;
     }
 
+    checkoutStatus.value = "loading";
+
     axios
         .post(
             `${page.props.ziggy.url}/api/checkout`,
@@ -251,6 +283,7 @@ const submit = () => {
             if (invoice.snap_token) {
                 showSnap(invoice);
             } else {
+                checkoutStatus.value = "success";
                 cartStore.clearSelectedItems();
                 router.visit(
                     route("order.success", { invoice_code: invoice.code })
@@ -258,6 +291,7 @@ const submit = () => {
             }
         })
         .catch((error) => {
+            checkoutStatus.value = "error";
             console.error("Checkout error:", error);
             if (error.response.status == 422) {
                 form.errors = error.response.data.errors || {};
@@ -631,7 +665,8 @@ const submit = () => {
                     :disabled="
                         !form.payment_method ||
                         !form.shipping_method ||
-                        cartStore.selectedItems.length == 0
+                        cartStore.selectedItems.length == 0 ||
+                        checkoutStatus === 'loading'
                     "
                     @click="submit"
                 >

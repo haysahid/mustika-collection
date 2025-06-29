@@ -117,6 +117,7 @@ class OrderController extends Controller
 
         $transactions = Transaction::with(['payment_method', 'shipping_method', 'items'])
             ->where('user_id', Auth::id())
+            ->where('status', '!=', 'cancelled')
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
