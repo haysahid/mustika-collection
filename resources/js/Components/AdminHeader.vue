@@ -90,7 +90,7 @@ const logout = () => {
                             </template>
 
                             <template #content>
-                                <DropdownLink :href="route('profile.show')">
+                                <DropdownLink :href="route('profile')">
                                     Profile
                                 </DropdownLink>
 
@@ -197,7 +197,7 @@ const logout = () => {
 
                         <div class="space-y-0.5 bg-primary">
                             <ResponsiveNavLink
-                                :href="route('profile.show')"
+                                :href="route('profile')"
                                 :active="route().current('profile.show')"
                                 class="[&>*]:text-gray-200"
                             >

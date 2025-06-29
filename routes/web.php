@@ -22,6 +22,8 @@ Route::get('/login', [UserController::class, 'login'])->name('login');
 Route::post('/login', [UserController::class, 'loginProcess'])->name('login.process');
 Route::get('/register', [UserController::class, 'register'])->name('register');
 Route::post('/register', [UserController::class, 'registerProcess'])->name('register.process');
+Route::get('/profile', [UserController::class, 'profile'])->name('profile');
+Route::post('/profile', [UserController::class, 'updateProfile'])->name('profile.update');
 Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 
 Route::middleware(['auth:sanctum'])->group(function () {

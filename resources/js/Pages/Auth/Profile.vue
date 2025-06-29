@@ -4,40 +4,63 @@ import AuthenticationCard from "@/Components/AuthenticationCard.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import TextInput from "@/Components/TextInput.vue";
 import LandingLayout from "@/Layouts/LandingLayout.vue";
+import { usePage } from "@inertiajs/vue3";
+import { ref } from "vue";
+import SuccessDialog from "@/Components/SuccessDialog.vue";
 
 defineProps({
     canResetPassword: Boolean,
     status: String,
 });
 
+const page = usePage();
+
 const form = useForm({
-    name: "",
-    username: "",
-    email: "",
-    phone: "",
-    password: "",
-    password_confirmation: "",
+    name: page.props.auth.user.name || "",
+    username: page.props.auth.user.username || "",
+    email: page.props.auth.user.email || "",
+    phone: page.props.auth.user.phone || "",
 });
 
 const submit = () => {
     form.transform((data) => ({
         ...data,
         redirect: route().params.redirect,
-    })).post(route("register"), {
-        onFinish: () => form.reset("password", "password_confirmation"),
+    })).post(route("profile.update"), {
+        onSuccess: (response) => {
+            openSuccessDialog("Profil berhasil diperbarui.");
+        },
+        onError: (errors) => {
+            if (errors.access) {
+                form.errors.access = errors.access;
+            }
+        },
     });
+};
+
+const showSuccessDialog = ref(false);
+const showSuccessMessage = ref("");
+
+const openSuccessDialog = (message) => {
+    showSuccessMessage.value = message;
+    showSuccessDialog.value = true;
+};
+
+const closeSuccessDialog = () => {
+    showSuccessDialog.value = false;
+    showSuccessMessage.value = "";
 };
 </script>
 
 <template>
-    <LandingLayout title="Daftar">
+    <LandingLayout title="Profil">
         <AuthenticationCard class="!min-h-[100vh] !pb-[200px]">
             <template #logo>
                 <div
                     class="flex flex-col items-center justify-center gap-2 mb-6 sm:flex-row"
                 >
                     <h1 class="text-2xl font-bold text-gray-800 sm:block">
-                        Daftar
+                        Ubah Profil
                     </h1>
                 </div>
             </template>
@@ -178,89 +201,22 @@ const submit = () => {
                     </TextInput>
                 </div>
 
-                <div class="mt-4">
-                    <TextInput
-                        id="password"
-                        v-model="form.password"
-                        type="password"
-                        placeholder="Masukkan password"
-                        class="block w-full mt-1"
-                        :error="form.errors.password"
-                        @update:modelValue="form.errors.password = null"
-                        required
-                    >
-                        <template #prefix>
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="25"
-                                viewBox="0 0 24 25"
-                                class="absolute fill-primary left-3"
-                            >
-                                <path
-                                    d="M12 17.5C12.5304 17.5 13.0391 17.2893 13.4142 16.9142C13.7893 16.5391 14 16.0304 14 15.5C14 14.9696 13.7893 14.4609 13.4142 14.0858C13.0391 13.7107 12.5304 13.5 12 13.5C11.4696 13.5 10.9609 13.7107 10.5858 14.0858C10.2107 14.4609 10 14.9696 10 15.5C10 16.0304 10.2107 16.5391 10.5858 16.9142C10.9609 17.2893 11.4696 17.5 12 17.5ZM18 8.5C18.5304 8.5 19.0391 8.71071 19.4142 9.08579C19.7893 9.46086 20 9.96957 20 10.5V20.5C20 21.0304 19.7893 21.5391 19.4142 21.9142C19.0391 22.2893 18.5304 22.5 18 22.5H6C5.46957 22.5 4.96086 22.2893 4.58579 21.9142C4.21071 21.5391 4 21.0304 4 20.5V10.5C4 9.96957 4.21071 9.46086 4.58579 9.08579C4.96086 8.71071 5.46957 8.5 6 8.5H7V6.5C7 5.17392 7.52678 3.90215 8.46447 2.96447C9.40215 2.02678 10.6739 1.5 12 1.5C12.6566 1.5 13.3068 1.62933 13.9134 1.8806C14.52 2.13188 15.0712 2.50017 15.5355 2.96447C15.9998 3.42876 16.3681 3.97995 16.6194 4.58658C16.8707 5.19321 17 5.84339 17 6.5V8.5H18ZM12 3.5C11.2044 3.5 10.4413 3.81607 9.87868 4.37868C9.31607 4.94129 9 5.70435 9 6.5V8.5H15V6.5C15 5.70435 14.6839 4.94129 14.1213 4.37868C13.5587 3.81607 12.7956 3.5 12 3.5Z"
-                                />
-                            </svg>
-                        </template>
-                    </TextInput>
-                </div>
-
-                <div class="mt-4">
-                    <TextInput
-                        id="password_confirmation"
-                        v-model="form.password_confirmation"
-                        type="password"
-                        placeholder="Masukkan konfirmasi password"
-                        class="block w-full mt-1"
-                        :error="form.errors.password_confirmation"
-                        @update:modelValue="
-                            form.errors.password_confirmation = null
-                        "
-                        required
-                    >
-                        <template #prefix>
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="25"
-                                viewBox="0 0 24 25"
-                                class="absolute fill-primary left-3"
-                            >
-                                <path
-                                    d="M12 17.5C12.5304 17.5 13.0391 17.2893 13.4142 16.9142C13.7893 16.5391 14 16.0304 14 15.5C14 14.9696 13.7893 14.4609 13.4142 14.0858C13.0391 13.7107 12.5304 13.5 12 13.5C11.4696 13.5 10.9609 13.7107 10.5858 14.0858C10.2107 14.4609 10 14.9696 10 15.5C10 16.0304 10.2107 16.5391 10.5858 16.9142C10.9609 17.2893 11.4696 17.5 12 17.5ZM18 8.5C18.5304 8.5 19.0391 8.71071 19.4142 9.08579C19.7893 9.46086 20 9.96957 20 10.5V20.5C20 21.0304 19.7893 21.5391 19.4142 21.9142C19.0391 22.2893 18.5304 22.5 18 22.5H6C5.46957 22.5 4.96086 22.2893 4.58579 21.9142C4.21071 21.5391 4 21.0304 4 20.5V10.5C4 9.96957 4.21071 9.46086 4.58579 9.08579C4.96086 8.71071 5.46957 8.5 6 8.5H7V6.5C7 5.17392 7.52678 3.90215 8.46447 2.96447C9.40215 2.02678 10.6739 1.5 12 1.5C12.6566 1.5 13.3068 1.62933 13.9134 1.8806C14.52 2.13188 15.0712 2.50017 15.5355 2.96447C15.9998 3.42876 16.3681 3.97995 16.6194 4.58658C16.8707 5.19321 17 5.84339 17 6.5V8.5H18ZM12 3.5C11.2044 3.5 10.4413 3.81607 9.87868 4.37868C9.31607 4.94129 9 5.70435 9 6.5V8.5H15V6.5C15 5.70435 14.6839 4.94129 14.1213 4.37868C13.5587 3.81607 12.7956 3.5 12 3.5Z"
-                                />
-                            </svg>
-                        </template>
-                    </TextInput>
-                </div>
-
                 <div class="flex items-center justify-center mt-8">
                     <PrimaryButton
                         class="px-4 py-2 w-full max-w-[240px]"
                         :class="{ 'opacity-25': form.processing }"
                         :disabled="form.processing"
                     >
-                        Daftar
+                        Simpan
                     </PrimaryButton>
                 </div>
             </form>
-
-            <!-- Login -->
-            <div class="mt-6 text-center">
-                <p class="text-sm text-gray-600">
-                    Sudah punya akun?
-                    <Link
-                        :href="
-                            route('login', {
-                                redirect: route().params.redirect,
-                            })
-                        "
-                        class="font-medium text-primary hover:font-semibold"
-                    >
-                        Masuk disini
-                    </Link>
-                </p>
-            </div>
         </AuthenticationCard>
+
+        <SuccessDialog
+            :show="showSuccessDialog"
+            :title="showSuccessMessage"
+            @close="closeSuccessDialog"
+        />
     </LandingLayout>
 </template>

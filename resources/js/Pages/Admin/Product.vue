@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
 import { usePage, useForm, router } from "@inertiajs/vue3";
 import AdminLayout from "@/Layouts/AdminLayout.vue";
@@ -12,8 +12,20 @@ import Dropdown from "@/Components/Dropdown.vue";
 import DiscountTag from "@/Components/DiscountTag.vue";
 
 const props = defineProps({
-    products: null,
-    brands: null,
+    products: {
+        type: Object as () => {
+            data: ProductEntity[];
+            current_page: number;
+            per_page: number;
+            total: number;
+            links: Array<{ url: string; label: string; active: boolean }>;
+        },
+        required: true,
+    },
+    brands: {
+        type: Array as () => BrandEntity[],
+        required: true,
+    },
 });
 
 const page = usePage();
@@ -469,9 +481,30 @@ onMounted(() => {
                             <td class="text-center">
                                 <p>
                                     {{
-                                        (
-                                            product.selling_price *
-                                            (1 - product.discount / 100)
+                                        (product.variants.length > 0
+                                            ? Math.min(
+                                                  ...product.variants.map(
+                                                      (variant) =>
+                                                          variant.final_selling_price
+                                                  )
+                                              )
+                                            : 0
+                                        ).toLocaleString("id-ID", {
+                                            style: "currency",
+                                            currency: "IDR",
+                                            minimumFractionDigits: 0,
+                                        })
+                                    }}
+                                    -
+                                    {{
+                                        (product.variants.length > 0
+                                            ? Math.max(
+                                                  ...product.variants.map(
+                                                      (variant) =>
+                                                          variant.final_selling_price
+                                                  )
+                                              )
+                                            : 0
                                         ).toLocaleString("id-ID", {
                                             style: "currency",
                                             currency: "IDR",
@@ -485,14 +518,35 @@ onMounted(() => {
                                 >
                                     <p class="text-red-500 line-through">
                                         {{
-                                            product.selling_price.toLocaleString(
-                                                "id-ID",
-                                                {
-                                                    style: "currency",
-                                                    currency: "IDR",
-                                                    minimumFractionDigits: 0,
-                                                }
-                                            )
+                                            (product.variants.length > 0
+                                                ? Math.min(
+                                                      ...product.variants.map(
+                                                          (variant) =>
+                                                              variant.base_selling_price
+                                                      )
+                                                  )
+                                                : 0
+                                            ).toLocaleString("id-ID", {
+                                                style: "currency",
+                                                currency: "IDR",
+                                                minimumFractionDigits: 0,
+                                            })
+                                        }}
+                                        -
+                                        {{
+                                            (product.variants.length > 0
+                                                ? Math.max(
+                                                      ...product.variants.map(
+                                                          (variant) =>
+                                                              variant.base_selling_price
+                                                      )
+                                                  )
+                                                : 0
+                                            ).toLocaleString("id-ID", {
+                                                style: "currency",
+                                                currency: "IDR",
+                                                minimumFractionDigits: 0,
+                                            })
                                         }}
                                     </p>
                                     <DiscountTag
@@ -520,8 +574,13 @@ onMounted(() => {
                                 </div>
                             </td>
                             <td class="text-center">
-                                {{ product.stock }}
-                                <span>{{ product.unit }}</span>
+                                {{
+                                    product.variants.reduce(
+                                        (total, variant) =>
+                                            total + variant.current_stock_level,
+                                        0
+                                    )
+                                }}
                             </td>
                             <td>
                                 <AdminItemAction

@@ -34,7 +34,7 @@ const submit = () => {
                 <div
                     class="flex flex-col items-center justify-center gap-2 mb-6 sm:flex-row"
                 >
-                    <h1 class="text-3xl font-bold text-gray-800 sm:block">
+                    <h1 class="text-2xl font-bold text-gray-800 sm:block">
                         Masuk
                     </h1>
                 </div>

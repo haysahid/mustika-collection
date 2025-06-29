@@ -40,7 +40,7 @@ class ProductController extends Controller
         }
 
         if ($colors) {
-            $products->whereHas('colors', function ($query) use ($colors) {
+            $products->whereHas('variants', function ($query) use ($colors) {
                 $query->whereIn('color_id', $colors);
             });
         }
@@ -52,7 +52,7 @@ class ProductController extends Controller
         }
 
         if ($sizes) {
-            $products->whereHas('sizes', function ($query) use ($sizes) {
+            $products->whereHas('variants', function ($query) use ($sizes) {
                 $query->whereIn('size_id', $sizes);
             });
         }
@@ -63,7 +63,7 @@ class ProductController extends Controller
         }
 
         $products->orderBy($orderBy, $orderDirection);
-        $products->with(['brand', 'colors', 'categories', 'sizes', 'images', 'links']);
+        $products->with(['brand', 'categories', 'images', 'links', 'variants']);
         $products->get();
 
         return Inertia::render('Admin/Product', [

@@ -206,7 +206,7 @@ const logout = () => {
 
                                         <template #content>
                                             <DropdownLink
-                                                :href="route('profile.show')"
+                                                :href="route('profile')"
                                             >
                                                 Profile
                                             </DropdownLink>
@@ -364,7 +364,7 @@ const logout = () => {
                             </template>
 
                             <template #content>
-                                <DropdownLink :href="route('profile.show')">
+                                <DropdownLink :href="route('profile')">
                                     Profile
                                 </DropdownLink>
 

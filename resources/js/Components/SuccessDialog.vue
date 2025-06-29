@@ -17,6 +17,45 @@ const emit = defineEmits(["close", "delete"]);
 const close = () => {
     emit("close");
 };
+
+import { ref, watch, onBeforeUnmount } from "vue";
+
+let timer = null;
+const progress = ref(100); // percent
+const duration = 2000; // ms
+
+watch(
+    () => props.show,
+    (show) => {
+        if (show) {
+            progress.value = 100;
+            const step = 10;
+            const interval = duration / (100 / step);
+            timer = setInterval(() => {
+                progress.value -= step;
+                if (progress.value <= 0) {
+                    progress.value = 0;
+                    clearInterval(timer);
+                    timer = null;
+                    close();
+                }
+            }, interval);
+        } else {
+            if (timer) {
+                clearInterval(timer);
+                timer = null;
+            }
+            progress.value = 100;
+        }
+    }
+);
+
+onBeforeUnmount(() => {
+    if (timer) {
+        clearInterval(timer);
+        timer = null;
+    }
+});
 </script>
 <template>
     <DialogModal
