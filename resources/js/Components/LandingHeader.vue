@@ -6,6 +6,8 @@ import CartButton from "./CartButton.vue";
 import { useCartStore } from "@/stores/cart-store";
 import DropdownLink from "./DropdownLink.vue";
 import Dropdown from "./Dropdown.vue";
+import MyOrderButton from "./MyOrderButton.vue";
+import Tooltip from "./Tooltip.vue";
 
 const cartStore = useCartStore();
 
@@ -87,12 +89,39 @@ const logout = () => {
                         ></span>
 
                         <div class="flex items-center gap-3">
-                            <!-- Cart -->
-                            <CartButton
-                                :length="cartStore.items.length"
-                                class="me-2 sm:me-0"
-                                @click="$inertia.get(route('cart'))"
-                            />
+                            <div class="flex items-center gap-3 me-2 sm:me-0">
+                                <!-- My Cart -->
+                                <Tooltip
+                                    id="tooltip-cart"
+                                    placement="bottom"
+                                    class="col-span-1 sm:col-span-2"
+                                >
+                                    <template #content>
+                                        <p>Keranjang Saya</p>
+                                    </template>
+                                    <CartButton
+                                        :length="cartStore.items.length"
+                                        @click="$inertia.get(route('cart'))"
+                                    />
+                                </Tooltip>
+
+                                <!-- My Order -->
+                                <Tooltip
+                                    id="tooltip-my-order"
+                                    placement="bottom"
+                                    class="col-span-1 sm:col-span-2"
+                                >
+                                    <template #content>
+                                        <p>Pesanan Saya</p>
+                                    </template>
+                                    <MyOrderButton
+                                        v-if="$page.props.auth.user"
+                                        @click="
+                                            $inertia.get(route('order.index'))
+                                        "
+                                    />
+                                </Tooltip>
+                            </div>
 
                             <!-- Trailing Menus -->
                             <div class="hidden gap-x-8 sm:flex sm:items-center">

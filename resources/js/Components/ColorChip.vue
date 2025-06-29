@@ -48,7 +48,7 @@ const onClick = () => {
 
 <template>
     <div
-        class="flex items-center justify-center gap-2 cursor-pointer px-3.5 py-2 sm:py-3 rounded-lg hover:bg-gray-50 outline outline-1 -outline-offset-1 outline-gray-400 min-w-[60px]"
+        class="flex items-center justify-center gap-2 cursor-pointer px-3.5 py-2 sm:py-3 rounded-lg hover:bg-gray-50 outline outline-1 -outline-offset-1 outline-gray-400 min-w-[60px] h-fit"
         :class="{
             '!outline-2 !-outline-offset-2': props.selected,
             'opacity-30 hover:bg-transparent !cursor-default': props.disabled,
@@ -56,7 +56,10 @@ const onClick = () => {
         :style="props.selected ? { outlineColor: props.hexCode } : {}"
         @click="onClick"
     >
-        <div class="rounded-full size-5 shrink-0" :style="radioStyle"></div>
+        <div
+            class="rounded-full size-4 sm:size-5 shrink-0"
+            :style="radioStyle"
+        ></div>
         <span>{{ props.label }}</span>
     </div>
 </template>
