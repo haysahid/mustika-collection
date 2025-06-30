@@ -2,10 +2,9 @@
 return [
     'store_id' => 1,
     'brand' => [
-        'id' => null,
         'name' => 'Zoeya',
         'description' => 'Brand busana muslim Zoeya', // Placeholder description
-        'website' => 'url(\'catalog?brands=Zoeya\')', // Placeholder website URL
+        'website' => 'catalog?brands=Zoeya', // Placeholder website URL
     ],
     'name' => 'Gamis Elegan Wanita Modern',
     'slug' => 'gamis-elegan-wanita-modern',

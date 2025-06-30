@@ -2,10 +2,9 @@
 return [
     'store_id' => 1,
     'brand' => [
-        'id' => null,
         'name' => 'Fazli',
         'description' => 'Brand busana muslim Fazli',
-        'website' => 'url(\'catalog?brands=Fazli\')',
+        'website' => 'catalog?brands=Fazli',
     ],
     'name' => 'Koko Premium Pria Modern',
     'slug' => 'koko-premium-pria-modern',

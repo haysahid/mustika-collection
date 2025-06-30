@@ -602,7 +602,7 @@ return [
         'brand' => [ // Brand object for 'Haitwo' is inserted.
             'name' => 'Haitwo',
             'description' => 'Brand busana muslim Haitwo', // Placeholder description
-            'website' => 'url(\'catalog?brands=Haitwo\')', // Placeholder website URL
+            'website' => 'catalog?brands=Haitwo', // Placeholder website URL
         ],
         'store_id' => 1,
         'colors' => [

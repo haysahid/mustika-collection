@@ -164,9 +164,9 @@ class PublicController extends Controller
         $accumulatedStock = $product->variants->sum('current_stock_level');
         $minOrder = $product->variants->min('min_order');
         $variants = $product->variants;
-        $motifs = $variants->pluck('motif')->unique()->filter()->sort()->values();
-        $colors = $variants->pluck('color')->unique();
-        $sizes = $variants->pluck('size')->filter()->unique('id')->sortBy('id')->values();
+        $motifs = $variants->pluck('motif')->unique()->filter()->sort()->values()->all();
+        $colors = $variants->pluck('color')->unique('id')->values()->all();
+        $sizes = $variants->pluck('size')->filter()->unique('id')->sortBy('id')->values()->all();
 
         $relatedProducts = Product::where('id', '!=', $product->id)
             ->with(['brand', 'categories', 'images'])

@@ -2,10 +2,9 @@
 return [
     'store_id' => 1,
     'brand' => [
-        'id' => null,
         'name' => 'Kulit Garut',
         'description' => 'Brand produk kulit asli berkualitas dari Garut',
-        'website' => 'url(\'catalog?brands=KulitGarut\')',
+        'website' => 'catalog?brands=KulitGarut',
     ],
     'name' => 'Tas Kulit Premium',
     'slug' => 'tas-kulit-premium',

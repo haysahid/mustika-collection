@@ -2,10 +2,9 @@
 return [
     'store_id' => 1,
     'brand' => [
-        'id' => null,
         'name' => 'Nibras',
         'description' => 'Brand busana muslim dan aksesoris Nibras',
-        'website' => 'url(\'catalog?brands=Nibras\')',
+        'website' => 'catalog?brands=Nibras',
     ],
     'name' => 'Aksesoris Muslim Stylish',
     'slug' => 'aksesoris-muslim-stylish',

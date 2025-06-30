@@ -2,7 +2,6 @@
 return [
     'store_id' => 1,
     'brand' => [
-        'id' => 5,
         'name' => 'Ethica',
     ],
     'name' => 'Hits 56 White Alyssum Couple Keluarga Muslim Ethica 2023',

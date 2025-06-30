@@ -2,7 +2,6 @@
 return [
     'store_id' => 1,
     'brand' => [
-        'id' => 3,
         'name' => 'Nibras',
     ],
     'name' => 'Nibras Teen Setelan Baju Muslim Remaja Atasan Bawahan',

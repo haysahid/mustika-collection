@@ -2,10 +2,9 @@
 return [
     'store_id' => 1,
     'brand' => [
-        'id' => null,
         'name' => 'Rayya',
         'description' => 'Brand fashion muslim Rayya', // Placeholder description
-        'website' => 'url(\'catalog?brands=Rayya\')', // Placeholder website URL
+        'website' => 'catalog?brands=Rayya', // Placeholder website URL
     ],
     'name' => 'Sepatu Muslim Casual',
     'slug' => 'sepatu-muslim-casual',
