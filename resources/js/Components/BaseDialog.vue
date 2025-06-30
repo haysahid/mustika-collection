@@ -56,7 +56,10 @@ const close = () => {
                     v-if="props.showNegativeButton"
                     type="button"
                     class=""
-                    @click="emit('close')"
+                    @click="
+                        emit('negativeClicked');
+                        emit('close');
+                    "
                 >
                     {{ props.negativeButtonText }}
                 </SecondaryButton>
