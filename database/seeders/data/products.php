@@ -1,378 +1,21 @@
 <?php
 
 return [
-    [
-        'store_id' => 1,
-        'brand' => [
-            'name' => 'Seply',
-        ],
-        'name' => 'Eksis 194 Windsor Wine Couple Keluarga Muslim Seply 2023',
-        'slug' => 'eksis-194-windsor-wine-couple-keluarga-muslim-seply-2023',
-        'sku_prefix' => 'PRD_EKSIS194',
-        'description' => 'Eksis 194 Windsor Wine adalah koleksi sarimbit couple keluarga terbaru dari Seply untuk tahun 2023. Koleksi ini tersedia untuk Koko Dewasa/Anak, Gamis Dewasa/Anak, serta Hijab Sara Square. Didesain dengan nuansa Windsor Wine yang elegan, Eksis 194 cocok untuk tampilan serasi keluarga muslim.',
-        'discount_type' => 'percentage',
-        'discount' => 10,
-        'categories' => [
-            ['name' => 'Fashion Muslim'],
-            ['name' => 'Set'],
-            ['name' => 'Koko Dewasa / Anak'],
-            ['name' => 'Gamis Dewasa / Anak'],
-            ['name' => 'Hijab Sara Square'],
-        ],
-        'images' => [
-            ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22110-ruo8w52wsvjv6f.jpg'],
-            ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22110-akky702wsvjvd6.jpg'],
-        ],
-        'links' => [
-            [
-                'platform_id' => 1, // Shopee
-                'url' => 'https://shopee.co.id/Eksis-194-Windsor-Wine-Couple-Keluarga-Muslim-Seply-2023-i.17828602.16289722954',
-            ],
-        ],
-        'variants' => [
-            // Ayah L
-            [
-                'sku' => 'PRD_EKSIS194_AYAH_WINE_L',
-                'barcode' => '00000001',
-                'slug' => 'eksis-194-windsor-wine-couple-keluarga-muslim-seply-2023-v1',
-                'motif' => 'Ayah',
-                'color' => [
-                    'name' => 'Wine',
-                    'hex_code' => '#722F37',
-                ],
-                'size' => [
-                    'name' => 'L',
-                ],
-                'material' => 'Premium Material',
-                'purchase_price' => 85000,
-                'base_selling_price' => 145000,
-                'discount_type' => 'percentage',
-                'discount' => 10,
-                'final_selling_price' => 130500,
-                'current_stock_level' => 20,
-                'last_stock_update' => now(),
-                'unit' => 'set',
-                'images' => [
-                    ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22110-91qb622wsvjvc7.jpg'],
-                ],
-            ],
-            // Ayah XL
-            [
-                'sku' => 'PRD_EKSIS194_AYAH_WINE_XL',
-                'barcode' => '00000002',
-                'slug' => 'eksis-194-windsor-wine-couple-keluarga-muslim-seply-2023-v2',
-                'motif' => 'Ayah',
-                'color' => [
-                    'name' => 'Wine',
-                    'hex_code' => '#722F37',
-                ],
-                'size' => [
-                    'name' => 'XL',
-                ],
-                'material' => 'Premium Material',
-                'purchase_price' => 90000,
-                'base_selling_price' => 150000,
-                'discount_type' => 'percentage',
-                'discount' => 10,
-                'final_selling_price' => 135000,
-                'current_stock_level' => 15,
-                'last_stock_update' => now(),
-                'unit' => 'set',
-                'images' => [
-                    ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22110-91qb622wsvjvc7.jpg'],
-                ],
-            ],
-            // Ibu L
-            [
-                'sku' => 'PRD_EKSIS194_IBU_WINE_L',
-                'barcode' => '00000003',
-                'slug' => 'eksis-194-windsor-wine-couple-keluarga-muslim-seply-2023-v3',
-                'motif' => 'Ibu',
-                'color' => [
-                    'name' => 'Wine',
-                    'hex_code' => '#722F37',
-                ],
-                'size' => [
-                    'name' => 'L',
-                ],
-                'material' => 'Premium Material',
-                'purchase_price' => 90000,
-                'base_selling_price' => 155000,
-                'discount_type' => 'percentage',
-                'discount' => 10,
-                'final_selling_price' => 139500,
-                'current_stock_level' => 20,
-                'last_stock_update' => now(),
-                'unit' => 'set',
-                'images' => [
-                    ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22110-c1o90bcxsvjv07.jpg'],
-                    ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22110-ryf4u72wsvjv9b.jpg'],
-                ],
-            ],
-            // Ibu XL
-            [
-                'sku' => 'PRD_EKSIS194_IBU_WINE_XL',
-                'barcode' => '00000004',
-                'slug' => 'eksis-194-windsor-wine-couple-keluarga-muslim-seply-2023-v4',
-                'motif' => 'Ibu',
-                'color' => [
-                    'name' => 'Wine',
-                    'hex_code' => '#722F37',
-                ],
-                'size' => [
-                    'name' => 'XL',
-                ],
-                'material' => 'Premium Material',
-                'purchase_price' => 95000,
-                'base_selling_price' => 160000,
-                'discount_type' => 'percentage',
-                'discount' => 10,
-                'final_selling_price' => 144000,
-                'current_stock_level' => 15,
-                'last_stock_update' => now(),
-                'unit' => 'set',
-                'images' => [
-                    ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22110-c1o90bcxsvjv07.jpg'],
-                    ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22110-ryf4u72wsvjv9b.jpg'],
-                ],
-            ],
-            // Ibu XXL
-            [
-                'sku' => 'PRD_EKSIS194_IBU_WINE_XXL',
-                'barcode' => '00000005',
-                'slug' => 'eksis-194-windsor-wine-couple-keluarga-muslim-seply-2023-v5',
-                'motif' => 'Ibu',
-                'color' => [
-                    'name' => 'Wine',
-                    'hex_code' => '#722F37',
-                ],
-                'size' => [
-                    'name' => 'XXL',
-                ],
-                'material' => 'Premium Material',
-                'purchase_price' => 100000,
-                'base_selling_price' => 165000,
-                'discount_type' => 'percentage',
-                'discount' => 10,
-                'final_selling_price' => 148500,
-                'current_stock_level' => 10,
-                'last_stock_update' => now(),
-                'unit' => 'set',
-                'images' => [
-                    ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22110-c1o90bcxsvjv07.jpg'],
-                    ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22110-ryf4u72wsvjv9b.jpg'],
-                ],
-            ],
-            // Anak Laki-laki S
-            [
-                'sku' => 'PRD_EKSIS194_ANAK_LAKI_WINE_S',
-                'barcode' => '00000006',
-                'slug' => 'eksis-194-windsor-wine-anak-laki-laki-s',
-                'motif' => 'Anak Laki-laki',
-                'color' => [
-                    'name' => 'Wine',
-                    'hex_code' => '#722F37',
-                ],
-                'size' => [
-                    'name' => 'S',
-                ],
-                'material' => 'Premium Material',
-                'purchase_price' => 60000,
-                'base_selling_price' => 95000,
-                'discount_type' => 'percentage',
-                'discount' => 10,
-                'final_selling_price' => 85500,
-                'current_stock_level' => 25,
-                'last_stock_update' => now(),
-                'unit' => 'set',
-                'images' => [
-                    ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22110-4d36162wsvjv14.jpg'],
-                ],
-            ],
-            // Anak Laki-laki M
-            [
-                'sku' => 'PRD_EKSIS194_ANAK_LAKI_WINE_M',
-                'barcode' => '00000007',
-                'slug' => 'eksis-194-windsor-wine-anak-laki-laki-m',
-                'motif' => 'Anak Laki-laki',
-                'color' => [
-                    'name' => 'Wine',
-                    'hex_code' => '#722F37',
-                ],
-                'size' => [
-                    'name' => 'M',
-                ],
-                'material' => 'Premium Material',
-                'purchase_price' => 62000,
-                'base_selling_price' => 100000,
-                'discount_type' => 'percentage',
-                'discount' => 10,
-                'final_selling_price' => 90000,
-                'current_stock_level' => 20,
-                'last_stock_update' => now(),
-                'unit' => 'set',
-                'images' => [
-                    ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22110-4d36162wsvjv14.jpg'],
-                ],
-            ],
-            // Anak Laki-laki L
-            [
-                'sku' => 'PRD_EKSIS194_ANAK_LAKI_WINE_L',
-                'barcode' => '00000008',
-                'slug' => 'eksis-194-windsor-wine-anak-laki-laki-l',
-                'motif' => 'Anak Laki-laki',
-                'color' => [
-                    'name' => 'Wine',
-                    'hex_code' => '#722F37',
-                ],
-                'size' => [
-                    'name' => 'L',
-                ],
-                'material' => 'Premium Material',
-                'purchase_price' => 64000,
-                'base_selling_price' => 105000,
-                'discount_type' => 'percentage',
-                'discount' => 10,
-                'final_selling_price' => 94500,
-                'current_stock_level' => 15,
-                'last_stock_update' => now(),
-                'unit' => 'set',
-                'images' => [
-                    ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22110-4d36162wsvjv14.jpg'],
-                ],
-            ],
-            // Anak Laki-laki XL
-            [
-                'sku' => 'PRD_EKSIS194_ANAK_LAKI_WINE_XL',
-                'barcode' => '00000009',
-                'slug' => 'eksis-194-windsor-wine-anak-laki-laki-xl',
-                'motif' => 'Anak Laki-laki',
-                'color' => [
-                    'name' => 'Wine',
-                    'hex_code' => '#722F37',
-                ],
-                'size' => [
-                    'name' => 'XL',
-                ],
-                'material' => 'Premium Material',
-                'purchase_price' => 66000,
-                'base_selling_price' => 110000,
-                'discount_type' => 'percentage',
-                'discount' => 10,
-                'final_selling_price' => 99000,
-                'current_stock_level' => 12,
-                'last_stock_update' => now(),
-                'unit' => 'set',
-                'images' => [
-                    ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22110-4d36162wsvjv14.jpg'],
-                ],
-            ],
-            // Anak Perempuan S
-            [
-                'sku' => 'PRD_EKSIS194_ANAK_PEREMPUAN_WINE_S',
-                'barcode' => '00000010',
-                'slug' => 'eksis-194-windsor-wine-anak-perempuan-s',
-                'motif' => 'Anak Perempuan',
-                'color' => [
-                    'name' => 'Wine',
-                    'hex_code' => '#722F37',
-                ],
-                'size' => [
-                    'name' => 'S',
-                ],
-                'material' => 'Premium Material',
-                'purchase_price' => 60000,
-                'base_selling_price' => 95000,
-                'discount_type' => 'percentage',
-                'discount' => 10,
-                'final_selling_price' => 85500,
-                'current_stock_level' => 25,
-                'last_stock_update' => now(),
-                'unit' => 'set',
-                'images' => [
-                    ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22110-8e49w52wsvjv74.jpg'],
-                ],
-            ],
-            // Anak Perempuan M
-            [
-                'sku' => 'PRD_EKSIS194_ANAK_PEREMPUAN_WINE_M',
-                'barcode' => '00000011',
-                'slug' => 'eksis-194-windsor-wine-anak-perempuan-m',
-                'motif' => 'Anak Perempuan',
-                'color' => [
-                    'name' => 'Wine',
-                    'hex_code' => '#722F37',
-                ],
-                'size' => [
-                    'name' => 'M',
-                ],
-                'material' => 'Premium Material',
-                'purchase_price' => 62000,
-                'base_selling_price' => 100000,
-                'discount_type' => 'percentage',
-                'discount' => 10,
-                'final_selling_price' => 90000,
-                'current_stock_level' => 20,
-                'last_stock_update' => now(),
-                'unit' => 'set',
-                'images' => [
-                    ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22110-8e49w52wsvjv74.jpg'],
-                ],
-            ],
-            // Anak Perempuan L
-            [
-                'sku' => 'PRD_EKSIS194_ANAK_PEREMPUAN_WINE_L',
-                'barcode' => '00000012',
-                'slug' => 'eksis-194-windsor-wine-anak-perempuan-l',
-                'motif' => 'Anak Perempuan',
-                'color' => [
-                    'name' => 'Wine',
-                    'hex_code' => '#722F37',
-                ],
-                'size' => [
-                    'name' => 'L',
-                ],
-                'material' => 'Premium Material',
-                'purchase_price' => 64000,
-                'base_selling_price' => 105000,
-                'discount_type' => 'percentage',
-                'discount' => 10,
-                'final_selling_price' => 94500,
-                'current_stock_level' => 15,
-                'last_stock_update' => now(),
-                'unit' => 'set',
-                'images' => [
-                    ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22110-8e49w52wsvjv74.jpg'],
-                ],
-            ],
-            // Anak Perempuan XL
-            [
-                'sku' => 'PRD_EKSIS194_ANAK_PEREMPUAN_WINE_XL',
-                'barcode' => '00000013',
-                'slug' => 'eksis-194-windsor-wine-anak-perempuan-xl',
-                'motif' => 'Anak Perempuan',
-                'color' => [
-                    'name' => 'Wine',
-                    'hex_code' => '#722F37',
-                ],
-                'size' => [
-                    'name' => 'XL',
-                ],
-                'material' => 'Premium Material',
-                'purchase_price' => 66000,
-                'base_selling_price' => 110000,
-                'discount_type' => 'percentage',
-                'discount' => 10,
-                'final_selling_price' => 99000,
-                'current_stock_level' => 12,
-                'last_stock_update' => now(),
-                'unit' => 'set',
-                'images' => [
-                    ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22110-8e49w52wsvjv74.jpg'],
-                ],
-            ],
-        ]
-    ]
+    require __DIR__ . '/product/product_1.php',
+    require __DIR__ . '/product/product_2.php',
+    require __DIR__ . '/product/product_3.php',
+    require __DIR__ . '/product/product_4.php',
+    require __DIR__ . '/product/product_5.php',
+    require __DIR__ . '/product/product_6.php',
+    require __DIR__ . '/product/product_7.php',
+    require __DIR__ . '/product/product_8.php',
+    require __DIR__ . '/product/product_9.php',
+    require __DIR__ . '/product/product_10.php',
+    require __DIR__ . '/product/product_11.php',
+    require __DIR__ . '/product/product_12.php',
+    require __DIR__ . '/product/product_13.php',
+    require __DIR__ . '/product/product_14.php',
+    require __DIR__ . '/product/product_15.php',
 ];
 
 return [
@@ -560,12 +203,12 @@ return [
             ],
         ],
         'images' => [
-            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasb-m2p0qpwx3rts25'],
-            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasb-m2p0qpwx6kyo83'],
-            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7ras8-m2p0qpwx0yow37'],
-            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasm-m2p0qpwwzk4g79'],
-            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasm-m2p0qpwx56e815'],
-            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasa-m2p0qpwx2d9c9f'],
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasb-m2p0qpwx3rts25.jpg'], // Gambar utama
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasb-m2p0qpwx6kyo83.jpg'], // Gambar utama
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7ras8-m2p0qpwx0yow37.jpg'], // Gambar koko dewasa
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasm-m2p0qpwwzk4g79.jpg'], // Gambar gamis dewasa
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasm-m2p0qpwx56e815.jpg'], // Gambar koko anak
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasa-m2p0qpwx2d9c9f.jpg'], // Gambar gamis anak
         ],
     ],
     [
@@ -627,12 +270,12 @@ return [
             ],
         ],
         'images' => [
-            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasa-m2p0qpwx9e3k13'],
-            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasm-m2p0qpy0zcuc09'],
-            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7ras9-m2p0qpy10res17'],
-            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasm-m2p0qpwxaso0ef'],
-            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasl-m2p0qpwxc78g75'],
-            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasl-m2p0qpy125z886'],
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasa-m2p0qpwx9e3k13.jpg'], // Gambar utama
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasm-m2p0qpy0zcuc09.jpg'], // Gambar utama
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7ras9-m2p0qpy10res17.jpg'], // Gambar koko dewasa
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasm-m2p0qpwxaso0ef.jpg'], // Gambar gamis dewasa
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasl-m2p0qpwxc78g75.jpg'], // Gambar koko anak
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasl-m2p0qpy125z886.jpg'], // Gambar gamis anak
         ],
     ],
     [
@@ -661,21 +304,6 @@ return [
             ['name' => 'Gamis'],
         ],
         'sizes' => [
-            ['name' => '0'],
-            ['name' => '0+'],
-            ['name' => '1'],
-            ['name' => '2'],
-            ['name' => '3'],
-            ['name' => '4'],
-            ['name' => '5'],
-            ['name' => '6'],
-            ['name' => '7'],
-            ['name' => '8'],
-            ['name' => '9'],
-            ['name' => '10'],
-            ['name' => '11'],
-            ['name' => '12'],
-            ['name' => 'XS'],
             ['name' => 'S'],
             ['name' => 'M'],
             ['name' => 'L'],
@@ -689,11 +317,11 @@ return [
             ],
         ],
         'images' => [
-            ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22100-o4spb9zu90iv6b'],
-            ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22100-b3rmf0zu90ivc0'],
-            ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22100-4nfpn7zu90iv1a'],
-            ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22100-0yqkta1u90ivd3'],
-            ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22120-dy4v4utjdjlv38'],
+            ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22100-o4spb9zu90iv6b.jpg'], // Gambar utama
+            ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22100-b3rmf0zu90ivc0.jpg'], // Gambar utama
+            ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22100-4nfpn7zu90iv1a.jpg'], // Gambar koko dewasa
+            ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22100-0yqkta1u90ivd3.jpg'], // Gambar gamis dewasa
+            ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22120-dy4v4utjdjlv38.jpg'], // Gambar utama
         ],
     ],
     [
@@ -725,9 +353,6 @@ return [
             ['name' => 'Gamis'],
         ],
         'sizes' => [
-            ['name' => '0'],
-            ['name' => '0+'],
-            ['name' => '1'],
             ['name' => '2'],
             ['name' => '3'],
             ['name' => '4'],
@@ -737,8 +362,6 @@ return [
             ['name' => '8'],
             ['name' => '9'],
             ['name' => '10'],
-            ['name' => '11'],
-            ['name' => '12'],
             ['name' => 'XS'],
             ['name' => 'S'],
             ['name' => 'M'],
@@ -753,12 +376,12 @@ return [
             ],
         ],
         'images' => [
-            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7r990-lstxy8xbi6z194'],
-            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7r98r-lstxy8xbb64t05'],
-            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7r98p-lstxy8xbfdu574'],
-            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7r98q-lstxy8xbgsel07'],
-            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7r98u-lstxy8xbckp914'],
-            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7r98p-lstxy8xbdz9p4e'],
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7r990-lstxy8xbi6z194.jpg'], // Gambar utama
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7r98r-lstxy8xbb64t05.jpg'], // Gambar utama
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7r98p-lstxy8xbfdu574.jpg'], // Gambar koko dewasa
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7r98q-lstxy8xbgsel07.jpg'], // Gambar gamis dewasa
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7r98u-lstxy8xbckp914.jpg'], // Gambar koko anak
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7r98p-lstxy8xbdz9p4e.jpg'], // Gambar gamis anak
         ],
     ],
     [
@@ -790,9 +413,6 @@ return [
             ['name' => 'Gamis'],
         ],
         'sizes' => [
-            ['name' => '0'],
-            ['name' => '0+'],
-            ['name' => '1'],
             ['name' => '2'],
             ['name' => '3'],
             ['name' => '4'],
@@ -802,8 +422,6 @@ return [
             ['name' => '8'],
             ['name' => '9'],
             ['name' => '10'],
-            ['name' => '11'],
-            ['name' => '12'],
             ['name' => 'XS'],
             ['name' => 'S'],
             ['name' => 'M'],
@@ -818,12 +436,12 @@ return [
             ],
         ],
         'images' => [
-            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7r98w-lstxy8xb8czx91'],
-            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7r98p-lstxy8xb6yfh76'],
-            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7r98v-lstxy8xb6ybqa0'],
-            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7r98w-lstxy8xb9rkd01'],
-            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7r98x-lstxy8xb6y6573'],
-            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7r98q-lstxy8xb6y3re7'],
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7r98w-lstxy8xb8czx91.jpg'], // Gambar utama
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7r98p-lstxy8xb6yfh76.jpg'], // Gambar koko dewasa
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7r98v-lstxy8xb6ybqa0.jpg'], // Gambar koko anak
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7r98w-lstxy8xb9rkd01.jpg'], // Gambar gamis dewasa
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7r98x-lstxy8xb6y6573.jpg'], // Gambar gamis anak
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7r98q-lstxy8xb6y3re7.jpg'], // Gambar utama
         ],
     ],
     [
@@ -853,10 +471,6 @@ return [
                 'hex_code' => '#40E0D0', // Approximate hex for Turquoise
             ],
             [
-                'name' => 'Tosca Kuning', // NT 32 TOSCA KUNING
-                'hex_code' => '#ADD8E6', // Approximate hex for Light Blue (Tosca often leans blue/green, with yellow hint)
-            ],
-            [
                 'name' => 'Dusty Pink', // NT 079 DUSTY PINK
                 'hex_code' => '#E8B5CE', // Approximate hex for Dusty Pink
             ],
@@ -879,7 +493,19 @@ return [
             [
                 'name' => 'Ungu', // NT 13 UNGU
                 'hex_code' => '#800080', // Hex for Purple/Ungu
-            ]
+            ],
+            [
+                'name' => 'Biru Muda', // NT 15 BIRU MUDA
+                'hex_code' => '#ADD8E6', // Hex for Light Blue
+            ],
+            [
+                'name' => 'Kuning', // NT 16 KUNING
+                'hex_code' => '#FFFF00', // Hex for Yellow
+            ],
+            [
+                'name' => 'Cream', // NT 17 CREAM
+                'hex_code' => '#FFFDD0', // Hex for Cream
+            ],
         ],
         'categories' => [
             ['name' => 'Fashion Muslim'],
@@ -901,11 +527,17 @@ return [
             ],
         ],
         'images' => [
-            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasb-m2qqbugp3e8h33'],
-            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasc-m2qqbugp4ssx45'],
-            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasf-m2qqbugz2zlw2a'],
-            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasi-m2qpngm1yh1t41'],
-            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasc-m2qpngm1rg7l7c'],
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasb-m2qqbugp3e8h33.jpg'], // Gambar utama
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasc-m2qqbugp4ssx45.jpg'], // Gambar utama
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasf-m2qqbugz2zlw2a.jpg'], // Gambar warna Maroon
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasi-m2qpngm1yh1t41.jpg'], // Gambar warna Turquoise
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasc-m2qpngm1rg7l7c.jpg'], // Gambar warna Dusty Pink
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rask-m2qpngm1zvm99d.jpg'], // Gambar warna Dusty Pink
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7ras8-m2qpngm21a6p45.jpg'], // Gambar warna Orange
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rash-m2qpngm22or594.jpg'], // Gambar warna Tosca
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rask-m2qpngm243bl77.jpg'], // Gambar warna Ungu
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasc-m2qqlu1t1epvb9.jpg'], // Gambar warna Kuning
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasj-m2qqqvbrn8jj64.jpg'], // Gambar warna Cream
         ],
     ],
     [
@@ -948,11 +580,11 @@ return [
             ],
         ],
         'images' => [
-            ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22110-k188r6f7qwjvee'],
-            ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22110-evf0x5f7qwjv2c'],
-            ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22110-k90aq3f7qwjv0f'],
-            ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22110-4pna54f7qwjvf2'],
-            ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22110-asiew037qwjv69'],
+            ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22110-k188r6f7qwjvee.jpg'], // Gambar utama
+            ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22110-evf0x5f7qwjv2c.jpg'], // Gambar gamis dewasa
+            ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22110-k90aq3f7qwjv0f.jpg'], // Gambar koko dewasa
+            ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22110-4pna54f7qwjvf2.jpg'], // Gambar utama
+            ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22110-asiew037qwjv69.jpg'], // Gambar utama
         ],
     ],
     [
@@ -1004,7 +636,15 @@ return [
             [
                 'name' => 'Maroon',
                 'hex_code' => '#800000',
-            ]
+            ],
+            [
+                'name' => 'Dusty Pink',
+                'hex_code' => '#E8B5CE',
+            ],
+            [
+                'name' => 'Lavender',
+                'hex_code' => '#E6E6FA',
+            ],
         ],
         'categories' => [
             ['name' => 'Fashion Muslim'],
@@ -1027,14 +667,14 @@ return [
             ],
         ],
         'images' => [
-            ['image' => 'https://down-id.img.susercontent.com/file/dbc94c020b6799ab0f9fb8f0bf104ff8'],
-            ['image' => 'https://down-id.img.susercontent.com/file/107004abdf3cb55a40d30d4cd00616d3'],
-            ['image' => 'https://down-id.img.susercontent.com/file/33402ae82f446dced6779e3164ed7582'],
-            ['image' => 'https://down-id.img.susercontent.com/file/842016466ffecda478644b62b3324168'],
-            ['image' => 'https://down-id.img.susercontent.com/file/8591304a2d117cb2d6699d7248b242b7'],
-            ['image' => 'https://down-id.img.susercontent.com/file/d5387602153fca48b1eed1bdfb284abb'],
-            ['image' => 'https://down-id.img.susercontent.com/file/3dad20cf5e28199d877a3bb9f7491fa0'],
-            ['image' => 'https://down-id.img.susercontent.com/file/9df9993ee1253d6a0178c29ea1c66a73'],
+            ['image' => 'https://down-id.img.susercontent.com/file/dbc94c020b6799ab0f9fb8f0bf104ff8.webp'], // Gambar Dusty Pink
+            ['image' => 'https://down-id.img.susercontent.com/file/3dad20cf5e28199d877a3bb9f7491fa0.webp'], // Gambar Dusty Pink
+            ['image' => 'https://down-id.img.susercontent.com/file/107004abdf3cb55a40d30d4cd00616d3.webp'], // Gambar Maroon
+            ['image' => 'https://down-id.img.susercontent.com/file/d5387602153fca48b1eed1bdfb284abb.webp'], // Gambar Maroon
+            ['image' => 'https://down-id.img.susercontent.com/file/33402ae82f446dced6779e3164ed7582.webp'], // Gambar Dusty Blue
+            ['image' => 'https://down-id.img.susercontent.com/file/842016466ffecda478644b62b3324168.webp'], // Gambar Lavender
+            ['image' => 'https://down-id.img.susercontent.com/file/8591304a2d117cb2d6699d7248b242b7.webp'], // Gambar Lavender
+            ['image' => 'https://down-id.img.susercontent.com/file/9df9993ee1253d6a0178c29ea1c66a73.webp'], // Gambar Utama
         ],
     ],
     // Koko
@@ -1049,22 +689,31 @@ return [
         'stock' => 15,
         'min_order' => 1,
         'unit' => 'pcs',
-        'brand_id' => 1,
+        'brand' => [
+            'name' => 'Fazli',
+        ],
         'store_id' => 1,
         'colors' => [
-            ['id' => 2]
+            ['name' => 'Abu-abu', 'hex_code' => '#808080'],
         ],
         'categories' => [
-            ['id' => 1],
-            ['id' => 3],
+            ['name' => 'Koko Dewasa/Anak'],
+            ['name' => 'Baju Muslim Pria'],
         ],
         'sizes' => [
-            ['id' => 2],
-            ['id' => 3],
-            ['id' => 4],
+            ['name' => 'S'],
+            ['name' => 'M'],
+            ['name' => 'L'],
         ],
         'images' => [
-            ['image' => 'product/koko-premium-pria-modern.jpeg'],
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasd-m0lcclj9b1i456.jpg'], // Gambar lengan panjang
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasg-m0lcclkn90csd5.webp'], // Gambar lengan panjang
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rask-m0lcclj9cg80fb.webp'], // Gambar utama
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasb-m0lcclknafemab.webp'], // Gambar lengan panjang
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7ras9-m0lccloj3c5j7b.webp'], // Gambar lengan pendek
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rasc-m0lccloj3bqv6f.webp'], // Gambar lengan panjang
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7rase-m0lcclkn90euf9.webp'], // Gambar lengan pendek
+            ['image' => 'https://down-id.img.susercontent.com/file/id-11134207-7r992-lrer2znexeef06.webp'], // Gambar utama
         ],
     ],
     // Gamis
@@ -1079,22 +728,35 @@ return [
         'stock' => 10,
         'min_order' => 1,
         'unit' => 'pcs',
-        'brand_id' => 2,
+        'brand' => [
+            'name' => 'Zoeya',
+        ],
         'store_id' => 1,
         'colors' => [
-            ['id' => 3]
+            [
+                'name' => 'Hitam',
+                'hex_code' => '#000000'
+            ],
+            [
+                'name' => 'Coklat',
+                'hex_code' => '#8B4513'
+            ],
+
         ],
         'categories' => [
-            ['id' => 2],
-            ['id' => 4],
+            ['name' => 'Gamis Dewasa/Anak'],
+            ['name' => 'Baju Muslim Wanita'],
         ],
         'sizes' => [
-            ['id' => 1],
-            ['id' => 2],
-            ['id' => 3],
+            ['name' => 'XS'],
+            ['name' => 'S'],
+            ['name' => 'M'],
+            ['name' => 'L'],
+            ['name' => 'XL'],
+            ['name' => 'XXL'],
         ],
         'images' => [
-            ['image' => 'product/gamis-elegan-wanita-modern.webp'],
+            ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-23020-g235zmt5u2nv2d.jpg'],
         ],
     ],
     // Aksesoris
@@ -1109,17 +771,25 @@ return [
         'stock' => 50,
         'min_order' => 1,
         'unit' => 'pcs',
-        'brand_id' => 3,
+        'brand' => [
+            'name' => 'Nibras',
+        ],
         'store_id' => 1,
         'colors' => [
-            ['id' => 4]
+            [
+                'name' => 'Kuning',
+                'hex_code' => '#FFFF00',
+            ],
         ],
         'categories' => [
-            ['id' => 5],
+            ['name' => 'Aksesoris Muslim'],
         ],
-        'sizes' => [],
+        'sizes' => [
+            ['name' => 'One Size'],
+        ],
         'images' => [
-            ['image' => 'product/aksesoris-muslim-stylish.jpeg'],
+            ['image' => 'https://down-id.img.susercontent.com/file/1ab9bf690704c94586d2a1069a2b03ac.webp'],
+
         ],
     ],
     // Sepatu
@@ -1134,22 +804,28 @@ return [
         'stock' => 30,
         'min_order' => 1,
         'unit' => 'pasang',
-        'brand_id' => 4,
+        'brand' => [
+            'name' => 'Rayya',
+        ],
         'store_id' => 1,
         'colors' => [
-            ['id' => 5]
+            [
+                'name' => 'Hitam',
+                'hex_code' => '#000000',
+            ],
         ],
         'categories' => [
-            ['id' => 6],
-            ['name' => 'Sepatu'],
+            ['name' => 'Aksesoris Muslim'],
         ],
         'sizes' => [
-            ['id' => 2],
-            ['id' => 3],
-            ['id' => 4],
+            ['name' => '39'],
+            ['name' => '40'],
+            ['name' => '41'],
+            ['name' => '42'],
+            ['name' => '43'],
         ],
         'images' => [
-            ['image' => 'product/sepatu-muslim-casual.jpg'],
+            ['image' => 'https://down-id.img.susercontent.com/file/27ed5aec3cbd06ce4e75052c0bab6c2b.webp'],
         ],
     ],
     // Tas
@@ -1164,18 +840,26 @@ return [
         'stock' => 10,
         'min_order' => 1,
         'unit' => 'pcs',
-        'brand_id' => 1,
+        'brand' => [
+            'name' => 'Kulit Garut',
+        ],
         'store_id' => 1,
         'colors' => [
-            ['id' => 2]
+            [
+                'name' => 'Cream',
+                'hex_code' => '#FFFDD0', // Cream color
+            ]
         ],
         'categories' => [
-            ['id' => 6],
-            ['id' => 8],
+            ['name' => 'Aksesoris Muslim'],
+            ['name' => 'Tas Muslim'],
         ],
-        'sizes' => [],
+        'sizes' => [
+            ['name' => 'Medium'],
+            ['name' => 'Large'],
+        ],
         'images' => [
-            ['image' => 'product/tas-kulit-premium.webp'],
+            ['image' => 'https://down-id.img.susercontent.com/file/sg-11134201-22110-7jwz46ds77jvcf.webp'],
         ],
     ],
 ];

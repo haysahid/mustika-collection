@@ -57,6 +57,53 @@ class ProductSeeder extends Seeder
                 'discount' => $productData['discount'] ?? null,
             ]);
 
+            // Attach categories
+            if (isset($productData['categories'])) {
+                foreach ($productData['categories'] as $category) {
+                    if (isset($category['id'])) {
+                        // If category ID is provided, attach it directly
+                        $product->categories()->attach($category['id']);
+                        continue;
+                    }
+
+                    // Check if category exists by name, otherwise create it
+                    $categoryModel = Category::firstOrCreate(
+                        ['name' => $category['name']],
+                    );
+
+                    if ($categoryModel) {
+                        $product->categories()->attach($categoryModel->id);
+                    }
+                }
+            }
+
+            // Add product images
+            if (isset($productData['images'])) {
+                foreach ($productData['images'] as $key => $image) {
+                    // If image is a URL, download it and store it
+                    if (filter_var($image['image'], FILTER_VALIDATE_URL)) {
+                        DownloadProductImage::dispatch($image['image'], $product->id, $key);
+                    } else {
+                        $product->images()->create(
+                            [
+                                'image' => $image['image'],
+                                'order' => $key
+                            ]
+                        );
+                    }
+                }
+            }
+
+            // Add links
+            if (isset($productData['links'])) {
+                foreach ($productData['links'] as $link) {
+                    $product->links()->create([
+                        'platform_id' => $link['platform_id'],
+                        'url' => $link['url'],
+                    ]);
+                }
+            }
+
             // Create product variants
             if (isset($productData['variants'])) {
                 foreach ($productData['variants'] as $variant) {
@@ -134,53 +181,6 @@ class ProductSeeder extends Seeder
                             }
                         }
                     }
-                }
-            }
-
-            // Attach categories
-            if (isset($productData['categories'])) {
-                foreach ($productData['categories'] as $category) {
-                    if (isset($category['id'])) {
-                        // If category ID is provided, attach it directly
-                        $product->categories()->attach($category['id']);
-                        continue;
-                    }
-
-                    // Check if category exists by name, otherwise create it
-                    $categoryModel = Category::firstOrCreate(
-                        ['name' => $category['name']],
-                    );
-
-                    if ($categoryModel) {
-                        $product->categories()->attach($categoryModel->id);
-                    }
-                }
-            }
-
-            // Add product images
-            if (isset($productData['images'])) {
-                foreach ($productData['images'] as $key => $image) {
-                    // If image is a URL, download it and store it
-                    if (filter_var($image['image'], FILTER_VALIDATE_URL)) {
-                        DownloadProductImage::dispatch($image['image'], $product->id, $key);
-                    } else {
-                        $product->images()->create(
-                            [
-                                'image' => $image['image'],
-                                'order' => $key
-                            ]
-                        );
-                    }
-                }
-            }
-
-            // Add links
-            if (isset($productData['links'])) {
-                foreach ($productData['links'] as $link) {
-                    $product->links()->create([
-                        'platform_id' => $link['platform_id'],
-                        'url' => $link['url'],
-                    ]);
                 }
             }
         }

@@ -143,7 +143,10 @@ const images = computed(() => {
                         arr.findIndex((i) => i.image === img.image) === idx
                 ) || []),
             ...props.product.images,
-        ];
+        ].filter(
+            (img, idx, arr) =>
+                arr.findIndex((i) => i.image === img.image) === idx
+        );
     }
 
     return [
@@ -154,7 +157,9 @@ const images = computed(() => {
                 (img, idx, arr) =>
                     arr.findIndex((i) => i.image === img.image) === idx
             ) || []),
-    ];
+    ].filter(
+        (img, idx, arr) => arr.findIndex((i) => i.image === img.image) === idx
+    );
 });
 </script>
 
