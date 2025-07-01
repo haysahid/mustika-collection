@@ -20,6 +20,7 @@ return [
         ['name' => 'Hijab Syar\'i'],
     ],
     'images' => [
+        ['image' => 'https://down-id.img.susercontent.com/file/33402ae82f446dced6779e3164ed7582.webp'], // Gambar Dusty Blue
         ['image' => 'https://down-id.img.susercontent.com/file/9df9993ee1253d6a0178c29ea1c66a73.webp'], // Gambar Utama
     ],
     'links' => [

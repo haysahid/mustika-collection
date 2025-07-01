@@ -197,6 +197,11 @@ class OrderController extends Controller
                 'Shipping cost retrieved successfully'
             );
         } catch (Exception $e) {
+            Log::error('Failed to retrieve shipping cost: ' . $e->getMessage(), [
+                'user_id' => Auth::id(),
+                'request_data' => $request->all(),
+            ]);
+
             return ResponseFormatter::error(
                 'Failed to retrieve shipping cost',
                 500
@@ -402,6 +407,12 @@ class OrderController extends Controller
             );
         } catch (Exception $e) {
             DB::rollBack();
+
+            Log::error('Checkout failed: ' . $e->getMessage(), [
+                'user_id' => Auth::id(),
+                'request_data' => $request->all(),
+            ]);
+
             return ResponseFormatter::error(
                 'Checkout failed' . $e->getMessage(),
                 500
@@ -442,6 +453,12 @@ class OrderController extends Controller
             );
         } catch (Exception $e) {
             DB::rollBack();
+
+            Log::error('Cancel order failed: ' . $e->getMessage(), [
+                'user_id' => Auth::id(),
+                'invoice_id' => $validated['invoice_id'],
+            ]);
+
             return ResponseFormatter::error(
                 'Gagal membatalkan pesanan: ' . $e->getMessage(),
                 500
@@ -502,6 +519,12 @@ class OrderController extends Controller
             );
         } catch (Exception $e) {
             DB::rollBack();
+
+            Log::error('Confirm payment failed: ' . $e->getMessage(), [
+                'user_id' => Auth::id(),
+                'invoice_id' => $validated['invoice_id'],
+            ]);
+
             return ResponseFormatter::error(
                 'Gagal mengonfirmasi pembayaran: ' . $e->getMessage(),
                 500

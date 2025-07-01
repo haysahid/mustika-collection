@@ -31,7 +31,7 @@ const transactions = props.transactions.data;
 <template>
     <LandingLayout title="Pesanan Saya">
         <div
-            class="p-6 sm:p-12 md:px-[100px] md:py-[60px] flex flex-col gap-2 sm:gap-3"
+            class="p-6 sm:p-12 md:px-[100px] md:py-[60px] flex flex-col gap-2 sm:gap-3 sm:items-center"
             :class="{
                 'min-h-[60vh] items-center justify-center gap-4':
                     transactions.length == 0,
@@ -63,10 +63,11 @@ const transactions = props.transactions.data;
                 </Link>
             </div>
             <p
-                class="text-sm text-gray-700 text-start sm:text-center sm:text-base"
+                class="max-w-md text-sm text-gray-700 text-start sm:text-center sm:text-base"
                 v-else
             >
-                Periksa kembali sebelum buat pesanan.
+                Terima kasih telah berbelanja di {{ $page.props.store.name }}.
+                Berikut adalah daftar pesanan Anda.
             </p>
         </div>
 
