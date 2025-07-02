@@ -27,6 +27,6 @@ interface ProductVariantEntity {
     product: ProductEntity | null;
     color: ColorEntity | null;
     size: SizeEntity | null;
-    images: ProductImageEntity[];
+    images: ProductVariantImageEntity[];
     transaction_items: TransactionItemEntity[];
 }

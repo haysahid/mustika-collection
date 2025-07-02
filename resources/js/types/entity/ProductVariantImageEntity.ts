@@ -1,5 +1,5 @@
 interface ProductVariantImageEntity {
-    id: number;
+    id: number | string | null;
     product_variant_id: number | null;
     product_id: number;
     image: string;

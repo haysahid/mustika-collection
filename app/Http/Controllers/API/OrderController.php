@@ -15,6 +15,7 @@ use App\Models\TransactionItem;
 use App\Models\User;
 use Exception;
 use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -26,13 +27,84 @@ class OrderController extends Controller
     protected $weight = 1000; // 1000 gram (1 kg)
     protected $courier = 'jne'; // Courier service
 
+    protected $provinces = [
+        ['province_id' => '11', 'province' => 'Aceh'],
+        ['province_id' => '51', 'province' => 'Bali'],
+        ['province_id' => '36', 'province' => 'Banten'],
+        ['province_id' => '17', 'province' => 'Bengkulu'],
+        ['province_id' => '34', 'province' => 'DI Yogyakarta'],
+        ['province_id' => '31', 'province' => 'DKI Jakarta'],
+        ['province_id' => '75', 'province' => 'Gorontalo'],
+        ['province_id' => '15', 'province' => 'Jambi'],
+        ['province_id' => '32', 'province' => 'Jawa Barat'],
+        ['province_id' => '33', 'province' => 'Jawa Tengah'],
+        ['province_id' => '35', 'province' => 'Jawa Timur'],
+        ['province_id' => '61', 'province' => 'Kalimantan Barat'],
+        ['province_id' => '63', 'province' => 'Kalimantan Selatan'],
+        ['province_id' => '62', 'province' => 'Kalimantan Tengah'],
+        ['province_id' => '64', 'province' => 'Kalimantan Timur'],
+        ['province_id' => '65', 'province' => 'Kalimantan Utara'],
+        ['province_id' => '19', 'province' => 'Kepulauan Bangka Belitung'],
+        ['province_id' => '21', 'province' => 'Kepulauan Riau'],
+        ['province_id' => '18', 'province' => 'Lampung'],
+        ['province_id' => '81', 'province' => 'Maluku'],
+        ['province_id' => '82', 'province' => 'Maluku Utara'],
+        ['province_id' => '52', 'province' => 'Nusa Tenggara Barat'],
+        ['province_id' => '53', 'province' => 'Nusa Tenggara Timur'],
+        ['province_id' => '91', 'province' => 'Papua'],
+        ['province_id' => '92', 'province' => 'Papua Barat'],
+        ['province_id' => '96', 'province' => 'Papua Barat Daya'],
+        ['province_id' => '95', 'province' => 'Papua Pegunungan'],
+        ['province_id' => '93', 'province' => 'Papua Selatan'],
+        ['province_id' => '94', 'province' => 'Papua Tengah'],
+        ['province_id' => '14', 'province' => 'Riau'],
+        ['province_id' => '76', 'province' => 'Sulawesi Barat'],
+        ['province_id' => '73', 'province' => 'Sulawesi Selatan'],
+        ['province_id' => '72', 'province' => 'Sulawesi Tengah'],
+        ['province_id' => '74', 'province' => 'Sulawesi Tenggara'],
+        ['province_id' => '71', 'province' => 'Sulawesi Utara'],
+        ['province_id' => '13', 'province' => 'Sumatera Barat'],
+        ['province_id' => '16', 'province' => 'Sumatera Selatan'],
+        ['province_id' => '12', 'province' => 'Sumatera Utara'],
+    ];
+
+    protected function getCities($province_id)
+    {
+        $fileContent = file_get_contents(__DIR__ . '/data_kota_kabupaten.json');
+        $citiesData = json_decode($fileContent, true);
+
+        $cities = [];
+
+        $uniqueCityIdCounter = 1;
+        foreach ($citiesData as &$city) {
+            $provinceName = $city['province']['province_name'] ?? null;
+            $cities[] = [
+                'city_id' => (string)$uniqueCityIdCounter++,
+                'province_id' => $this->provinces[array_search($provinceName, array_column($this->provinces, 'province'))]['province_id'] ?? null,
+                'city_name' => $city['city_name'],
+                'province' => $provinceName,
+                'type' => $city['type'] ?? null,
+                'postal_code' => $city['postal_code'] ?? null,
+            ];
+        }
+
+        // Filter cities by province_id
+        return array_values(array_filter($cities, fn($city) => $city['province_id'] === $province_id));
+    }
+
     protected function getShipping($origin, $destination, $weight, $courier)
     {
+        return [
+            'value' => 38000,
+            'etd' => '4-5',
+            'note' => ''
+        ];
+
         $cacheKey = "rajaongkir_shipping_cost_{$origin}_{$destination}_{$weight}_{$courier}";
 
         $shippingCost = cache()->remember($cacheKey, 60 * 60, function () use ($origin, $destination, $weight, $courier) {
             $client = new Client();
-            $response = $client->post('https://api.rajaongkir.com/starter/cost', [
+            $response = $client->post('https://api-sandbox.collaborator.komerce.id/starter/cost', [
                 'headers' => [
                     'key' => env('RAJAONGKIR_API_KEY'),
                 ],
@@ -126,11 +198,22 @@ class OrderController extends Controller
 
     public function provinces(Request $request)
     {
+        return ResponseFormatter::success(
+            $this->provinces,
+            'Daftar provinsi berhasil diambil'
+        );
+
+        // Deprecated code, kept for reference
         try {
+            $provinces = [
+                ['province_id' => '11', 'province_name' => 'Jakarta'],
+
+            ];
+
             $cacheKey = 'rajaongkir_provinces';
             $provinces = cache()->remember($cacheKey, 60 * 60, function () {
                 $client = new Client();
-                $response = $client->get('https://api.rajaongkir.com/starter/province', [
+                $response = $client->get('https://api-sandbox.collaborator.komerce.id/starter/province', [
                     'headers' => [
                         'key' => env('RAJAONGKIR_API_KEY'),
                     ],
@@ -152,12 +235,23 @@ class OrderController extends Controller
 
     public function cities(Request $request)
     {
+        $cacheKey = 'rajaongkir_cities_' . $request->input('province_id');
+        $cities = cache()->remember($cacheKey, 60 * 60, function () use ($request) {
+            return $this->getCities($request->input('province_id'));
+        });
+
+        return ResponseFormatter::success(
+            $cities,
+            'Daftar kota berhasil diambil'
+        );
+
+        // Deprecated code, kept for reference
         try {
             $provinceId = $request->input('province_id');
             $cacheKey = 'rajaongkir_cities_' . $provinceId;
             $cities = cache()->remember($cacheKey, 60 * 60, function () use ($provinceId) {
                 $client = new Client();
-                $response = $client->get('https://api.rajaongkir.com/starter/city', [
+                $response = $client->get('https://api-sandbox.collaborator.komerce.id/starter/city', [
                     'query' => ['province' => $provinceId],
                     'headers' => [
                         'key' => env('RAJAONGKIR_API_KEY'),
