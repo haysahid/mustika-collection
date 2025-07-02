@@ -29,16 +29,32 @@ const props = defineProps({
 
 const emit = defineEmits(["submit", "close"]);
 
+const isFile = (image) => {
+    return image instanceof File;
+};
+
+const loadFile = (file) => {
+    return URL.createObjectURL(file);
+};
+
+const isNewImage = (image) => {
+    return typeof image.id == "string" && image.id.startsWith("new-var-");
+};
+
+const isExistingImage = (image) => {
+    return typeof image.id == "number";
+};
+
+const initialNewImagesCount =
+    props.variant?.images?.filter((image) => isNewImage(image)).length || 0;
+
 const form = useForm(
     props.variant
         ? {
               ...JSON.parse(JSON.stringify(props.variant)),
               images: [
-                  ...(props.variant?.images?.map((image) => ({
-                      ...image,
-                      image: "/storage/" + image.image,
-                  })) || []),
-                  { id: "new-var-1", image: null },
+                  ...(props.variant?.images || []),
+                  { id: `new-var-${initialNewImagesCount + 1}`, image: null },
               ],
           }
         : {
@@ -54,13 +70,17 @@ const form = useForm(
               material: null,
               purchase_price: null,
               base_selling_price: null,
-              discount_type: "percentage",
-              discount: null,
+              discount_type: props.product?.discount_type || "percentage",
+              discount: props.product?.discount,
               current_stock_level: null,
               unit: null,
               images: [{ id: "new-var-1", image: null }],
           }
 );
+
+const countNewImages = computed(() => {
+    return form.images.filter((image) => isNewImage(image)).length;
+});
 
 const drag = ref(false);
 
@@ -83,112 +103,6 @@ const filteredSizes = computed(() => {
         size.name.toLowerCase().includes(sizeSearch.value.toLowerCase())
     );
 });
-
-function uploadNewImage(image: ProductVariantImageEntity, index: number) {
-    const token = `Bearer ${localStorage.getItem("access_token")}`;
-
-    const formData = new FormData();
-    formData.append("product_id", props.product?.id?.toString());
-    formData.append("image", image.image);
-    formData.append("order", index.toString());
-
-    axios
-        .post(`${page.props.ziggy.url}/api/admin/product-image`, formData, {
-            headers: {
-                "Content-Type": "multipart/form-data",
-                Authorization: token,
-            },
-        })
-        .then((response) => {
-            form.images[index] = {
-                ...response.data.result,
-                image: "/storage/" + response.data.result.image,
-            };
-        })
-        .catch((error) => {
-            if (error.response?.data?.error) {
-                openErrorDialog(error.response.data.error);
-            }
-        });
-}
-
-function updateImage(index, image) {
-    if (typeof image.image === "string" && image.order == index) {
-        return;
-    }
-
-    const token = `Bearer ${localStorage.getItem("access_token")}`;
-
-    const formData = new FormData();
-    formData.append("_method", "PUT");
-    if (image.image instanceof File) {
-        formData.append("image", image.image);
-    }
-    formData.append("order", index);
-
-    axios
-        .post(
-            `${page.props.ziggy.url}/api/admin/product-image/${image.id}`,
-            formData,
-            {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                    Authorization: token,
-                },
-            }
-        )
-        .then((response) => {
-            form.images[index] = {
-                ...response.data.result,
-                image: "/storage/" + response.data.result.image,
-            };
-        })
-        .catch((error) => {
-            if (error.response?.data?.error) {
-                openErrorDialog(error.response.data.error);
-            }
-        });
-}
-
-function updateImages() {
-    const images = form.images || [];
-
-    images.forEach((image, index) => {
-        console.log("Processing image:", image, "at index:", index);
-        if (isNewImage(image) && image.image instanceof File) {
-            uploadNewImage(image, index);
-        } else if (isExistingImage(image)) {
-            updateImage(index, image);
-        }
-    });
-}
-
-function deleteImages() {
-    const token = `Bearer ${localStorage.getItem("access_token")}`;
-    const images = imagesToDelete.value || [];
-
-    images.forEach((imageId) => {
-        axios
-            .delete(
-                `${page.props.ziggy.url}/api/admin/product-image/${imageId}`,
-                {
-                    headers: {
-                        Authorization: token,
-                    },
-                }
-            )
-            .then(() => {
-                imagesToDelete.value = imagesToDelete.value.filter(
-                    (id) => id !== imageId
-                );
-            })
-            .catch((error) => {
-                if (error.response?.data?.error) {
-                    openErrorDialog(error.response.data.error);
-                }
-            });
-    });
-}
 
 function validate() {
     if (form.errors) {
@@ -231,99 +145,20 @@ function validate() {
 
 const submit = () => {
     validate();
-    console.log(form.errors);
     if (form.errors.url) return;
 
-    emit("submit", form.data());
+    emit("submit", {
+        ...form.data(),
+        final_selling_price:
+            form.base_selling_price -
+            (form.discount_type === "percentage"
+                ? (form.base_selling_price * form.discount) / 100
+                : form.discount),
+        images: form.images.filter(
+            (image) => image.image instanceof File || isExistingImage(image)
+        ),
+    });
     emit("close");
-
-    if (props.product?.id) {
-        updateImages();
-        deleteImages();
-
-        form.transform((data) => {
-            const formData = new FormData();
-            Object.keys(data).forEach((key) => {
-                if (key === "images") return;
-
-                if (key === "colors") {
-                    data.colors.forEach((color, index) => {
-                        formData.append(`colors[${index}]`, color.id);
-                    });
-                } else if (key === "sizes") {
-                    data.sizes.forEach((size, index) => {
-                        formData.append(`sizes[${index}]`, size.id);
-                    });
-                } else if (key === "links") {
-                    data.links.forEach((link, index) => {
-                        if (link.platform_id) {
-                            formData.append(
-                                `links[${index}][platform_id]`,
-                                link.platform_id
-                            );
-                        }
-
-                        if (link.url) {
-                            formData.append(`links[${index}][url]`, link.url);
-                        }
-                    });
-                } else if (data[key] !== null && data[key] !== undefined) {
-                    formData.append(key, data[key]);
-                }
-            });
-            return formData;
-        }).post(route("admin.product.update", props.product), {
-            onError: (errors) => {
-                if (errors.error) {
-                    openErrorDialog(errors.error);
-                }
-            },
-            onFinish: () => {
-                form.reset();
-            },
-        });
-    } else {
-        form.transform((data) => {
-            const formData = new FormData();
-            Object.keys(data).forEach((key) => {
-                if (key === "images") {
-                    data[key].forEach((image, index) => {
-                        if (image.image instanceof File) {
-                            formData.append(`images[${index}]`, image);
-                        }
-                    });
-                } else if (key === "colors") {
-                    data.colors.forEach((color, index) => {
-                        formData.append(`colors[${index}]`, color.id);
-                    });
-                } else if (key === "sizes") {
-                    data.sizes.forEach((size, index) => {
-                        formData.append(`sizes[${index}]`, size.id);
-                    });
-                } else if (key === "links") {
-                    data.links.forEach((link, index) => {
-                        formData.append(
-                            `links[${index}][platform_id]`,
-                            link.platform_id
-                        );
-                        formData.append(`links[${index}][url]`, link.url);
-                    });
-                } else if (data[key] !== null && data[key] !== undefined) {
-                    formData.append(key, data[key]);
-                }
-            });
-            return formData;
-        }).post(route("admin.product.store"), {
-            onError: (errors) => {
-                if (errors.error) {
-                    openErrorDialog(errors.error);
-                }
-            },
-            onFinish: () => {
-                form.reset();
-            },
-        });
-    }
 };
 
 const imagesContainer = ref(null);
@@ -342,18 +177,6 @@ const draggable = useDraggable(imagesContainer, form.images, {
     },
 });
 
-const countNewImages = computed(() => {
-    return form.images.filter((image) => isNewImage(image)).length;
-});
-
-const isNewImage = (image) => {
-    return typeof image.id == "string" && image.id.startsWith("new-var-");
-};
-
-const isExistingImage = (image) => {
-    return typeof image.id == "number";
-};
-
 const imagesToDelete = ref([]);
 
 const showErrorDialog = ref(false);
@@ -363,24 +186,6 @@ const openErrorDialog = (message) => {
     errorMessage.value = message;
     showErrorDialog.value = true;
 };
-
-const name = computed(() => {
-    let updateName = props.variant?.name || "";
-
-    if (form.motif) {
-        updateName += ` - ${form.motif}`;
-    }
-
-    if (form.color) {
-        updateName += ` - ${form.color.name}`;
-    }
-
-    if (form.size) {
-        updateName += ` - ${form.size.name}`;
-    }
-
-    return updateName;
-});
 </script>
 
 <template>
@@ -391,21 +196,6 @@ const name = computed(() => {
             >
                 {{ props.variant ? "Ubah" : "Tambah" }} Variasi Produk
             </h2>
-
-            <!-- Material -->
-            <div
-                class="flex flex-col w-full gap-y-1 gap-x-4 sm:items-center sm:flex-row"
-            >
-                <InputLabel
-                    for="name"
-                    value="Nama Variasi"
-                    class="text-lg font-bold sm:w-1/5"
-                />
-                <span class="hidden text-sm sm:block">:</span>
-                <p class="block w-full mt-1 text-gray-800">
-                    {{ name }}
-                </p>
-            </div>
 
             <!-- Motif -->
             <div
@@ -661,7 +451,7 @@ const name = computed(() => {
                 />
             </div>
 
-            <!-- Image -->
+            <!-- Images -->
             <div
                 class="flex flex-col w-full gap-y-1 gap-x-4 sm:items-start sm:flex-row"
             >
@@ -674,7 +464,7 @@ const name = computed(() => {
                 <div ref="imagesContainer" class="flex flex-wrap w-full gap-2">
                     <ImageInput
                         v-for="(image, index) in form.images"
-                        :key="image.id"
+                        :key="index"
                         :id="`image-${image.id}`"
                         v-model="image.image"
                         type="file"

@@ -77,11 +77,11 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $brands = Brand::class::get();
-        $categories = Category::get();
+        $brands = Brand::orderBy('name', 'asc')->get();
+        $categories = Category::orderBy('name', 'asc')->get();
         $sizes = Size::get();
-        $colors = Color::get();
-        $platforms = Platform::get();
+        $colors = Color::orderBy('name', 'asc')->get();
+        $platforms = Platform::orderBy('name', 'asc')->get();
 
         return Inertia::render('Admin/Product/AddProduct', [
             'brands' => $brands,
@@ -212,9 +212,17 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        $product->load(['brand', 'colors', 'categories', 'sizes', 'images', 'links.platform']);
+        $product->load([
+            'brand',
+            'categories',
+            'images',
+            'links.platform',
+            'variants.color',
+            'variants.size',
+            'variants.images',
+        ]);
 
-        $brands = Brand::class::orderBy('name', 'asc')->get();
+        $brands = Brand::orderBy('name', 'asc')->get();
         $categories = Category::orderBy('name', 'asc')->get();
         $sizes = Size::get();
         $colors = Color::orderBy('name', 'asc')->get();

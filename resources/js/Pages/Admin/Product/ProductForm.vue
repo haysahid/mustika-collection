@@ -50,13 +50,11 @@ const form = useForm(
               variants: [
                   ...(props.product?.variants?.map((variant) => ({
                       ...variant,
-                      images: [
-                          ...(variant?.images?.map((image) => ({
+                      images:
+                          variant.images?.map((image) => ({
                               ...image,
                               image: "/storage/" + image.image,
-                          })) || []),
-                          { id: "new-var-1", image: null },
-                      ],
+                          })) || [],
                   })) || []),
               ],
           }
@@ -306,6 +304,7 @@ const isExistingImage = (image) => {
 };
 
 const imagesToDelete = ref([]);
+const variantsToDelete = ref([]);
 
 const showAddLinkForm = ref(false);
 const openAddLinkForm = () => {
@@ -691,10 +690,12 @@ const openErrorDialog = (message) => {
 
             <!-- Variants -->
             <div class="flex flex-col items-start w-full gap-2 mt-4">
-                <h2 class="text-lg font-semibold">Variasi Produk</h2>
+                <h2 class="text-lg font-semibold">
+                    Variasi Produk ({{ form.variants.length }})
+                </h2>
                 <div
                     ref="variantsContainer"
-                    class="flex flex-col items-start w-full gap-2"
+                    class="grid w-full grid-cols-1 gap-2 sm:grid-cols-2"
                 >
                     <div
                         v-for="(variant, index) in form.variants"
@@ -702,22 +703,32 @@ const openErrorDialog = (message) => {
                         class="w-full"
                     >
                         <VariantCard
+                            :name="`${variant.motif} - ${variant.color?.name} - ${variant.size?.name}`"
                             :variant="variant"
                             :index="index"
-                            @updateVariant="form.variants[index] = $event"
-                            @deleteVariant="form.variants.splice(index, 1)"
+                            @click="variant.showEditForm = true"
+                            @delete="
+                                form.variants.splice(index, 1);
+                                if (variant.id) {
+                                    variantsToDelete.push(variant.id);
+                                }
+                            "
                         />
                         <DialogModal
                             :show="variant.showEditForm"
                             title="Ubah Variasi Produk"
-                            maxWidth="md"
                             @close="variant.showEditForm = false"
                         >
                             <template #content>
                                 <VariantForm
                                     :product="props.product"
                                     :variant="variant"
-                                    @submit="form.variants[index] = $event"
+                                    @submit="
+                                        form.variants[index] = {
+                                            ...$event,
+                                            showEditForm: false,
+                                        }
+                                    "
                                     @close="variant.showEditForm = false"
                                 />
                             </template>
@@ -761,7 +772,7 @@ const openErrorDialog = (message) => {
         >
             <template #content>
                 <VariantForm
-                    :product="props.product"
+                    :product="form"
                     :variant="null"
                     @submit="form.variants.push($event)"
                     @close="showAddVariantForm = false"
