@@ -113,6 +113,8 @@ const goToNextImage = () => {
                 {{ imageIndex + 1 }} / {{ props.images.length }}
             </div>
         </div>
+
+        <!--  -->
         <div class="flex items-center gap-4 py-4 overflow-x-auto">
             <img
                 v-for="(img, index) in props.images"

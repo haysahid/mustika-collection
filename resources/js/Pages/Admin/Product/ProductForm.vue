@@ -157,7 +157,6 @@ function updateImages() {
     const images = form.images || [];
 
     images.forEach((image, index) => {
-        console.log("Processing image:", image, "at index:", index);
         if (isNewImage(image) && image.image instanceof File) {
             uploadNewImage(image, index);
         } else if (isExistingImage(image)) {
@@ -227,6 +226,7 @@ const submit = () => {
             return formData;
         }).post(route("admin.product.update", props.product), {
             onError: (errors) => {
+                console.error(errors);
                 if (errors.error) {
                     openErrorDialog(errors.error);
                 }

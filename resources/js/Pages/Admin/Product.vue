@@ -553,6 +553,7 @@ onMounted(() => {
                                         v-if="product.discount > 0"
                                         :discount-type="product.discount_type"
                                         :discount="product.discount"
+                                        class="!text-xs !px-1.5 !py-0.5"
                                     />
                                 </div>
                             </td>

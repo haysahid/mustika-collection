@@ -675,10 +675,10 @@ const submit = () => {
             </div>
 
             <!-- Divider -->
-            <div class="my-2 border-b border-gray-300"></div>
+            <!-- <div class="my-2 border-b border-gray-300"></div> -->
 
             <!-- Note -->
-            <p class="text-sm text-gray-500">Catatan:</p>
+            <!-- <p class="text-sm text-gray-500">Catatan:</p>
             <ul
                 class="flex flex-col pl-4 text-sm text-gray-500 list-disc list-outside gap-y-2"
             >
@@ -687,7 +687,7 @@ const submit = () => {
                     melanjutkan ke pembayaran.
                 </li>
                 <li>Total harga belum termasuk biaya layanan transfer.</li>
-            </ul>
+            </ul> -->
         </div>
 
         <BaseDialog

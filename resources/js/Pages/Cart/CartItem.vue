@@ -92,7 +92,7 @@ const hasActions = computed(() => {
                 class="flex flex-col items-start justify-between gap-4 xl:flex-row"
             >
                 <!-- Detail -->
-                <div>
+                <div class="w-full">
                     <Link
                         :href="
                             route(
@@ -100,9 +100,10 @@ const hasActions = computed(() => {
                                 props.item.variant.product.slug
                             ) + `?sku=${props.item.variant.sku}`
                         "
+                        class="w-full"
                     >
                         <h3
-                            class="text-base font-medium text-gray-800 sm:text-lg hover:text-primary-dark"
+                            class="w-full text-base font-medium text-gray-800 sm:text-lg hover:text-primary-dark"
                         >
                             {{ props.item.variant.name }}
                         </h3>

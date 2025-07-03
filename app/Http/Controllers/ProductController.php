@@ -98,54 +98,60 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'code' => 'nullable|string|max:100',
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'material' => 'nullable|string',
-            'selling_price' => 'required|numeric',
-            'discount' => 'nullable|numeric',
-            'stock' => 'required|integer',
-            'min_order' => 'nullable|integer',
-            'unit' => 'nullable|string|max:100',
             'brand_id' => 'required|exists:brands,id',
-            'colors' => 'nullable|array',
-            'colors.*' => 'exists:colors,id',
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'discount_type' => 'nullable|string|default:percentage',
+            'discount' => 'nullable|numeric',
             'categories' => 'nullable|array',
             'categories.*' => 'exists:categories,id',
-            'sizes' => 'nullable|array',
-            'sizes.*' => 'exists:sizes,id',
-            'images' => 'nullable|array',
+            'images' => 'required|array',
             'images.*' => 'file|mimes:jpg,jpeg,png,webp|max:2048',
             'links' => 'nullable|array',
+            'variants' => 'required|array',
+            'variants.*.motif' => 'required|string|max:100',
+            'variants.*.color_id' => 'required|exists:colors,id',
+            'variants.*.size_id' => 'required|exists:sizes,id',
+            'variants.*.material' => 'required|string|max:100',
+            'variants.*.base_selling_price' => 'required|numeric',
+            'variants.*.discount_type' => 'nullable|string|default:percentage',
+            'variants.*.discount' => 'nullable|numeric',
+            'variants.*.final_selling_price' => 'required|numeric',
+            'variants.*.current_stock_level' => 'required|integer',
+            'variants.*.unit' => 'required|string|max:100',
         ], [
-            'code.string' => 'Kode produk harus berupa string.',
-            'code.max' => 'Kode produk tidak boleh lebih dari 100 karakter.',
-            'name.required' => 'Nama produk harus diisi.',
-            'name.string' => 'Nama produk harus berupa string.',
-            'name.max' => 'Nama produk tidak boleh lebih dari 255 karakter.',
-            'description.string' => 'Deskripsi produk harus berupa string.',
-            'material.string' => 'Bahan produk harus berupa string.',
-            'selling_price.required' => 'Harga jual harus diisi.',
-            'selling_price.numeric' => 'Harga jual harus berupa angka.',
-            'discount.numeric' => 'Diskon harus berupa angka.',
-            'stock.required' => 'Stok harus diisi.',
-            'stock.integer' => 'Stok harus berupa bilangan bulat.',
-            'min_order.integer' => 'Jumlah pesanan minimum harus berupa bilangan bulat.',
-            'unit.string' => 'Satuan harus berupa string.',
-            'unit.max' => 'Satuan tidak boleh lebih dari 100 karakter.',
             'brand_id.required' => 'Merek produk harus dipilih.',
             'brand_id.exists' => 'Merek yang dipilih tidak valid.',
-            'colors.array' => 'Warna harus berupa array.',
-            'colors.*.exists' => 'Warna yang dipilih tidak valid.',
+            'name.required' => 'Nama produk harus diisi.',
+            'description.required' => 'Deskripsi produk harus diisi.',
+            'discount_type.string' => 'Jenis diskon harus berupa string.',
+            'discount.numeric' => 'Diskon harus berupa angka.',
             'categories.array' => 'Kategori harus berupa array.',
             'categories.*.exists' => 'Kategori yang dipilih tidak valid.',
-            'sizes.array' => 'Ukuran harus berupa array.',
-            'sizes.*.exists' => 'Ukuran yang dipilih tidak valid.',
+            'images.required' => 'Gambar produk harus diunggah.',
             'images.array' => 'Gambar harus berupa array.',
-            'images.*.file' => 'Gambar harus berupa file.',
-            'images.*.mimes' => 'Gambar harus berupa file dengan format: jpg, jpeg, png, webp.',
-            'images.*.max' => 'Ukuran gambar tidak boleh lebih dari 2MB.',
+            'images.*.file' => 'Setiap gambar harus berupa file.',
+            'images.*.mimes' => 'Gambar harus berupa file dengan format jpg, jpeg, png, atau webp.',
+            'images.*.max' => 'Setiap gambar tidak boleh lebih dari 2MB.',
             'links.array' => 'Tautan harus berupa array.',
+            'variants.required' => 'Varian produk harus diisi.',
+            'variants.*.motif.required' => 'Motif varian harus diisi.',
+            'variants.*.color_id.required' => 'Warna varian harus dipilih.',
+            'variants.*.color_id.exists' => 'Warna yang dipilih tidak valid.',
+            'variants.*.size_id.required' => 'Ukuran varian harus dipilih.',
+            'variants.*.size_id.exists' => 'Ukuran yang dipilih tidak valid.',
+            'variants.*.material.required' => 'Material varian harus diisi.',
+            'variants.*.base_selling_price.required' => 'Harga jual dasar varian harus diisi.',
+            'variants.*.base_selling_price.numeric' => 'Harga jual dasar varian harus berupa angka.',
+            'variants.*.discount_type.string' => 'Jenis diskon varian harus berupa string.',
+            'variants.*.discount.numeric' => 'Diskon varian harus berupa angka.',
+            'variants.*.final_selling_price.required' => 'Harga jual akhir varian harus diisi.',
+            'variants.*.final_selling_price.numeric' => 'Harga jual akhir varian harus berupa angka.',
+            'variants.*.current_stock_level.required' => 'Stok saat ini varian harus diisi.',
+            'variants.*.current_stock_level.integer' => 'Stok saat ini varian harus berupa bilangan bulat.',
+            'variants.*.unit.required' => 'Satuan varian harus diisi.',
+            'variants.*.unit.string' => 'Satuan varian harus berupa string.',
+            'variants.*.unit.max' => 'Satuan varian tidak boleh lebih dari 100 karakter.',
         ]);
 
         try {
@@ -156,16 +162,8 @@ class ProductController extends Controller
                 'store_id' => 1,
             ]);
 
-            if (isset($validated['colors'])) {
-                $product->colors()->attach($validated['colors']);
-            }
-
             if (isset($validated['categories'])) {
                 $product->categories()->attach($validated['categories']);
-            }
-
-            if (isset($validated['sizes'])) {
-                $product->sizes()->attach($validated['sizes']);
             }
 
             if (isset($validated['images'])) {
@@ -185,6 +183,12 @@ class ProductController extends Controller
                         'platform_id' => $link['platform_id'],
                         'url' => $link['url'],
                     ]);
+                }
+            }
+
+            if (isset($validated['variants'])) {
+                foreach ($validated['variants'] as $variant) {
+                    $product->variants()->create($variant);
                 }
             }
 

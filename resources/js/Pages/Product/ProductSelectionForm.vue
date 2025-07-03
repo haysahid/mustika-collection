@@ -297,6 +297,7 @@ defineExpose({
             <div
                 class="flex flex-col items-start gap-4 sm:flex-row sm:items-center"
             >
+                <!-- Add to Cart -->
                 <button
                     class="flex items-center justify-center w-full gap-2 px-6 py-3 transition duration-200 rounded-lg bg-primary hover:bg-primary-dark sm:w-auto"
                     @click="addToCart"
@@ -320,6 +321,8 @@ defineExpose({
                         }}
                     </p>
                 </button>
+
+                <!-- WhatsApp -->
                 <a
                     :href="linkWhatsApp()"
                     target="_blank"
