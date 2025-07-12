@@ -7,6 +7,8 @@ use App\Models\Category;
 use App\Models\Color;
 use App\Models\Platform;
 use App\Models\Product;
+use App\Models\ProductVariant;
+use App\Models\ProductVariantImage;
 use App\Models\Size;
 use Exception;
 use Illuminate\Http\Request;
@@ -100,8 +102,8 @@ class ProductController extends Controller
         $validated = $request->validate([
             'brand_id' => 'required|exists:brands,id',
             'name' => 'required|string|max:255',
+            'sku_prefix' => 'required|string|max:100',
             'description' => 'required|string',
-            'discount_type' => 'nullable|string|default:percentage',
             'discount' => 'nullable|numeric',
             'categories' => 'nullable|array',
             'categories.*' => 'exists:categories,id',
@@ -114,17 +116,19 @@ class ProductController extends Controller
             'variants.*.size_id' => 'required|exists:sizes,id',
             'variants.*.material' => 'required|string|max:100',
             'variants.*.base_selling_price' => 'required|numeric',
-            'variants.*.discount_type' => 'nullable|string|default:percentage',
             'variants.*.discount' => 'nullable|numeric',
-            'variants.*.final_selling_price' => 'required|numeric',
             'variants.*.current_stock_level' => 'required|integer',
             'variants.*.unit' => 'required|string|max:100',
+            'variants.*.images' => 'required|array',
+            'variants.*.images.*' => 'file|mimes:jpg,jpeg,png,webp|max:2048',
         ], [
             'brand_id.required' => 'Merek produk harus dipilih.',
             'brand_id.exists' => 'Merek yang dipilih tidak valid.',
             'name.required' => 'Nama produk harus diisi.',
+            'sku_prefix.required' => 'Prefix SKU harus diisi.',
+            'sku_prefix.string' => 'Prefix SKU harus berupa string.',
+            'sku_prefix.max' => 'Prefix SKU tidak boleh lebih dari 100 karakter.',
             'description.required' => 'Deskripsi produk harus diisi.',
-            'discount_type.string' => 'Jenis diskon harus berupa string.',
             'discount.numeric' => 'Diskon harus berupa angka.',
             'categories.array' => 'Kategori harus berupa array.',
             'categories.*.exists' => 'Kategori yang dipilih tidak valid.',
@@ -143,22 +147,26 @@ class ProductController extends Controller
             'variants.*.material.required' => 'Material varian harus diisi.',
             'variants.*.base_selling_price.required' => 'Harga jual dasar varian harus diisi.',
             'variants.*.base_selling_price.numeric' => 'Harga jual dasar varian harus berupa angka.',
-            'variants.*.discount_type.string' => 'Jenis diskon varian harus berupa string.',
             'variants.*.discount.numeric' => 'Diskon varian harus berupa angka.',
-            'variants.*.final_selling_price.required' => 'Harga jual akhir varian harus diisi.',
-            'variants.*.final_selling_price.numeric' => 'Harga jual akhir varian harus berupa angka.',
             'variants.*.current_stock_level.required' => 'Stok saat ini varian harus diisi.',
             'variants.*.current_stock_level.integer' => 'Stok saat ini varian harus berupa bilangan bulat.',
             'variants.*.unit.required' => 'Satuan varian harus diisi.',
             'variants.*.unit.string' => 'Satuan varian harus berupa string.',
             'variants.*.unit.max' => 'Satuan varian tidak boleh lebih dari 100 karakter.',
+            'variants.*.images.required' => 'Gambar varian harus diunggah.',
+            'variants.*.images.array' => 'Gambar varian harus berupa array.',
+            'variants.*.images.*.file' => 'Setiap gambar varian harus berupa file.',
+            'variants.*.images.*.mimes' => 'Gambar varian harus berupa file dengan format jpg, jpeg, png, atau webp.',
+            'variants.*.images.*.max' => 'Setiap gambar varian tidak boleh lebih dari 2MB.',
         ]);
 
         try {
             DB::beginTransaction();
             $product = Product::create([
                 ...$validated,
+                'sku_prefix' => strtoupper(str_replace(' ', '', $validated['sku_prefix'])),
                 'slug' => str($validated['name'])->slug(),
+                'discount_type' => 'percentage',
                 'store_id' => 1,
             ]);
 
@@ -188,7 +196,33 @@ class ProductController extends Controller
 
             if (isset($validated['variants'])) {
                 foreach ($validated['variants'] as $variant) {
-                    $product->variants()->create($variant);
+                    $newVariant = ProductVariant::create([
+                        'product_id' => $product->id,
+                        'sku' => strtoupper(str_replace(' ', '', $product->sku_prefix . '_' . $variant['motif'] . '_' . $variant['color_id'] . '_' . $variant['size_id'])),
+                        'slug' => str($product->name . '-' . $variant['motif'] . '-' . $variant['color_id'] . '-' . $variant['size_id'])->slug(),
+                        'motif' => $variant['motif'],
+                        'color_id' => $variant['color_id'],
+                        'size_id' => $variant['size_id'],
+                        'material' => $variant['material'],
+                        'purchase_price' => $variant['purchase_price'] ?? $variant['base_selling_price'],
+                        'base_selling_price' => $variant['base_selling_price'],
+                        'discount_type' => 'percentage',
+                        'discount' => $variant['discount'] ?? 0,
+                        'final_selling_price' => $variant['base_selling_price'] - ($variant['base_selling_price'] * ($variant['discount'] ?? 0) / 100),
+                        'current_stock_level' => $variant['current_stock_level'],
+                        'unit' => $variant['unit'],
+                    ]);
+
+                    if (isset($variant['images'])) {
+                        foreach ($variant['images'] as $key => $image) {
+                            $imagePath = $image->store('product');
+                            $newVariant->images()->create([
+                                'product_id' => $product->id,
+                                'image' => $imagePath,
+                                'order' => $key,
+                            ]);
+                        }
+                    }
                 }
             }
 

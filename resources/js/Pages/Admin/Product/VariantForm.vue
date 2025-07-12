@@ -466,7 +466,7 @@ const openErrorDialog = (message) => {
                         v-for="(image, index) in form.images"
                         :key="index"
                         :id="`image-${image.id}`"
-                        v-model="image.image"
+                        :modelValue="image.image"
                         type="file"
                         accept="image/*"
                         placeholder="Upload Produk"
@@ -478,11 +478,14 @@ const openErrorDialog = (message) => {
                         :isDragging="drag"
                         @update:modelValue="
                             if (isNewImage(image)) {
+                                if (image.image == null) {
+                                    form.images.push({
+                                        id: `new-${countNewImages + 1}`,
+                                        image: null,
+                                    });
+                                }
+
                                 image.image = $event;
-                                form.images.push({
-                                    id: `new-var-${countNewImages + 1}`,
-                                    image: null,
-                                });
                             } else {
                                 image.image = $event;
                             }

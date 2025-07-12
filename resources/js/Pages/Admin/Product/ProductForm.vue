@@ -60,6 +60,7 @@ const form = useForm(
           }
         : {
               name: null,
+              sku_prefix: null,
               brand_id: null,
               brand: null,
               discount: 0,
@@ -242,7 +243,7 @@ const submit = () => {
                 if (key === "images") {
                     data[key].forEach((image, index) => {
                         if (image.image instanceof File) {
-                            formData.append(`images[${index}]`, image);
+                            formData.append(`images[${index}]`, image.image);
                         }
                     });
                 } else if (key === "categories") {
@@ -257,6 +258,50 @@ const submit = () => {
                         );
                         formData.append(`links[${index}][url]`, link.url);
                     });
+                } else if (key === "variants") {
+                    data.variants.forEach((variant, index) => {
+                        formData.append(
+                            `variants[${index}][motif]`,
+                            variant.motif
+                        );
+                        formData.append(
+                            `variants[${index}][color_id]`,
+                            variant.color_id
+                        );
+                        formData.append(
+                            `variants[${index}][size_id]`,
+                            variant.size_id
+                        );
+                        formData.append(
+                            `variants[${index}][material]`,
+                            variant.material
+                        );
+                        formData.append(
+                            `variants[${index}][base_selling_price]`,
+                            variant.base_selling_price
+                        );
+                        formData.append(
+                            `variants[${index}][discount]`,
+                            variant.discount
+                        );
+                        formData.append(
+                            `variants[${index}][current_stock_level]`,
+                            variant.current_stock_level
+                        );
+                        formData.append(
+                            `variants[${index}][unit]`,
+                            variant.unit
+                        );
+                        variant.images.forEach((image, imgIndex) => {
+                            console.log("variant image", image);
+                            if (image.image instanceof File) {
+                                formData.append(
+                                    `variants[${index}][images][${imgIndex}]`,
+                                    image.image
+                                );
+                            }
+                        });
+                    });
                 } else if (data[key] !== null && data[key] !== undefined) {
                     formData.append(key, data[key]);
                 }
@@ -264,12 +309,10 @@ const submit = () => {
             return formData;
         }).post(route("admin.product.store"), {
             onError: (errors) => {
+                console.error(errors);
                 if (errors.error) {
                     openErrorDialog(errors.error);
                 }
-            },
-            onFinish: () => {
-                form.reset();
             },
         });
     }
@@ -381,6 +424,28 @@ const openErrorDialog = (message) => {
                 />
             </div>
 
+            <!-- SKU Prefix -->
+            <div
+                class="flex flex-col w-full gap-y-1 gap-x-4 sm:items-center sm:flex-row"
+            >
+                <InputLabel
+                    for="sku_prefix"
+                    value="SKU Prefix"
+                    class="w-[100px] sm:w-1/5 text-lg font-bold"
+                />
+                <span class="hidden text-sm sm:block">:</span>
+                <TextInput
+                    id="sku_prefix"
+                    v-model="form.sku_prefix"
+                    type="text"
+                    placeholder="Masukkan SKU Prefix"
+                    class="block w-full mt-1"
+                    required
+                    :error="form.errors.sku_prefix"
+                    @update:modelValue="form.errors.sku_prefix = null"
+                />
+            </div>
+
             <!-- Brand -->
             <div
                 class="flex flex-col w-full gap-y-1 gap-x-4 sm:items-center sm:flex-row"
@@ -485,7 +550,7 @@ const openErrorDialog = (message) => {
                 </Dropdown>
             </div>
 
-            <!-- Image -->
+            <!-- Images -->
             <div
                 class="flex flex-col w-full gap-y-1 gap-x-4 sm:items-start sm:flex-row"
             >
@@ -500,7 +565,7 @@ const openErrorDialog = (message) => {
                         v-for="(image, index) in form.images"
                         :key="image.id"
                         :id="`image-${image.id}`"
-                        v-model="image.image"
+                        :modelValue="image.image"
                         type="file"
                         accept="image/*"
                         placeholder="Upload Produk"
@@ -512,11 +577,14 @@ const openErrorDialog = (message) => {
                         :isDragging="drag"
                         @update:modelValue="
                             if (isNewImage(image)) {
+                                if (image.image == null) {
+                                    form.images.push({
+                                        id: `new-${countNewImages + 1}`,
+                                        image: null,
+                                    });
+                                }
+
                                 image.image = $event;
-                                form.images.push({
-                                    id: `new-${countNewImages + 1}`,
-                                    image: null,
-                                });
                             } else {
                                 image.image = $event;
                             }
@@ -695,7 +763,7 @@ const openErrorDialog = (message) => {
                 </h2>
                 <div
                     ref="variantsContainer"
-                    class="grid w-full grid-cols-1 gap-2 sm:grid-cols-2"
+                    class="grid w-full grid-cols-1 gap-2 lg:grid-cols-2"
                 >
                     <div
                         v-for="(variant, index) in form.variants"
