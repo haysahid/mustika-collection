@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductVariantController;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\StoreCertificateController;
 use App\Http\Controllers\StoreController;

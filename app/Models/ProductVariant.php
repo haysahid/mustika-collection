@@ -33,6 +33,16 @@ class ProductVariant extends Model
         'name',
     ];
 
+    protected $casts = [
+        'color_id' => 'integer',
+        'size_id' => 'integer',
+        'purchase_price' => 'integer',
+        'base_selling_price' => 'integer',
+        'discount' => 'integer',
+        'final_selling_price' => 'integer',
+        'current_stock_level' => 'integer',
+    ];
+
     // Additional attributes
     protected function getNameAttribute()
     {

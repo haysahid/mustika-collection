@@ -25,9 +25,13 @@ const props = defineProps({
         type: Object as () => ProductVariantEntity,
         default: null,
     },
+    isEdit: {
+        type: Boolean,
+        default: false,
+    },
 });
 
-const emit = defineEmits(["submit", "close"]);
+const emit = defineEmits(["submit", "close", "submitted"]);
 
 const isFile = (image) => {
     return image instanceof File;
@@ -143,21 +147,218 @@ function validate() {
     }
 }
 
+function uploadNewImage(image, index) {
+    const token = `Bearer ${localStorage.getItem("access_token")}`;
+
+    const formData = new FormData();
+    formData.append("product_variant_id", props.variant?.id?.toString());
+    formData.append("product_id", props.product?.id?.toString());
+    formData.append("image", image.image);
+    formData.append("order", index);
+
+    axios
+        .post(
+            `${page.props.ziggy.url}/api/admin/product-variant-image`,
+            formData,
+            {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                    Authorization: token,
+                },
+            }
+        )
+        .then((response) => {
+            form.images[index] = {
+                ...response.data.result,
+                image: "/storage/" + response.data.result.image,
+            };
+        })
+        .catch((error) => {
+            if (error.response?.data?.error) {
+                openErrorDialog(error.response.data.error);
+            }
+        });
+}
+
+function updateImage(index, image) {
+    if (typeof image.image === "string" && image.order == index) {
+        return;
+    }
+
+    const token = `Bearer ${localStorage.getItem("access_token")}`;
+
+    const formData = new FormData();
+    formData.append("_method", "PUT");
+    if (image.image instanceof File) {
+        formData.append("image", image.image);
+    }
+    formData.append("order", index);
+
+    axios
+        .post(
+            `${page.props.ziggy.url}/api/admin/product-variant-image/${image.id}`,
+            formData,
+            {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                    Authorization: token,
+                },
+            }
+        )
+        .then((response) => {
+            form.images[index] = {
+                ...response.data.result,
+                image: "/storage/" + response.data.result.image,
+            };
+        })
+        .catch((error) => {
+            if (error.response?.data?.error) {
+                openErrorDialog(error.response.data.error);
+            }
+        });
+}
+
+function updateImages() {
+    const images = form.images || [];
+
+    images.forEach((image, index) => {
+        if (isNewImage(image) && image.image instanceof File) {
+            uploadNewImage(image, index);
+        } else if (isExistingImage(image)) {
+            updateImage(index, image);
+        }
+    });
+}
+
+function deleteImages() {
+    const token = `Bearer ${localStorage.getItem("access_token")}`;
+    const images = imagesToDelete.value || [];
+
+    images.forEach((imageId) => {
+        axios
+            .delete(
+                `${page.props.ziggy.url}/api/admin/product-variant-image/${imageId}`,
+                {
+                    headers: {
+                        Authorization: token,
+                    },
+                }
+            )
+            .then(() => {
+                imagesToDelete.value = imagesToDelete.value.filter(
+                    (id) => id !== imageId
+                );
+            })
+            .catch((error) => {
+                if (error.response?.data?.error) {
+                    openErrorDialog(error.response.data.error);
+                }
+            });
+    });
+}
+
+function updateVariant() {
+    const data = form.data();
+    const formData = new FormData();
+
+    formData.append("_method", "PUT");
+
+    Object.keys(data).forEach((key) => {
+        if (key === "images") return;
+
+        if (data[key] !== null && data[key] !== undefined) {
+            formData.append(key, data[key]);
+        }
+    });
+
+    const token = `Bearer ${localStorage.getItem("access_token")}`;
+
+    axios
+        .post(
+            `${page.props.ziggy.url}/api/admin/product-variant/${props.variant.id}`,
+            formData,
+            {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                    Authorization: token,
+                },
+            }
+        )
+        .then((response) => {
+            if (response.data?.meta?.message) {
+                emit("submitted", response.data?.meta?.message);
+            }
+        })
+        .catch((error) => {
+            if (error.response?.data?.error) {
+                openErrorDialog(error.response.data.error);
+            }
+        });
+}
+
+function createVariant() {
+    const data = form.data();
+    const formData = new FormData();
+
+    Object.keys(data).forEach((key) => {
+        if (key === "images") {
+            data.images.forEach((image, index) => {
+                if (isNewImage(image) && image.image instanceof File) {
+                    formData.append(`images[${index}]`, image.image);
+                }
+            });
+        } else if (data[key] !== null && data[key] !== undefined) {
+            formData.append(key, data[key]);
+        }
+    });
+
+    const token = `Bearer ${localStorage.getItem("access_token")}`;
+
+    axios
+        .post(`${page.props.ziggy.url}/api/admin/product-variant`, formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+                Authorization: token,
+            },
+        })
+        .then((response) => {
+            if (response.data?.meta?.message) {
+                emit("submitted", response.data?.meta?.message);
+            }
+        })
+        .catch((error) => {
+            if (error.response?.data?.error) {
+                openErrorDialog(error.response.data.error);
+            }
+        });
+}
+
 const submit = () => {
     validate();
     if (form.errors.url) return;
 
-    emit("submit", {
-        ...form.data(),
-        final_selling_price:
-            form.base_selling_price -
-            (form.discount_type === "percentage"
-                ? (form.base_selling_price * form.discount) / 100
-                : form.discount),
-        images: form.images.filter(
-            (image) => image.image instanceof File || isExistingImage(image)
-        ),
-    });
+    if (props.isEdit) {
+        if (props.variant) {
+            updateImages();
+            deleteImages();
+            updateVariant();
+        } else {
+            createVariant();
+        }
+    } else {
+        emit("submit", {
+            ...form.data(),
+            final_selling_price:
+                form.base_selling_price -
+                (form.discount_type === "percentage"
+                    ? (form.base_selling_price * form.discount) / 100
+                    : form.discount),
+            images: form.images.filter(
+                (image) => image.image instanceof File || isExistingImage(image)
+            ),
+        });
+    }
+
     emit("close");
 };
 

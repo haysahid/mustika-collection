@@ -15,6 +15,8 @@ import DialogModal from "@/Components/DialogModal.vue";
 import LinkItem from "@/Components/LinkItem.vue";
 import VariantCard from "./VariantCard.vue";
 import VariantForm from "./VariantForm.vue";
+import DeleteConfirmationDialog from "@/Components/DeleteConfirmationDialog.vue";
+import SuccessDialog from "@/Components/SuccessDialog.vue";
 
 const props = defineProps({
     product: {
@@ -191,6 +193,60 @@ function deleteImages() {
                 }
             });
     });
+}
+
+function deleteVariant(variant) {
+    const token = `Bearer ${localStorage.getItem("access_token")}`;
+
+    axios
+        .delete(
+            `${page.props.ziggy.url}/api/admin/product-variant/${variant.id}`,
+            {
+                headers: {
+                    Authorization: token,
+                },
+            }
+        )
+        .then((response) => {
+            variantsToDelete.value = variantsToDelete.value.filter(
+                (id) => id !== variant.id
+            );
+
+            openSuccessDialog(response.data.meta.message);
+            getVariants();
+        })
+        .catch((error) => {
+            if (error.response?.data?.error) {
+                openErrorDialog(error.response.data.error);
+            }
+        });
+}
+
+function getVariants() {
+    const token = `Bearer ${localStorage.getItem("access_token")}`;
+
+    axios
+        .get(`${page.props.ziggy.url}/api/admin/product/${props.product.id}`, {
+            headers: {
+                Authorization: token,
+            },
+        })
+        .then((response) => {
+            const product = response.data.result;
+            form.variants = product.variants.map((variant) => ({
+                ...variant,
+                images:
+                    variant.images?.map((image) => ({
+                        ...image,
+                        image: "/storage/" + image.image,
+                    })) || [],
+            }));
+        })
+        .catch((error) => {
+            if (error.response?.data?.error) {
+                openErrorDialog(error.response.data.error);
+            }
+        });
 }
 
 const submit = () => {
@@ -387,12 +443,30 @@ const draggableVariants = useDraggable(variantsContainer, form.variants, {
     },
 });
 
+const showSuccessDialog = ref(false);
+const successMessage = ref(null);
+
+const openSuccessDialog = (message) => {
+    successMessage.value = message;
+    showSuccessDialog.value = true;
+};
+
+const closeSuccessDialog = () => {
+    showSuccessDialog.value = false;
+    successMessage.value = null;
+};
+
 const showErrorDialog = ref(false);
 const errorMessage = ref(null);
 
 const openErrorDialog = (message) => {
     errorMessage.value = message;
     showErrorDialog.value = true;
+};
+
+const closeErrorDialog = () => {
+    showErrorDialog.value = false;
+    errorMessage.value = null;
 };
 </script>
 
@@ -776,9 +850,13 @@ const openErrorDialog = (message) => {
                             :index="index"
                             @click="variant.showEditForm = true"
                             @delete="
-                                form.variants.splice(index, 1);
-                                if (variant.id) {
-                                    variantsToDelete.push(variant.id);
+                                if (props.product) {
+                                    variant.showDeleteConfirmation = true;
+                                } else {
+                                    form.variants.splice(index, 1);
+                                    if (variant.id) {
+                                        variantsToDelete.push(variant.id);
+                                    }
                                 }
                             "
                         />
@@ -789,7 +867,8 @@ const openErrorDialog = (message) => {
                         >
                             <template #content>
                                 <VariantForm
-                                    :product="props.product"
+                                    :isEdit="props.product != null"
+                                    :product="form.data()"
                                     :variant="variant"
                                     @submit="
                                         form.variants[index] = {
@@ -798,9 +877,23 @@ const openErrorDialog = (message) => {
                                         }
                                     "
                                     @close="variant.showEditForm = false"
+                                    @submitted="
+                                        variant.showEditForm = false;
+                                        openSuccessDialog($event);
+                                        getVariants();
+                                    "
                                 />
                             </template>
                         </DialogModal>
+                        <DeleteConfirmationDialog
+                            :title="`Hapus Varian Produk <b>${variant.name}</b>?`"
+                            :show="variant.showDeleteConfirmation"
+                            @close="variant.showDeleteConfirmation = false"
+                            @delete="
+                                variant.showDeleteConfirmation = false;
+                                deleteVariant(variant);
+                            "
+                        />
                     </div>
                 </div>
 
@@ -840,15 +933,27 @@ const openErrorDialog = (message) => {
         >
             <template #content>
                 <VariantForm
-                    :product="form"
+                    :isEdit="props.product != null"
+                    :product="form.data()"
                     :variant="null"
                     @submit="form.variants.push($event)"
                     @close="showAddVariantForm = false"
+                    @submitted="
+                        showAddVariantForm = false;
+                        openSuccessDialog($event);
+                        getVariants();
+                    "
                 />
             </template>
         </DialogModal>
 
-        <ErrorDialog :show="showErrorDialog" @close="showErrorDialog = false">
+        <SuccessDialog
+            :show="showSuccessDialog"
+            :title="successMessage"
+            @close="closeSuccessDialog"
+        />
+
+        <ErrorDialog :show="showErrorDialog" @close="closeErrorDialog">
             <template #content>
                 <div>
                     <div
