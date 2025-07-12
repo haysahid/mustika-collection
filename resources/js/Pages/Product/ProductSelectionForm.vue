@@ -66,11 +66,7 @@ if (route().params) {
 
 const filteredVariants = computed(() => {
     return variants.filter((variant) => {
-        return (
-            (filter.motif ? variant.motif === filter.motif : true) &&
-            (filter.color ? variant.color?.id === filter.color?.id : true) &&
-            (filter.size ? variant.size?.id === filter.size?.id : true)
-        );
+        return filter.motif ? variant.motif === filter.motif : true;
     });
 });
 
@@ -224,11 +220,30 @@ defineExpose({
                         :key="index"
                         :label="motif"
                         :selected="filter.motif === motif"
-                        :disabled="!availableMotifs.includes(motif)"
                         @click="
                             filter.motif === motif
                                 ? (filter.motif = null)
-                                : (filter.motif = motif)
+                                : (filter.motif = motif);
+
+                            if (
+                                filter.size &&
+                                !filteredVariants.some(
+                                    (variant) =>
+                                        variant.size?.id === filter.size.id
+                                )
+                            ) {
+                                filter.size = null;
+                            }
+
+                            if (
+                                filter.color &&
+                                !filteredVariants.some(
+                                    (variant) =>
+                                        variant.color?.id === filter.color.id
+                                )
+                            ) {
+                                filter.color = null;
+                            }
                         "
                     />
                 </div>
@@ -252,7 +267,26 @@ defineExpose({
                         @click="
                             filter.color?.id === color.id
                                 ? (filter.color = null)
-                                : (filter.color = color)
+                                : (filter.color = color);
+
+                            if (
+                                filter.size &&
+                                !filteredVariants.some(
+                                    (variant) =>
+                                        variant.size?.id === filter.size.id
+                                )
+                            ) {
+                                filter.size = null;
+                            }
+
+                            if (
+                                filter.motif &&
+                                !filteredVariants.some(
+                                    (variant) => variant.motif === filter.motif
+                                )
+                            ) {
+                                filter.motif = null;
+                            }
                         "
                     />
                 </div>
@@ -275,7 +309,26 @@ defineExpose({
                         @click="
                             filter.size?.id === size.id
                                 ? (filter.size = null)
-                                : (filter.size = size)
+                                : (filter.size = size);
+
+                            if (
+                                filter.color &&
+                                !filteredVariants.some(
+                                    (variant) =>
+                                        variant.color?.id === filter.color.id
+                                )
+                            ) {
+                                filter.color = null;
+                            }
+
+                            if (
+                                filter.motif &&
+                                !filteredVariants.some(
+                                    (variant) => variant.motif === filter.motif
+                                )
+                            ) {
+                                filter.motif = null;
+                            }
                         "
                     />
                 </div>

@@ -29,7 +29,7 @@ const props = defineProps({
 });
 
 function formatPrice(price) {
-    return price.toLocaleString("id-ID", {
+    return (price ?? 0).toLocaleString("id-ID", {
         style: "currency",
         currency: "IDR",
         minimumFractionDigits: 0,
