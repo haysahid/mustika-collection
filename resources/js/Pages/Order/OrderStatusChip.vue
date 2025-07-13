@@ -6,7 +6,7 @@ const props = defineProps({
     },
     label: {
         type: String,
-        default: "",
+        default: null,
     },
 });
 </script>
@@ -23,6 +23,6 @@ const props = defineProps({
             'text-red-500 bg-red-100': props.status === 'cancelled',
         }"
     >
-        {{ props.label }}
+        {{ props.label ?? props.status }}
     </div>
 </template>

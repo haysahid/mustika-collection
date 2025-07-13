@@ -2,9 +2,8 @@
 import { ref, computed } from "vue";
 import LandingSection from "@/Components/LandingSection.vue";
 import OrderItem from "./OrderItem.vue";
-import OrderContentRow from "@/Components/OrderContentRow.vue";
-import OrderStatusChip from "./OrderStatusChip.vue";
 import formatDate from "@/plugins/date-formatter";
+import OrderSummaryCard from "./OrderSummaryCard.vue";
 
 const props = defineProps({
     invoice: {
@@ -395,13 +394,12 @@ setTimeout(() => {
 </script>
 
 <template>
-    <div
-        data-aos="fade-up"
-        data-aos-duration="600"
-        class="p-6 !pt-0 sm:p-12 md:p-[100px] flex flex-col gap-4 sm:gap-12"
-    >
+    <div class="p-6 !pt-0 sm:p-12 md:p-[100px] flex flex-col gap-4 sm:gap-12">
         <!-- Tracking -->
-        <div class="flex flex-col items-center gap-4 mx-auto w-fit sm:gap-6">
+        <div
+            v-if="props.transaction.status !== 'cancelled'"
+            class="flex flex-col items-center gap-4 mx-auto w-fit sm:gap-6"
+        >
             <div
                 class="flex items-start justify-center gap-4 md:gap-8 lg:gap-12"
             >
@@ -452,6 +450,9 @@ setTimeout(() => {
         <LandingSection class="!flex-col !justify-start !min-h-[56vh]">
             <div
                 class="flex flex-col items-center justify-center w-full gap-2 mx-auto lg:flex-row lg:items-start sm:gap-12 max-w-7xl"
+                :class="{
+                    'lg:flex-col xl:flex-row': $page.props.auth.is_admin,
+                }"
             >
                 <!-- Items -->
                 <div>
@@ -464,79 +465,21 @@ setTimeout(() => {
                 </div>
 
                 <!-- Summary -->
-                <div
-                    class="w-full lg:w-[400px] outline outline-1 -outline-offset-1 outline-gray-300 rounded-2xl p-4 gap-y-4 flex flex-col gap-4"
+                <OrderSummaryCard
+                    :invoice="props.invoice"
+                    :transaction="props.transaction"
+                    :items="props.items"
+                    :class="{
+                        'lg:w-full xl:w-[400px]': $page.props.auth.is_admin,
+                    }"
                 >
-                    <h3 class="text-lg font-semibold text-gray-700">
-                        Detail Pemesanan
-                    </h3>
-                    <div>
-                        <div class="flex flex-col gap-2">
-                            <OrderContentRow
-                                label="Invoice"
-                                :value="props.invoice.code"
-                            />
-
-                            <OrderContentRow
-                                label="Tgl. Pemesanan"
-                                :value="
-                                    formatDate(props.transaction.created_at)
-                                "
-                            />
-                            <OrderContentRow
-                                label="Status"
-                                :value="props.transaction.status"
-                            >
-                                <template #value>
-                                    <!-- Status -->
-                                    <OrderStatusChip
-                                        :status="props.transaction.status"
-                                        :label="
-                                            props.transaction.status?.toUpperCase()
-                                        "
-                                    />
-                                </template>
-                            </OrderContentRow>
-                            <OrderContentRow
-                                label="Metode Pembayaran"
-                                :value="props.transaction.payment_method.name"
-                            />
-                            <OrderContentRow
-                                label="Metode Pengiriman"
-                                :value="props.transaction.shipping_method.name"
-                            />
-
-                            <!-- Divider -->
-                            <div class="my-2 border-b border-gray-300"></div>
-
-                            <OrderContentRow
-                                label="Sub Total"
-                                :value="subTotal"
-                            />
-                            <OrderContentRow
-                                label="Biaya Pengiriman"
-                                :value="
-                                    props.transaction.shipping_cost.toLocaleString(
-                                        'id-ID',
-                                        {
-                                            style: 'currency',
-                                            currency: 'IDR',
-                                            minimumFractionDigits: 0,
-                                        }
-                                    )
-                                "
-                            />
-                            <div class="flex items-center justify-between">
-                                <p class="text-lg font-bold text-gray-700">
-                                    Total
-                                </p>
-                                <p class="text-lg font-bold text-primary">
-                                    {{ total }}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    <template #additionalInfo v-if="$slots.additionalInfo">
+                        <slot name="additionalInfo" />
+                    </template>
+                    <template #actions>
+                        <slot name="actions" />
+                    </template>
+                </OrderSummaryCard>
             </div>
         </LandingSection>
     </div>

@@ -30,4 +30,5 @@ Route::name('api.admin.')->prefix('admin')->middleware('auth:sanctum')->group(fu
     Route::apiResource('product-image', ProductImageController::class);
     Route::apiResource('product-variant', ProductVariantController::class);
     Route::apiResource('product-variant-image', ProductVariantImageController::class);
+    Route::put('change-order-status', [OrderController::class, 'changeStatus'])->name('order.change-status');
 });

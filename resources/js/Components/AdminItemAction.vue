@@ -1,10 +1,21 @@
 <script setup>
+import { computed, getCurrentInstance } from "vue";
+
 defineEmits(["edit", "delete"]);
+
+const hasEditCallback = computed(() => {
+    return !!getCurrentInstance()?.vnode?.props?.["onEdit"];
+});
+
+const hasDeleteCallback = computed(() => {
+    return !!getCurrentInstance()?.vnode?.props?.["onDelete"];
+});
 </script>
 
 <template>
-    <div class="flex gap-2">
+    <div class="flex justify-center gap-2">
         <button
+            v-if="hasEditCallback"
             type="button"
             class="p-2 bg-blue-500 rounded-md hover:bg-blue-600"
             @click="$emit('edit')"
@@ -26,6 +37,7 @@ defineEmits(["edit", "delete"]);
             </svg>
         </button>
         <button
+            v-if="hasDeleteCallback"
             type="button"
             class="p-2 bg-red-500 rounded-md hover:bg-red-600"
             @click="$emit('delete')"

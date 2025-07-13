@@ -38,6 +38,8 @@ const props = defineProps({
         </div>
 
         <OrderDetail
+            data-aos="fade-up"
+            data-aos-duration="600"
             :invoice="props.invoice"
             :transaction="props.transaction"
             :items="props.items"

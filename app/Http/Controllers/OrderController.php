@@ -15,6 +15,10 @@ use Inertia\Inertia;
 
 class OrderController extends Controller
 {
+    public function index()
+    {
+        //
+    }
 
     public function orderSuccess(Request $request)
     {

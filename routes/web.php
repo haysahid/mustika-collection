@@ -7,6 +7,7 @@ use App\Http\Controllers\ProductVariantController;
 use App\Http\Controllers\PublicController;
 use App\Http\Controllers\StoreCertificateController;
 use App\Http\Controllers\StoreController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Foundation\Application;
@@ -60,6 +61,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/product/{product}', [ProductController::class, 'edit'])->name('product.edit');
         Route::post('/product/{product}', [ProductController::class, 'update'])->name('product.update');
         Route::delete('/product/{product}', [ProductController::class, 'destroy'])->name('product.destroy');
+
+        // Transaction
+        Route::get('/transaction', [TransactionController::class, 'index'])->name('transaction');
+        Route::get('/transaction/{transaction}', [TransactionController::class, 'edit'])->name('transaction.edit');
     });
 });
 
