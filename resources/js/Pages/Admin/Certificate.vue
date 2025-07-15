@@ -167,6 +167,7 @@ onMounted(() => {
                                 />
                                 <DeleteConfirmationDialog
                                     :show="certificate.showDeleteModal"
+                                    :title="`Hapus Sertifikat <b>${certificate.name}</b>?`"
                                     @close="
                                         closeDeleteCertificateDialog(
                                             certificate

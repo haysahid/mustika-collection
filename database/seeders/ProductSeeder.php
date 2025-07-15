@@ -38,10 +38,18 @@ class ProductSeeder extends Seeder
 
             // Ensure brand exists or create it
             if (isset($productData['brand'])) {
-                Log::info('Creating brand: ' . $productData['brand']['name']);
-                $brand = Brand::firstOrCreate(
-                    ['name' => $productData['brand']['name']]
-                );
+                $brand = Brand::where('name', $productData['brand']['name'])->first();
+
+                if (!$brand) {
+                    Log::info('Creating brand: ' . $productData['brand']['name']);
+                    $brand = Brand::create([
+                        'name' => $productData['brand']['name'],
+                        'description' => $productData['brand']['description'] ?? null,
+                        'logo' => $productData['brand']['logo'] ?? null,
+                        'website' => url('catalog?brands=' . $productData['brand']['name']),
+                    ]);
+                }
+
                 $brandId = $brand->id;
             }
 

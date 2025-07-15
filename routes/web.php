@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\BrandController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductVariantController;
@@ -54,6 +55,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/certificate/{storeCertificate}', [StoreCertificateController::class, 'edit'])->name('certificate.edit');
         Route::post('/certificate/{storeCertificate}', [StoreCertificateController::class, 'update'])->name('certificate.update');
         Route::delete('/certificate/{storeCertificate}', [StoreCertificateController::class, 'destroy'])->name('certificate.destroy');
+
+        // Brand
+        Route::get('/brand', [BrandController::class, 'index'])->name('brand');
+        Route::get('/brand/create', [BrandController::class, 'create'])->name('brand.create');
+        Route::post('/brand', [BrandController::class, 'store'])->name('brand.store');
+        Route::get('/brand/{brand}', [BrandController::class, 'edit'])->name('brand.edit');
+        Route::post('/brand/{brand}', [BrandController::class, 'update'])->name('brand.update');
+        Route::delete('/brand/{brand}', [BrandController::class, 'destroy'])->name('brand.destroy');
 
         // Product
         Route::get('/product', [ProductController::class, 'index'])->name('product');

@@ -17,7 +17,7 @@ class StoreCertificateController extends Controller
      */
     public function index(Request $request)
     {
-        $limit = $request->input('limit', 5);
+        $limit = $request->input('limit', 10);
         $sortBy = $request->input('order_by', 'created_at');
         $sortDirection = $request->input('order_direction', 'desc');
         $search = $request->input('search');
@@ -125,8 +125,6 @@ class StoreCertificateController extends Controller
 
         try {
             DB::beginTransaction();
-
-            // throw new Exception("Error Processing Request", 1);
 
             $storeCertificate->name = $request->input('name');
             $storeCertificate->description = $request->input('description');
