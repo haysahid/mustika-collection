@@ -60,6 +60,10 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
+    disabled: {
+        type: Boolean,
+        default: false,
+    },
     modelValue: {
         type: [String, Number],
         default: null,
@@ -89,7 +93,10 @@ onUpdated(() => {
     hasSuffix.value = !!slots.suffix;
 });
 
-defineExpose({ focus: () => input.value.focus() });
+defineExpose({
+    focus: () => input.value.focus(),
+    input,
+});
 </script>
 
 <template>
@@ -110,6 +117,7 @@ defineExpose({ focus: () => input.value.focus() });
                 :autocomplete="props.autocomplete"
                 :required="props.required"
                 :readonly="props.readonly"
+                :disabled="props.disabled"
                 class="w-full px-4 py-2 border-gray-300 rounded-full shadow-sm focus:border-indigo-500 focus:ring-indigo-500 overflow-ellipsis"
                 :class="[
                     {

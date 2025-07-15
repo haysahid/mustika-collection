@@ -5,6 +5,7 @@ use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\ProductImageController;
 use App\Http\Controllers\API\ProductVariantController;
 use App\Http\Controllers\API\ProductVariantImageController;
+use App\Http\Controllers\API\ReportController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -31,4 +32,5 @@ Route::name('api.admin.')->prefix('admin')->middleware('auth:sanctum')->group(fu
     Route::apiResource('product-variant', ProductVariantController::class);
     Route::apiResource('product-variant-image', ProductVariantImageController::class);
     Route::put('change-order-status', [OrderController::class, 'changeStatus'])->name('order.change-status');
+    Route::post('report/generate', [ReportController::class, 'generateReport'])->name('report.generate');
 });

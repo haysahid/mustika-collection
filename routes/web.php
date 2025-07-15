@@ -5,6 +5,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductVariantController;
 use App\Http\Controllers\PublicController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\StoreCertificateController;
 use App\Http\Controllers\StoreController;
 use App\Http\Controllers\TransactionController;
@@ -65,6 +66,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
         // Transaction
         Route::get('/transaction', [TransactionController::class, 'index'])->name('transaction');
         Route::get('/transaction/{transaction}', [TransactionController::class, 'edit'])->name('transaction.edit');
+
+        // Report
+        Route::get('/report', [ReportController::class, 'index'])->name('report');
+        Route::get('/report/preview', [ReportController::class, 'reportPreview'])->name('report.preview');
     });
 });
 
