@@ -286,27 +286,20 @@ onMounted(() => {
                                         selectedReportType = reportType;
                                         reportTypeSearch = '';
 
-                                        $inertia.get(
-                                            route('admin.report'),
-                                            {
-                                                report_type: reportType.value,
-                                                brand: selectedBrand
-                                                    ? selectedBrand.name
+                                        $inertia.get(route('admin.report'), {
+                                            report_type: reportType.value,
+                                            brand: selectedBrand
+                                                ? selectedBrand.name
+                                                : undefined,
+                                            start_date:
+                                                startDate && !isStockReport
+                                                    ? startDate
                                                     : undefined,
-                                                start_date:
-                                                    startDate && !isStockReport
-                                                        ? startDate
-                                                        : undefined,
-                                                end_date:
-                                                    endDate && !isStockReport
-                                                        ? endDate
-                                                        : undefined,
-                                            },
-                                            {
-                                                preserveState: true,
-                                                preserveScroll: true,
-                                            }
-                                        );
+                                            end_date:
+                                                endDate && !isStockReport
+                                                    ? endDate
+                                                    : undefined,
+                                        });
                                     "
                                     class="px-4 py-2 cursor-pointer hover:bg-gray-100"
                                 >
@@ -365,10 +358,6 @@ onMounted(() => {
                                                 {
                                                     report_type:
                                                         selectedReportType.value,
-                                                },
-                                                {
-                                                    preserveState: true,
-                                                    preserveScroll: true,
                                                 }
                                             );
                                         "
@@ -418,18 +407,11 @@ onMounted(() => {
                                         selectedBrand = brand;
                                         brandSearch = '';
 
-                                        $inertia.get(
-                                            route('admin.report'),
-                                            {
-                                                report_type:
-                                                    selectedReportType.value,
-                                                brand: brand.name,
-                                            },
-                                            {
-                                                preserveState: true,
-                                                preserveScroll: true,
-                                            }
-                                        );
+                                        $inertia.get(route('admin.report'), {
+                                            report_type:
+                                                selectedReportType.value,
+                                            brand: brand.name,
+                                        });
                                     "
                                     class="px-4 py-2 cursor-pointer hover:bg-gray-100"
                                 >
@@ -454,20 +436,13 @@ onMounted(() => {
                             :disabled="isStockReport"
                             :bgClass="!startDate ? 'bg-gray-100' : ''"
                             @change="
-                                $inertia.get(
-                                    route('admin.report'),
-                                    {
-                                        report_type: selectedReportType.value,
-                                        start_date: startDate
-                                            ? startDate
-                                            : undefined,
-                                        end_date: endDate ? endDate : undefined,
-                                    },
-                                    {
-                                        preserveState: true,
-                                        preserveScroll: true,
-                                    }
-                                )
+                                $inertia.get(route('admin.report'), {
+                                    report_type: selectedReportType.value,
+                                    start_date: startDate
+                                        ? startDate
+                                        : undefined,
+                                    end_date: endDate ? endDate : undefined,
+                                })
                             "
                         >
                             <template #suffix>
@@ -512,20 +487,13 @@ onMounted(() => {
                             :disabled="isStockReport"
                             :bgClass="!endDate ? 'bg-gray-100' : ''"
                             @change="
-                                $inertia.get(
-                                    route('admin.report'),
-                                    {
-                                        report_type: selectedReportType.value,
-                                        start_date: startDate
-                                            ? startDate
-                                            : undefined,
-                                        end_date: endDate ? endDate : undefined,
-                                    },
-                                    {
-                                        preserveState: true,
-                                        preserveScroll: true,
-                                    }
-                                )
+                                $inertia.get(route('admin.report'), {
+                                    report_type: selectedReportType.value,
+                                    start_date: startDate
+                                        ? startDate
+                                        : undefined,
+                                    end_date: endDate ? endDate : undefined,
+                                })
                             "
                         >
                             <template #suffix>
