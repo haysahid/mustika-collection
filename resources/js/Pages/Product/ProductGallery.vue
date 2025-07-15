@@ -60,12 +60,12 @@ const goToNextImage = () => {
         class="flex flex-col items-start justify-start"
     >
         <div
-            class="relative flex items-center justify-center w-full overflow-hidden transition-all duration-300 ease-in-out group rounded-2xl outline outline-1 -outline-offset-1 outline-gray-200"
+            class="relative flex items-center justify-center w-full overflow-hidden transition-all duration-300 ease-in-out border border-gray-200 group rounded-2xl border-1 -border-offset-1"
         >
             <img
                 :src="'/storage/' + image.image"
                 :alt="props.altText"
-                class="object-cover w-full transition-all duration-300 ease-in-out rounded-2xl aspect-square"
+                class="object-cover w-full transition-all duration-300 ease-in-out rounded-2xl aspect-square group-hover:scale-105"
             />
             <button
                 v-if="canGoToPreviousImage"

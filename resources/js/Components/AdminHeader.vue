@@ -90,6 +90,13 @@ const logout = () => {
                             </template>
 
                             <template #content>
+                                <DropdownLink
+                                    v-if="$page.props.auth.is_admin"
+                                    :href="route('admin.dashboard')"
+                                >
+                                    Dashboard
+                                </DropdownLink>
+
                                 <DropdownLink :href="route('profile')">
                                     Profile
                                 </DropdownLink>
@@ -196,6 +203,15 @@ const logout = () => {
                         <div class="mx-6 my-2 border-t border-secondary/20" />
 
                         <div class="space-y-0.5 bg-primary">
+                            <ResponsiveNavLink
+                                v-if="$page.props.auth.is_admin"
+                                :href="route('admin.dashboard')"
+                                :active="route().current('admin.dashboard')"
+                                class="[&>*]:text-gray-200"
+                            >
+                                Dashboard
+                            </ResponsiveNavLink>
+
                             <ResponsiveNavLink
                                 :href="route('profile')"
                                 :active="route().current('profile.show')"

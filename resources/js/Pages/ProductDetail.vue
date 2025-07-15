@@ -103,18 +103,6 @@ const basePrice = computed(() => {
     return `${formatPrice(lowestPrice)} - ${formatPrice(highestPrice)}`;
 });
 
-const discount = computed(() => {
-    if (orderForm.value?.selectedVariant != null) {
-        return orderForm.value.selectedVariant.discount_type === "percentage"
-            ? `${orderForm.value.selectedVariant.discount || 0}%`
-            : formatPrice(orderForm.value.selectedVariant.discount || 0);
-    }
-
-    return props.product?.discount_type === "percentage"
-        ? `${props.product?.discount || 0}%`
-        : formatPrice(props.product?.discount || 0);
-});
-
 const finalPrice = computed(() => {
     if (orderForm.value?.selectedVariant != null) {
         return formatPrice(orderForm.value.selectedVariant.final_selling_price);
@@ -128,7 +116,8 @@ const finalPrice = computed(() => {
 
 const images = computed(() => {
     if (orderForm.value?.selectedVariant != null) {
-        return orderForm.value?.selectedVariant.images || [];
+        const images = orderForm.value?.selectedVariant.images;
+        return images.length > 0 ? images : props.product.images;
     }
 
     if (
@@ -182,7 +171,10 @@ const images = computed(() => {
 
                 <div class="flex flex-col justify-start py-4">
                     <h1 class="mb-4 text-2xl font-bold sm:text-3xl">
-                        {{ props.product.name }}
+                        {{
+                            orderForm?.selectedVariant?.name ??
+                            props.product.name
+                        }}
                     </h1>
                     <div class="flex flex-col items-start gap-2.5 mb-6">
                         <p class="text-xl font-bold sm:text-2xl text-primary">

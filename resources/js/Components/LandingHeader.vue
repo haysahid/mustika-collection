@@ -206,6 +206,13 @@ const logout = () => {
 
                                         <template #content>
                                             <DropdownLink
+                                                v-if="$page.props.auth.is_admin"
+                                                :href="route('admin.dashboard')"
+                                            >
+                                                Dashboard
+                                            </DropdownLink>
+
+                                            <DropdownLink
                                                 :href="route('profile')"
                                             >
                                                 Profile
@@ -364,6 +371,13 @@ const logout = () => {
                             </template>
 
                             <template #content>
+                                <DropdownLink
+                                    v-if="$page.props.auth.is_admin"
+                                    :href="route('admin.dashboard')"
+                                >
+                                    Dashboard
+                                </DropdownLink>
+
                                 <DropdownLink :href="route('profile')">
                                     Profile
                                 </DropdownLink>

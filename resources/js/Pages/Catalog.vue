@@ -18,13 +18,15 @@ const props = defineProps({
     filters: null,
 });
 
-const products = props.products.data.map((product) => ({
-    ...product,
-    images: product.images.map((image) => ({
-        ...image,
-        image: image.image ? "/storage/" + image.image : null,
-    })),
-}));
+const products = ref(
+    props.products.data.map((product) => ({
+        ...product,
+        images: product.images.map((image) => ({
+            ...image,
+            image: image.image ? "/storage/" + image.image : null,
+        })),
+    }))
+);
 
 const catalogFilter = ref(null);
 
@@ -84,11 +86,27 @@ function onChangeCategories(categories) {
         .filter((category) => category.selected)
         .map((category) => category.name)
         .join(",");
-    router.get(route("catalog"), {
-        ...route().params,
-        categories: selectedCategories || undefined,
-        page: undefined,
-    });
+    router.get(
+        route("catalog"),
+        {
+            ...route().params,
+            categories: selectedCategories || undefined,
+            page: undefined,
+        },
+        {
+            preserveState: true,
+            preserveScroll: true,
+            onSuccess: () => {
+                products.value = page.props.products.data.map((product) => ({
+                    ...product,
+                    images: product.images.map((image) => ({
+                        ...image,
+                        image: image.image ? "/storage/" + image.image : null,
+                    })),
+                }));
+            },
+        }
+    );
 }
 
 function onChangeSearch() {
@@ -98,11 +116,27 @@ function onChangeSearch() {
         filters.value.search = null;
     }
 
-    router.get(route("catalog"), {
-        ...route().params,
-        search: searchQuery || undefined,
-        page: undefined,
-    });
+    router.get(
+        route("catalog"),
+        {
+            ...route().params,
+            search: searchQuery || undefined,
+            page: undefined,
+        },
+        {
+            preserveState: true,
+            preserveScroll: true,
+            onSuccess: () => {
+                products.value = page.props.products.data.map((product) => ({
+                    ...product,
+                    images: product.images.map((image) => ({
+                        ...image,
+                        image: image.image ? "/storage/" + image.image : null,
+                    })),
+                }));
+            },
+        }
+    );
 }
 </script>
 

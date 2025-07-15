@@ -28,7 +28,13 @@ class PublicController extends Controller
 
         $brands = Brand::take(5)->get();
 
-        $popularProducts = Product::with(['brand', 'categories', 'images'])->take(8)->get();
+        $popularProducts = Product::with(['brand', 'categories', 'images'])
+            ->join('product_variants', 'products.id', '=', 'product_variants.product_id')
+            ->leftJoin('transaction_items', 'product_variants.id', '=', 'transaction_items.variant_id')
+            ->select('products.*')
+            ->groupBy('products.id')
+            ->orderByRaw('SUM(transaction_items.quantity) DESC')
+            ->take(8)->get();
 
         return Inertia::render('Home', [
             'store' => $store,
@@ -170,6 +176,16 @@ class PublicController extends Controller
 
         $relatedProducts = Product::where('id', '!=', $product->id)
             ->with(['brand', 'categories', 'images'])
+            ->where(function ($query) use ($product) {
+                $query->whereHas('categories', function ($q) use ($product) {
+                    $q->whereIn('category_id', $product->categories->pluck('id'));
+                })->orWhereHas('brand', function ($q) use ($product) {
+                    $q->where('id', $product->brand->id);
+                })->orWhereHas('variants', function ($q) use ($product) {
+                    $q->whereIn('color_id', $product->variants->pluck('color_id'))
+                        ->orWhereIn('size_id', $product->variants->pluck('size_id'));
+                })->orWhere('name', 'like', '%' . $product->name . '%');
+            })
             ->take(4)
             ->get();
 
