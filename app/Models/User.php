@@ -81,4 +81,9 @@ class User extends Authenticatable
     {
         return $this->role->slug === 'super-admin' || $this->role->slug === 'admin';
     }
+
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
 }

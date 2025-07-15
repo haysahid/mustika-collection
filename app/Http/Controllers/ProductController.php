@@ -7,6 +7,9 @@ use App\Models\Category;
 use App\Models\Color;
 use App\Models\Platform;
 use App\Models\Product;
+use App\Models\ProductLink;
+use App\Models\ProductVariant;
+use App\Models\ProductVariantImage;
 use App\Models\Size;
 use Exception;
 use Illuminate\Http\Request;
@@ -40,7 +43,7 @@ class ProductController extends Controller
         }
 
         if ($colors) {
-            $products->whereHas('colors', function ($query) use ($colors) {
+            $products->whereHas('variants', function ($query) use ($colors) {
                 $query->whereIn('color_id', $colors);
             });
         }
@@ -52,7 +55,7 @@ class ProductController extends Controller
         }
 
         if ($sizes) {
-            $products->whereHas('sizes', function ($query) use ($sizes) {
+            $products->whereHas('variants', function ($query) use ($sizes) {
                 $query->whereIn('size_id', $sizes);
             });
         }
@@ -63,7 +66,7 @@ class ProductController extends Controller
         }
 
         $products->orderBy($orderBy, $orderDirection);
-        $products->with(['brand', 'colors', 'categories', 'sizes', 'images', 'links']);
+        $products->with(['brand', 'categories', 'images', 'links', 'variants']);
         $products->get();
 
         return Inertia::render('Admin/Product', [
@@ -77,11 +80,11 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $brands = Brand::class::get();
-        $categories = Category::get();
+        $brands = Brand::orderBy('name', 'asc')->get();
+        $categories = Category::orderBy('name', 'asc')->get();
         $sizes = Size::get();
-        $colors = Color::get();
-        $platforms = Platform::get();
+        $colors = Color::orderBy('name', 'asc')->get();
+        $platforms = Platform::orderBy('name', 'asc')->get();
 
         return Inertia::render('Admin/Product/AddProduct', [
             'brands' => $brands,
@@ -98,74 +101,78 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'code' => 'nullable|string|max:100',
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'material' => 'nullable|string',
-            'selling_price' => 'required|numeric',
-            'discount' => 'nullable|numeric',
-            'stock' => 'required|integer',
-            'min_order' => 'nullable|integer',
-            'unit' => 'nullable|string|max:100',
             'brand_id' => 'required|exists:brands,id',
-            'colors' => 'nullable|array',
-            'colors.*' => 'exists:colors,id',
+            'name' => 'required|string|max:255',
+            'sku_prefix' => 'required|string|max:100',
+            'description' => 'required|string',
+            'discount' => 'nullable|numeric',
             'categories' => 'nullable|array',
             'categories.*' => 'exists:categories,id',
-            'sizes' => 'nullable|array',
-            'sizes.*' => 'exists:sizes,id',
-            'images' => 'nullable|array',
+            'images' => 'required|array',
             'images.*' => 'file|mimes:jpg,jpeg,png,webp|max:2048',
             'links' => 'nullable|array',
+            'variants' => 'required|array',
+            'variants.*.motif' => 'required|string|max:100',
+            'variants.*.color_id' => 'required|exists:colors,id',
+            'variants.*.size_id' => 'required|exists:sizes,id',
+            'variants.*.material' => 'required|string|max:100',
+            'variants.*.base_selling_price' => 'required|numeric',
+            'variants.*.discount' => 'nullable|numeric',
+            'variants.*.current_stock_level' => 'required|integer',
+            'variants.*.unit' => 'required|string|max:100',
+            'variants.*.images' => 'required|array',
+            'variants.*.images.*' => 'file|mimes:jpg,jpeg,png,webp|max:2048',
         ], [
-            'code.string' => 'Kode produk harus berupa string.',
-            'code.max' => 'Kode produk tidak boleh lebih dari 100 karakter.',
-            'name.required' => 'Nama produk harus diisi.',
-            'name.string' => 'Nama produk harus berupa string.',
-            'name.max' => 'Nama produk tidak boleh lebih dari 255 karakter.',
-            'description.string' => 'Deskripsi produk harus berupa string.',
-            'material.string' => 'Bahan produk harus berupa string.',
-            'selling_price.required' => 'Harga jual harus diisi.',
-            'selling_price.numeric' => 'Harga jual harus berupa angka.',
-            'discount.numeric' => 'Diskon harus berupa angka.',
-            'stock.required' => 'Stok harus diisi.',
-            'stock.integer' => 'Stok harus berupa bilangan bulat.',
-            'min_order.integer' => 'Jumlah pesanan minimum harus berupa bilangan bulat.',
-            'unit.string' => 'Satuan harus berupa string.',
-            'unit.max' => 'Satuan tidak boleh lebih dari 100 karakter.',
             'brand_id.required' => 'Merek produk harus dipilih.',
             'brand_id.exists' => 'Merek yang dipilih tidak valid.',
-            'colors.array' => 'Warna harus berupa array.',
-            'colors.*.exists' => 'Warna yang dipilih tidak valid.',
+            'name.required' => 'Nama produk harus diisi.',
+            'sku_prefix.required' => 'Prefix SKU harus diisi.',
+            'sku_prefix.string' => 'Prefix SKU harus berupa string.',
+            'sku_prefix.max' => 'Prefix SKU tidak boleh lebih dari 100 karakter.',
+            'description.required' => 'Deskripsi produk harus diisi.',
+            'discount.numeric' => 'Diskon harus berupa angka.',
             'categories.array' => 'Kategori harus berupa array.',
             'categories.*.exists' => 'Kategori yang dipilih tidak valid.',
-            'sizes.array' => 'Ukuran harus berupa array.',
-            'sizes.*.exists' => 'Ukuran yang dipilih tidak valid.',
+            'images.required' => 'Gambar produk harus diunggah.',
             'images.array' => 'Gambar harus berupa array.',
-            'images.*.file' => 'Gambar harus berupa file.',
-            'images.*.mimes' => 'Gambar harus berupa file dengan format: jpg, jpeg, png, webp.',
-            'images.*.max' => 'Ukuran gambar tidak boleh lebih dari 2MB.',
+            'images.*.file' => 'Setiap gambar harus berupa file.',
+            'images.*.mimes' => 'Gambar harus berupa file dengan format jpg, jpeg, png, atau webp.',
+            'images.*.max' => 'Setiap gambar tidak boleh lebih dari 2MB.',
             'links.array' => 'Tautan harus berupa array.',
+            'variants.required' => 'Varian produk harus diisi.',
+            'variants.*.motif.required' => 'Motif varian harus diisi.',
+            'variants.*.color_id.required' => 'Warna varian harus dipilih.',
+            'variants.*.color_id.exists' => 'Warna yang dipilih tidak valid.',
+            'variants.*.size_id.required' => 'Ukuran varian harus dipilih.',
+            'variants.*.size_id.exists' => 'Ukuran yang dipilih tidak valid.',
+            'variants.*.material.required' => 'Material varian harus diisi.',
+            'variants.*.base_selling_price.required' => 'Harga jual dasar varian harus diisi.',
+            'variants.*.base_selling_price.numeric' => 'Harga jual dasar varian harus berupa angka.',
+            'variants.*.discount.numeric' => 'Diskon varian harus berupa angka.',
+            'variants.*.current_stock_level.required' => 'Stok saat ini varian harus diisi.',
+            'variants.*.current_stock_level.integer' => 'Stok saat ini varian harus berupa bilangan bulat.',
+            'variants.*.unit.required' => 'Satuan varian harus diisi.',
+            'variants.*.unit.string' => 'Satuan varian harus berupa string.',
+            'variants.*.unit.max' => 'Satuan varian tidak boleh lebih dari 100 karakter.',
+            'variants.*.images.required' => 'Gambar varian harus diunggah.',
+            'variants.*.images.array' => 'Gambar varian harus berupa array.',
+            'variants.*.images.*.file' => 'Setiap gambar varian harus berupa file.',
+            'variants.*.images.*.mimes' => 'Gambar varian harus berupa file dengan format jpg, jpeg, png, atau webp.',
+            'variants.*.images.*.max' => 'Setiap gambar varian tidak boleh lebih dari 2MB.',
         ]);
 
         try {
             DB::beginTransaction();
             $product = Product::create([
                 ...$validated,
+                'sku_prefix' => strtoupper(str_replace(' ', '', $validated['sku_prefix'])),
                 'slug' => str($validated['name'])->slug(),
+                'discount_type' => 'percentage',
                 'store_id' => 1,
             ]);
 
-            if (isset($validated['colors'])) {
-                $product->colors()->attach($validated['colors']);
-            }
-
             if (isset($validated['categories'])) {
                 $product->categories()->attach($validated['categories']);
-            }
-
-            if (isset($validated['sizes'])) {
-                $product->sizes()->attach($validated['sizes']);
             }
 
             if (isset($validated['images'])) {
@@ -185,6 +192,38 @@ class ProductController extends Controller
                         'platform_id' => $link['platform_id'],
                         'url' => $link['url'],
                     ]);
+                }
+            }
+
+            if (isset($validated['variants'])) {
+                foreach ($validated['variants'] as $variant) {
+                    $newVariant = ProductVariant::create([
+                        'product_id' => $product->id,
+                        'sku' => strtoupper(str_replace(' ', '', $product->sku_prefix . '_' . $variant['motif'] . '_' . $variant['color_id'] . '_' . $variant['size_id'])),
+                        'slug' => str($product->name . '-' . $variant['motif'] . '-' . $variant['color_id'] . '-' . $variant['size_id'])->slug(),
+                        'motif' => $variant['motif'],
+                        'color_id' => $variant['color_id'],
+                        'size_id' => $variant['size_id'],
+                        'material' => $variant['material'],
+                        'purchase_price' => $variant['purchase_price'] ?? $variant['base_selling_price'],
+                        'base_selling_price' => $variant['base_selling_price'],
+                        'discount_type' => 'percentage',
+                        'discount' => $variant['discount'] ?? 0,
+                        'final_selling_price' => $variant['base_selling_price'] - ($variant['base_selling_price'] * ($variant['discount'] ?? 0) / 100),
+                        'current_stock_level' => $variant['current_stock_level'],
+                        'unit' => $variant['unit'],
+                    ]);
+
+                    if (isset($variant['images'])) {
+                        foreach ($variant['images'] as $key => $image) {
+                            $imagePath = $image->store('product');
+                            $newVariant->images()->create([
+                                'product_id' => $product->id,
+                                'image' => $imagePath,
+                                'order' => $key,
+                            ]);
+                        }
+                    }
                 }
             }
 
@@ -212,9 +251,17 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        $product->load(['brand', 'colors', 'categories', 'sizes', 'images', 'links.platform']);
+        $product->load([
+            'brand',
+            'categories',
+            'images',
+            'links.platform',
+            'variants.color',
+            'variants.size',
+            'variants.images',
+        ]);
 
-        $brands = Brand::class::orderBy('name', 'asc')->get();
+        $brands = Brand::orderBy('name', 'asc')->get();
         $categories = Category::orderBy('name', 'asc')->get();
         $sizes = Size::get();
         $colors = Color::orderBy('name', 'asc')->get();
@@ -236,59 +283,44 @@ class ProductController extends Controller
     public function update(Request $request, Product $product)
     {
         $validated = $request->validate([
-            'code' => 'nullable|string|max:100',
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'material' => 'nullable|string',
-            'selling_price' => 'required|numeric',
-            'discount' => 'nullable|numeric',
-            'stock' => 'required|integer',
-            'min_order' => 'nullable|integer',
-            'unit' => 'nullable|string|max:100',
             'brand_id' => 'required|exists:brands,id',
-            'colors' => 'nullable|array',
-            'colors.*' => 'exists:colors,id',
+            'name' => 'required|string|max:255',
+            'sku_prefix' => 'required|string|max:100',
+            'description' => 'required|string',
+            'discount' => 'nullable|numeric',
             'categories' => 'nullable|array',
             'categories.*' => 'exists:categories,id',
-            'sizes' => 'nullable|array',
-            'sizes.*' => 'exists:sizes,id',
             'links' => 'nullable|array',
         ], [
-            'code.required' => 'Kode produk harus diisi.',
-            'name.required' => 'Nama produk harus diisi.',
-            'description.string' => 'Deskripsi harus berupa string.',
-            'material.string' => 'Material harus berupa string.',
-            'selling_price.required' => 'Harga jual harus diisi.',
-            'selling_price.numeric' => 'Harga jual harus berupa angka.',
-            'discount.numeric' => 'Diskon harus berupa angka.',
-            'stock.required' => 'Stok harus diisi.',
-            'stock.integer' => 'Stok harus berupa bilangan bulat.',
-            'min_order.integer' => 'Jumlah pesanan minimum harus berupa bilangan bulat.',
-            'unit.string' => 'Satuan harus berupa string.',
-            'unit.max' => 'Satuan tidak boleh lebih dari 100 karakter.',
             'brand_id.required' => 'Merek produk harus dipilih.',
             'brand_id.exists' => 'Merek yang dipilih tidak valid.',
-            'colors.array' => 'Warna harus berupa array.',
-            'colors.*.exists' => 'Warna yang dipilih tidak valid.',
+            'name.required' => 'Nama produk harus diisi.',
+            'sku_prefix.required' => 'Prefix SKU harus diisi.',
+            'sku_prefix.string' => 'Prefix SKU harus berupa string.',
+            'sku_prefix.max' => 'Prefix SKU tidak boleh lebih dari 100 karakter.',
+            'description.required' => 'Deskripsi produk harus diisi.',
+            'discount.numeric' => 'Diskon harus berupa angka.',
             'categories.array' => 'Kategori harus berupa array.',
             'categories.*.exists' => 'Kategori yang dipilih tidak valid.',
-            'sizes.array' => 'Ukuran harus berupa array.',
-            'sizes.*.exists' => 'Ukuran yang dipilih tidak valid.',
             'links.array' => 'Tautan harus berupa array.',
         ]);
 
         try {
+            $oldProduct = Product::with([
+                'brand',
+                'categories',
+                'images',
+                'links.platform',
+                'variants.color',
+                'variants.size',
+                'variants.images',
+            ])->find($product->id);
+
             DB::beginTransaction();
             $product->update([
                 ...$validated,
                 'slug' => str($validated['name'])->slug(),
             ]);
-
-            if ($request->has('colors')) {
-                $product->colors()->sync($validated['colors']);
-            } else {
-                $product->colors()->detach();
-            }
 
             if ($request->has('categories')) {
                 $product->categories()->sync($validated['categories']);
@@ -296,22 +328,26 @@ class ProductController extends Controller
                 $product->categories()->detach();
             }
 
-            if ($request->has('sizes')) {
-                $product->sizes()->sync($validated['sizes']);
-            } else {
-                $product->sizes()->detach();
-            }
-
-            Log::info('Product links: ' . json_encode($request->input('links')));
-
-            $product->links()->delete();
-
             if ($request->has('links')) {
+                $product->links()->delete();
+
                 foreach ($request->input('links') as $link) {
                     $product->links()->create([
                         'platform_id' => isset($link['platform_id']) ? $link['platform_id'] : null,
                         'url' => $link['url'],
                     ]);
+                }
+            }
+
+            Log::info('Need update variants:' . ($oldProduct->sku_prefix != $product->sku_prefix || $oldProduct->slug != $product->slug));
+
+            if ($oldProduct->sku_prefix != $product->sku_prefix || $oldProduct->slug != $product->slug) {
+                foreach ($product->variants as $variant) {
+                    $variant->sku = strtoupper(str_replace(' ', '', $variant->product->sku_prefix . '_' . $variant->motif . '_' . $variant->color->name . '_' . $variant->size->name));
+
+                    $variant->slug = str($variant->product->name . '-' . $variant->motif . '-' . $variant->color->name . '-' . $variant->size->name)->slug();
+
+                    $variant->save();
                 }
             }
 
@@ -340,6 +376,20 @@ class ProductController extends Controller
                     Storage::delete($image->image);
                 }
                 $image->delete();
+            }
+
+            // Delete product links
+            ProductLink::where('product_id', $product->id)->delete();
+
+            // Delete product variants
+            foreach ($product->variants as $variant) {
+                foreach ($variant->images as $image) {
+                    if ($image->image) {
+                        Storage::delete($image->image);
+                    }
+                    $image->delete();
+                }
+                $variant->delete();
             }
 
             // Delete product

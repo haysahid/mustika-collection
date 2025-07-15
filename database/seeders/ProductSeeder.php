@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Jobs\DownloadProductImage;
+use App\Jobs\DownloadProductVariantImage;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Color;
@@ -31,64 +32,38 @@ class ProductSeeder extends Seeder
         shuffle($products);
 
         foreach ($products as $productData) {
-            $brandId = $productData['brand_id'];
+            $brandId = null;
 
-            Log::info('Processing product: ' . $productData['code']);
+            Log::info('Processing product: ' . $productData['name']);
 
             // Ensure brand exists or create it
-            if (!isset($productData['brand_id']) && isset($productData['brand'])) {
-                Log::info('Brand not found, creating brand: ' . $productData['brand']['name']);
-                $brand = Brand::firstOrCreate(
-                    ['name' => $productData['brand']['name']]
-                );
+            if (isset($productData['brand'])) {
+                $brand = Brand::where('name', $productData['brand']['name'])->first();
+
+                if (!$brand) {
+                    Log::info('Creating brand: ' . $productData['brand']['name']);
+                    $brand = Brand::create([
+                        'name' => $productData['brand']['name'],
+                        'description' => $productData['brand']['description'] ?? null,
+                        'logo' => $productData['brand']['logo'] ?? null,
+                        'website' => url('catalog?brands=' . $productData['brand']['name']),
+                    ]);
+                }
+
                 $brandId = $brand->id;
             }
 
             // Create the product
             $product = Product::create([
-                'code' => $productData['code'],
+                'store_id' => $productData['store_id'],
+                'brand_id' => $brandId,
                 'name' => $productData['name'],
                 'slug' => $productData['slug'],
-                'description' => $productData['description'],
-                'material' => $productData['material'],
-                'selling_price' => $productData['selling_price'],
-                'discount' => $productData['discount'],
-                'stock' => $productData['stock'],
-                'min_order' => $productData['min_order'],
-                'unit' => $productData['unit'],
-                'brand_id' => $brandId,
-                'store_id' => $productData['store_id'],
+                'sku_prefix' => $productData['sku_prefix'],
+                'description' => $productData['description'] ?? null,
+                'discount_type' => $productData['discount_type'] ?? null,
+                'discount' => $productData['discount'] ?? null,
             ]);
-
-            // Attach colors
-            if (isset($productData['colors'])) {
-                foreach ($productData['colors'] as $color) {
-                    if (isset($color['id'])) {
-                        // If color ID is provided, attach it directly
-                        $product->colors()->attach($color['id']);
-                        continue;
-                    }
-
-                    // Check if color exists by name or hex_color, otherwise create it
-                    $existingColor = Color::where('name', $color['name'])
-                        ->orWhere('hex_code', $color['hex_code'])
-                        ->first();
-
-                    if ($existingColor) {
-                        $product->colors()->attach($existingColor->id);
-                    } else {
-                        // Create a new color if it doesn't exist
-                        $newColor = Color::create([
-                            'name' => $color['name'],
-                            'hex_code' => $color['hex_code'],
-                        ]);
-
-                        if ($newColor) {
-                            $product->colors()->attach($newColor->id);
-                        }
-                    }
-                }
-            }
 
             // Attach categories
             if (isset($productData['categories'])) {
@@ -110,27 +85,7 @@ class ProductSeeder extends Seeder
                 }
             }
 
-            // Attach sizes
-            if (isset($productData['sizes'])) {
-                foreach ($productData['sizes'] as $size) {
-                    if (isset($size['id'])) {
-                        // If size ID is provided, attach it directly
-                        $product->sizes()->attach($size['id']);
-                        continue;
-                    }
-
-                    // Check if size exists by name, otherwise create it
-                    $sizeModel = Size::firstOrCreate(
-                        ['name' => $size['name']],
-                    );
-
-                    if ($sizeModel) {
-                        $product->sizes()->attach($sizeModel->id);
-                    }
-                }
-            }
-
-            // Add images
+            // Add product images
             if (isset($productData['images'])) {
                 foreach ($productData['images'] as $key => $image) {
                     // If image is a URL, download it and store it
@@ -154,6 +109,86 @@ class ProductSeeder extends Seeder
                         'platform_id' => $link['platform_id'],
                         'url' => $link['url'],
                     ]);
+                }
+            }
+
+            // Create product variants
+            if (isset($productData['variants'])) {
+                foreach ($productData['variants'] as $variant) {
+                    // Check color
+                    $colorId = null;
+                    if (isset($variant['color'])) {
+                        if (isset($variant['color']['id'])) {
+                            // If color ID is provided, use it directly
+                            $colorId = $variant['color']['id'];
+                        } else {
+                            // Check if color exists by name or hex_color, otherwise create it
+                            $existingColor = Color::where('name', $variant['color']['name'])
+                                ->orWhere('hex_code', $variant['color']['hex_code'])
+                                ->first();
+                            if ($existingColor) {
+                                $colorId = $existingColor->id;
+                            } else {
+                                // Create a new color if it doesn't exist
+                                $newColor = Color::create([
+                                    'name' => $variant['color']['name'],
+                                    'hex_code' => $variant['color']['hex_code'],
+                                ]);
+                                $colorId = $newColor->id;
+                            }
+                        }
+                    }
+
+                    // Check size
+                    $sizeId = null;
+                    if (isset($variant['size'])) {
+                        if (isset($variant['size']['id'])) {
+                            // If size ID is provided, use it directly
+                            $sizeId = $variant['size']['id'];
+                        } else {
+                            // Check if size exists by name, otherwise create it
+                            $sizeModel = Size::firstOrCreate(
+                                ['name' => $variant['size']['name']],
+                            );
+                            $sizeId = $sizeModel->id;
+                        }
+                    }
+
+                    // Create the product variant
+                    $productVariant = $product->variants()->create([
+                        'sku' => $variant['sku'],
+                        'barcode' => $variant['barcode'] ?? null,
+                        'slug' => $variant['slug'] ?? null,
+                        'motif' => $variant['motif'] ?? null,
+                        'color_id' => $colorId,
+                        'size_id' => $sizeId,
+                        'material' => $variant['material'] ?? null,
+                        'purchase_price' => $variant['purchase_price'] ?? 0,
+                        'base_selling_price' => $variant['base_selling_price'] ?? 0,
+                        'discount_type' => $variant['discount_type'] ?? null,
+                        'discount' => $variant['discount'] ?? 0,
+                        'final_selling_price' => $variant['final_selling_price'] ?? 0,
+                        'current_stock_level' => $variant['current_stock_level'] ?? 0,
+                        'last_stock_update' => $variant['last_stock_update'] ?? now(),
+                        'unit' => $variant['unit'] ?? null,
+                    ]);
+
+                    // Add variant images
+                    if (isset($variant['images'])) {
+                        foreach ($variant['images'] as $key => $image) {
+                            // If image is a URL, download it and store it
+                            if (filter_var($image['image'], FILTER_VALIDATE_URL)) {
+                                DownloadProductVariantImage::dispatch($image['image'], $productVariant->id, $product->id, $key);
+                            } else {
+                                $productVariant->images()->create(
+                                    [
+                                        'image' => $image['image'],
+                                        'order' => $key
+                                    ]
+                                );
+                            }
+                        }
+                    }
                 }
             }
         }

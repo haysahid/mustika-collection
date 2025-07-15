@@ -41,21 +41,23 @@ const close = () => {
             ></h3>
         </template>
         <template v-if="props.description" #content>
-            <p class="text-center text-wrap">{{ props.description }}</p>
+            <p class="mt-0.5 mb-1.5 text-center text-wrap">
+                {{ props.description }}
+            </p>
         </template>
         <slot />
         <template #footer>
             <div class="flex gap-4 text-base">
+                <SecondaryButton type="button" class="" @click="emit('close')">
+                    Batalkan
+                </SecondaryButton>
                 <PrimaryButton
                     type="button"
                     class="bg-red-500 hover:bg-red-500/80 active:bg-red-500/90 focus:bg-red-500 focus:ring-red-500"
                     @click="emit('delete')"
                 >
-                    Hapus Data
+                    {{ props.positiveButtonText }}
                 </PrimaryButton>
-                <SecondaryButton type="button" class="" @click="emit('close')">
-                    Batalkan
-                </SecondaryButton>
             </div>
         </template>
     </DialogModal>

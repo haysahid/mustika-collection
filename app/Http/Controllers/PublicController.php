@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Color;
+use App\Models\PaymentMethod;
 use App\Models\Product;
+use App\Models\ShippingMethod;
 use App\Models\Size;
 use App\Models\Store;
 use Illuminate\Http\Request;
@@ -56,7 +58,7 @@ class PublicController extends Controller
         $sizes = $request->input('sizes');
 
         $products = Product::query();
-        $products->with(['brand', 'colors', 'categories', 'sizes', 'images',]);
+        $products->with(['brand', 'categories', 'images']);
 
         if ($brands) {
             if (is_string($brands)) {
@@ -71,7 +73,9 @@ class PublicController extends Controller
                 $colors = explode(',', $colors);
                 $colors = Color::whereIn('name', $colors)->pluck('id')->toArray();
             }
-            $products->whereIn('color_id', $colors);
+            $products->whereHas('variants', function ($query) use ($colors) {
+                $query->whereIn('color_id', $colors);
+            });
         }
 
         if ($categories) {
@@ -91,7 +95,7 @@ class PublicController extends Controller
                 $sizes = explode(',', $sizes);
                 $sizes = Size::whereIn('name', $sizes)->pluck('id')->toArray();
             }
-            $products->whereHas('sizes', function ($query) use ($sizes) {
+            $products->whereHas('variants', function ($query) use ($sizes) {
                 $query->whereIn('size_id', $sizes);
             });
         }
@@ -107,8 +111,14 @@ class PublicController extends Controller
                 $query->orWhereHas('categories', function ($q) use ($search) {
                     $q->where('name', 'like', '%' . $search . '%');
                 });
-                $query->orWhereHas('colors', function ($q) use ($search) {
-                    $q->where('name', 'like', '%' . $search . '%');
+                $query->orWhereHas('variants', function ($q) use ($search) {
+                    $q->where('motif', 'like', '%' . $search . '%');
+                    $q->orWhereHas('color', function ($q2) use ($search) {
+                        $q2->where('name', 'like', '%' . $search . '%');
+                    });
+                    $q->orWhereHas('size', function ($q2) use ($search) {
+                        $q2->where('name', 'like', '%' . $search . '%');
+                    });
                 });
             });
         }
@@ -139,9 +149,24 @@ class PublicController extends Controller
             'social_links',
         ])->first();
 
-        $product = Product::where('slug', $slug)
-            ->with(['brand', 'colors', 'categories', 'sizes', 'images', 'links.platform'])
-            ->firstOrFail();
+        $product = Product::with(
+            [
+                'brand',
+                'categories',
+                'images',
+                'links.platform',
+                'variants' => function ($query) {
+                    $query->with(['color', 'size', 'images']);
+                }
+            ]
+        )->where('slug', $slug)->firstOrFail();
+
+        $accumulatedStock = $product->variants->sum('current_stock_level');
+        $minOrder = $product->variants->min('min_order');
+        $variants = $product->variants;
+        $motifs = $variants->pluck('motif')->unique()->filter()->sort()->values()->all();
+        $colors = $variants->pluck('color')->unique('id')->values()->all();
+        $sizes = $variants->pluck('size')->filter()->unique('id')->sortBy('id')->values()->all();
 
         $relatedProducts = Product::where('id', '!=', $product->id)
             ->with(['brand', 'categories', 'images'])
@@ -151,7 +176,32 @@ class PublicController extends Controller
         return Inertia::render('ProductDetail', [
             'store' => $store,
             'product' => $product,
+            'accumulatedStock' => $accumulatedStock,
+            'minOrder' => $minOrder,
+            'motifs' => $motifs,
+            'colors' => $colors,
+            'sizes' => $sizes,
             'relatedProducts' => $relatedProducts,
+        ]);
+    }
+
+    public function myCart()
+    {
+        $store = Store::with([
+            'advantages',
+            'certificates' => function ($query) {
+                $query->limit(5);
+            },
+            'social_links',
+        ])->first();
+
+        $paymentMethods = PaymentMethod::get();
+        $shippingMethods = ShippingMethod::get();
+
+        return Inertia::render('MyCart', [
+            'store' => $store,
+            'paymentMethods' => $paymentMethods,
+            'shippingMethods' => $shippingMethods,
         ]);
     }
 }

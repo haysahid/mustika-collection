@@ -62,6 +62,7 @@ onUnmounted(() => {
 
 const maxWidthClass = computed(() => {
     return {
+        xs: "sm:max-w-xs",
         sm: "sm:max-w-sm",
         md: "sm:max-w-md",
         lg: "sm:max-w-lg",
@@ -73,7 +74,7 @@ const maxWidthClass = computed(() => {
 
 <template>
     <dialog
-        class="z-50 min-w-full min-h-full m-0 overflow-y-auto bg-transparent backdrop:bg-transparent"
+        class="z-50 max-w-xs min-w-full min-h-full m-0 overflow-y-auto bg-transparent backdrop:bg-transparent"
         ref="dialog"
     >
         <div

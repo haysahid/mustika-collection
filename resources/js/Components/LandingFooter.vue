@@ -39,6 +39,9 @@ const isHome = route().current("home");
                     </Link>
 
                     <div class="text-start">
+                        <p v-if="store.address" class="mb-2 text-gray-100">
+                            {{ store.address }}
+                        </p>
                         <p v-if="store.email" class="mb-2 text-gray-100">
                             <a
                                 :href="`mailto:${store.email}`"
@@ -56,9 +59,6 @@ const isHome = route().current("home");
                             >
                                 {{ store.phone }}
                             </a>
-                        </p>
-                        <p v-if="store.address" class="text-gray-100">
-                            {{ store.address }}
                         </p>
                         <div
                             class="flex items-center justify-start mt-4 space-x-4"

@@ -1,5 +1,6 @@
-<script setup>
+<script setup lang="ts">
 import { Link } from "@inertiajs/vue3";
+import DiscountTag from "@/Components/DiscountTag.vue";
 
 const props = defineProps({
     name: String,
@@ -7,21 +8,28 @@ const props = defineProps({
         type: String,
         default: "product-slug",
     },
-    price: Number,
-    image: String,
-    description: String,
+    basePrice: {
+        type: Number,
+        default: 0,
+    },
+    discountType: {
+        type: String,
+        default: "percentage", // or "fixed"
+    },
     discount: {
         type: Number,
         default: null,
     },
+    finalPrice: {
+        type: Number,
+        default: 0,
+    },
+    image: String,
+    description: String,
 });
 
-function formatPrice(price, discount = 0) {
-    if (discount > 0) {
-        price = price - (price * discount) / 100;
-    }
-
-    return price.toLocaleString("id-ID", {
+function formatPrice(price) {
+    return (price ?? 0).toLocaleString("id-ID", {
         style: "currency",
         currency: "IDR",
         minimumFractionDigits: 0,
@@ -72,25 +80,23 @@ function formatPrice(price, discount = 0) {
                 >
                     <div>
                         <p class="font-semibold sm:text-lg text-primary">
-                            {{ formatPrice(props.price, props.discount) }}
+                            {{ formatPrice(props.finalPrice) }}
                         </p>
 
                         <p
                             v-if="props.discount"
                             class="text-sm text-gray-500 line-through"
                         >
-                            {{ formatPrice(props.price) }}
+                            {{ formatPrice(props.basePrice) }}
                         </p>
                     </div>
 
-                    <div
+                    <DiscountTag
                         v-if="props.discount"
-                        class="px-1.5 py-0.5 sm:px-2 sm:py-1 text-xs text-white bg-red-500 rounded-md h-fit"
-                    >
-                        {{ props.discount }}%
-                    </div>
+                        :discount-type="props.discountType"
+                        :discount="props.discount"
+                    />
                 </div>
-            </div>
-        </div></Link
-    >
+            </div></div
+    ></Link>
 </template>

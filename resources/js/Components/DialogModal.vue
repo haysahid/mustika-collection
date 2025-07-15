@@ -29,6 +29,7 @@ const close = () => {
 
 const slots = useSlots();
 
+const hasIconSlot = !!slots.icon;
 const hasTitleSlot = !!slots.title;
 const hasContentSlot = !!slots.content;
 const hasFooterSlot = !!slots.footer;
@@ -41,7 +42,7 @@ const hasFooterSlot = !!slots.footer;
         :closeable="closeable"
         @close="close"
     >
-        <div class="relative">
+        <div class="relative max-h-[80vh] overflow-y-auto">
             <button
                 v-if="showCloseButton"
                 type="button"
@@ -65,8 +66,15 @@ const hasFooterSlot = !!slots.footer;
             </button>
             <div class="flex flex-col items-center p-6">
                 <div
-                    v-if="hasTitleSlot"
+                    v-if="hasIconSlot"
                     class="mb-2 text-lg font-medium text-center text-gray-900"
+                >
+                    <slot name="icon" />
+                </div>
+
+                <div
+                    v-if="hasTitleSlot"
+                    class="sticky top-0 z-10 mb-2 text-lg font-medium text-center text-gray-900"
                 >
                     <slot name="title" />
                 </div>

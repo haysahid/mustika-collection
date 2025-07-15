@@ -31,7 +31,7 @@ defineProps({
             <!-- Page Content -->
             <div class="flex">
                 <!-- Sidebar -->
-                <AdminSidebar />
+                <AdminSidebar class="print:hidden" />
 
                 <div
                     class="flex-1 w-full transition-all duration-300 ease-in-out md:ml-64 h-[calc(100vh-72px)] sm:min-h-[calc(100vh-72px)] relative mt-[72px] overflow-x-hidden"
@@ -39,7 +39,7 @@ defineProps({
                     <main class="p-6 pb-16">
                         <div
                             v-if="showTitle"
-                            class="flex items-center justify-between gap-4 mb-4 sm:mb-6"
+                            class="flex items-center justify-between gap-4 mb-4 sm:mb-6 print:hidden"
                         >
                             <div
                                 class="flex items-center gap-2 sm:gap-4 max-w-7xl"

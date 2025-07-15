@@ -9,10 +9,14 @@ import ImageInput from "@/Components/ImageInput.vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import Checkbox from "@/Components/Checkbox.vue";
 import ErrorDialog from "@/Components/ErrorDialog.vue";
-import { useDraggable, VueDraggable } from "vue-draggable-plus";
+import { useDraggable } from "vue-draggable-plus";
 import ProductLinkForm from "./ProductLinkForm.vue";
 import DialogModal from "@/Components/DialogModal.vue";
 import LinkItem from "@/Components/LinkItem.vue";
+import VariantCard from "./VariantCard.vue";
+import VariantForm from "./VariantForm.vue";
+import DeleteConfirmationDialog from "@/Components/DeleteConfirmationDialog.vue";
+import SuccessDialog from "@/Components/SuccessDialog.vue";
 
 const props = defineProps({
     product: {
@@ -25,9 +29,7 @@ const form = useForm(
     props.product
         ? {
               ...props.product,
-              colors: props.product?.colors || [],
               categories: props.product?.categories || [],
-              sizes: props.product?.sizes || [],
               images: [
                   ...(props.product?.images?.map((image) => ({
                       ...image,
@@ -47,22 +49,28 @@ const form = useForm(
                       };
                   }) || []),
               ],
+              variants: [
+                  ...(props.product?.variants?.map((variant) => ({
+                      ...variant,
+                      images:
+                          variant.images?.map((image) => ({
+                              ...image,
+                              image: "/storage/" + image.image,
+                          })) || [],
+                  })) || []),
+              ],
           }
         : {
               name: null,
+              sku_prefix: null,
               brand_id: null,
               brand: null,
-
-              selling_price: null,
               discount: 0,
-              stock: 0,
-              material: null,
               description: null,
-              colors: [],
               categories: [],
-              sizes: [],
               images: [{ id: "new-1", image: null }],
               links: [],
+              variants: [],
           }
 );
 
@@ -81,8 +89,6 @@ const filteredBrands = computed(() => {
 });
 
 const categories = page.props.categories || [];
-const sizes = page.props.sizes || [];
-const colors = page.props.colors || [];
 
 function uploadNewImage(image, index) {
     const token = `Bearer ${localStorage.getItem("access_token")}`;
@@ -154,7 +160,6 @@ function updateImages() {
     const images = form.images || [];
 
     images.forEach((image, index) => {
-        console.log("Processing image:", image, "at index:", index);
         if (isNewImage(image) && image.image instanceof File) {
             uploadNewImage(image, index);
         } else if (isExistingImage(image)) {
@@ -190,6 +195,60 @@ function deleteImages() {
     });
 }
 
+function deleteVariant(variant) {
+    const token = `Bearer ${localStorage.getItem("access_token")}`;
+
+    axios
+        .delete(
+            `${page.props.ziggy.url}/api/admin/product-variant/${variant.id}`,
+            {
+                headers: {
+                    Authorization: token,
+                },
+            }
+        )
+        .then((response) => {
+            variantsToDelete.value = variantsToDelete.value.filter(
+                (id) => id !== variant.id
+            );
+
+            openSuccessDialog(response.data.meta.message);
+            getVariants();
+        })
+        .catch((error) => {
+            if (error.response?.data?.error) {
+                openErrorDialog(error.response.data.error);
+            }
+        });
+}
+
+function getVariants() {
+    const token = `Bearer ${localStorage.getItem("access_token")}`;
+
+    axios
+        .get(`${page.props.ziggy.url}/api/admin/product/${props.product.id}`, {
+            headers: {
+                Authorization: token,
+            },
+        })
+        .then((response) => {
+            const product = response.data.result;
+            form.variants = product.variants.map((variant) => ({
+                ...variant,
+                images:
+                    variant.images?.map((image) => ({
+                        ...image,
+                        image: "/storage/" + image.image,
+                    })) || [],
+            }));
+        })
+        .catch((error) => {
+            if (error.response?.data?.error) {
+                openErrorDialog(error.response.data.error);
+            }
+        });
+}
+
 const submit = () => {
     if (props.product?.id) {
         updateImages();
@@ -200,17 +259,9 @@ const submit = () => {
             Object.keys(data).forEach((key) => {
                 if (key === "images") return;
 
-                if (key === "colors") {
-                    data.colors.forEach((color, index) => {
-                        formData.append(`colors[${index}]`, color.id);
-                    });
-                } else if (key === "categories") {
+                if (key === "categories") {
                     data.categories.forEach((category, index) => {
                         formData.append(`categories[${index}]`, category.id);
-                    });
-                } else if (key === "sizes") {
-                    data.sizes.forEach((size, index) => {
-                        formData.append(`sizes[${index}]`, size.id);
                     });
                 } else if (key === "links") {
                     data.links.forEach((link, index) => {
@@ -232,6 +283,7 @@ const submit = () => {
             return formData;
         }).post(route("admin.product.update", props.product), {
             onError: (errors) => {
+                console.error(errors);
                 if (errors.error) {
                     openErrorDialog(errors.error);
                 }
@@ -247,20 +299,12 @@ const submit = () => {
                 if (key === "images") {
                     data[key].forEach((image, index) => {
                         if (image.image instanceof File) {
-                            formData.append(`images[${index}]`, image);
+                            formData.append(`images[${index}]`, image.image);
                         }
-                    });
-                } else if (key === "colors") {
-                    data.colors.forEach((color, index) => {
-                        formData.append(`colors[${index}]`, color.id);
                     });
                 } else if (key === "categories") {
                     data.categories.forEach((category, index) => {
                         formData.append(`categories[${index}]`, category.id);
-                    });
-                } else if (key === "sizes") {
-                    data.sizes.forEach((size, index) => {
-                        formData.append(`sizes[${index}]`, size.id);
                     });
                 } else if (key === "links") {
                     data.links.forEach((link, index) => {
@@ -270,6 +314,50 @@ const submit = () => {
                         );
                         formData.append(`links[${index}][url]`, link.url);
                     });
+                } else if (key === "variants") {
+                    data.variants.forEach((variant, index) => {
+                        formData.append(
+                            `variants[${index}][motif]`,
+                            variant.motif
+                        );
+                        formData.append(
+                            `variants[${index}][color_id]`,
+                            variant.color_id
+                        );
+                        formData.append(
+                            `variants[${index}][size_id]`,
+                            variant.size_id
+                        );
+                        formData.append(
+                            `variants[${index}][material]`,
+                            variant.material
+                        );
+                        formData.append(
+                            `variants[${index}][base_selling_price]`,
+                            variant.base_selling_price
+                        );
+                        formData.append(
+                            `variants[${index}][discount]`,
+                            variant.discount
+                        );
+                        formData.append(
+                            `variants[${index}][current_stock_level]`,
+                            variant.current_stock_level
+                        );
+                        formData.append(
+                            `variants[${index}][unit]`,
+                            variant.unit
+                        );
+                        variant.images.forEach((image, imgIndex) => {
+                            console.log("variant image", image);
+                            if (image.image instanceof File) {
+                                formData.append(
+                                    `variants[${index}][images][${imgIndex}]`,
+                                    image.image
+                                );
+                            }
+                        });
+                    });
                 } else if (data[key] !== null && data[key] !== undefined) {
                     formData.append(key, data[key]);
                 }
@@ -277,12 +365,10 @@ const submit = () => {
             return formData;
         }).post(route("admin.product.store"), {
             onError: (errors) => {
+                console.error(errors);
                 if (errors.error) {
                     openErrorDialog(errors.error);
                 }
-            },
-            onFinish: () => {
-                form.reset();
             },
         });
     }
@@ -317,6 +403,7 @@ const isExistingImage = (image) => {
 };
 
 const imagesToDelete = ref([]);
+const variantsToDelete = ref([]);
 
 const showAddLinkForm = ref(false);
 const openAddLinkForm = () => {
@@ -337,12 +424,49 @@ const draggableLinks = useDraggable(linksContainer, form.links, {
     },
 });
 
+const showAddVariantForm = ref(false);
+const openAddVariantForm = () => {
+    showAddVariantForm.value = true;
+};
+const variantsContainer = ref(null);
+const draggableVariants = useDraggable(variantsContainer, form.variants, {
+    animation: 150,
+    onStart: (event) => {
+        drag.value = true;
+        const item = event.item;
+        item.style.opacity = "0.2";
+    },
+    onEnd: (event) => {
+        drag.value = false;
+        const item = event.item;
+        item.style.opacity = "1";
+    },
+});
+
+const showSuccessDialog = ref(false);
+const successMessage = ref(null);
+
+const openSuccessDialog = (message) => {
+    successMessage.value = message;
+    showSuccessDialog.value = true;
+};
+
+const closeSuccessDialog = () => {
+    showSuccessDialog.value = false;
+    successMessage.value = null;
+};
+
 const showErrorDialog = ref(false);
 const errorMessage = ref(null);
 
 const openErrorDialog = (message) => {
     errorMessage.value = message;
     showErrorDialog.value = true;
+};
+
+const closeErrorDialog = () => {
+    showErrorDialog.value = false;
+    errorMessage.value = null;
 };
 </script>
 
@@ -371,6 +495,28 @@ const openErrorDialog = (message) => {
                     :autofocus="true"
                     :error="form.errors.username"
                     @update:modelValue="form.errors.username = null"
+                />
+            </div>
+
+            <!-- SKU Prefix -->
+            <div
+                class="flex flex-col w-full gap-y-1 gap-x-4 sm:items-center sm:flex-row"
+            >
+                <InputLabel
+                    for="sku_prefix"
+                    value="SKU Prefix"
+                    class="w-[100px] sm:w-1/5 text-lg font-bold"
+                />
+                <span class="hidden text-sm sm:block">:</span>
+                <TextInput
+                    id="sku_prefix"
+                    v-model="form.sku_prefix"
+                    type="text"
+                    placeholder="Masukkan SKU Prefix"
+                    class="block w-full mt-1"
+                    required
+                    :error="form.errors.sku_prefix"
+                    @update:modelValue="form.errors.sku_prefix = null"
                 />
             </div>
 
@@ -478,7 +624,7 @@ const openErrorDialog = (message) => {
                 </Dropdown>
             </div>
 
-            <!-- Image -->
+            <!-- Images -->
             <div
                 class="flex flex-col w-full gap-y-1 gap-x-4 sm:items-start sm:flex-row"
             >
@@ -493,7 +639,7 @@ const openErrorDialog = (message) => {
                         v-for="(image, index) in form.images"
                         :key="image.id"
                         :id="`image-${image.id}`"
-                        v-model="image.image"
+                        :modelValue="image.image"
                         type="file"
                         accept="image/*"
                         placeholder="Upload Produk"
@@ -505,11 +651,14 @@ const openErrorDialog = (message) => {
                         :isDragging="drag"
                         @update:modelValue="
                             if (isNewImage(image)) {
+                                if (image.image == null) {
+                                    form.images.push({
+                                        id: `new-${countNewImages + 1}`,
+                                        image: null,
+                                    });
+                                }
+
                                 image.image = $event;
-                                form.images.push({
-                                    id: `new-${countNewImages + 1}`,
-                                    image: null,
-                                });
                             } else {
                                 image.image = $event;
                             }
@@ -524,29 +673,6 @@ const openErrorDialog = (message) => {
                         "
                     />
                 </div>
-            </div>
-
-            <!-- Selling Price -->
-            <div
-                class="flex flex-col w-full gap-y-1 gap-x-4 sm:items-center sm:flex-row"
-            >
-                <InputLabel
-                    for="selling_price"
-                    value="Harga "
-                    class="text-lg font-bold sm:w-1/5"
-                />
-                <span class="hidden text-sm sm:block">:</span>
-                <TextInput
-                    id="selling_price"
-                    v-model.number="form.selling_price"
-                    type="number"
-                    placeholder="Masukkan Harga"
-                    class="block w-full mt-1"
-                    required
-                    autocomplete="selling_price"
-                    :error="form.errors.selling_price"
-                    @update:modelValue="form.errors.selling_price = null"
-                />
             </div>
 
             <!-- Discount -->
@@ -569,29 +695,6 @@ const openErrorDialog = (message) => {
                     autocomplete="discount"
                     :error="form.errors.discount"
                     @update:modelValue="form.errors.discount = null"
-                />
-            </div>
-
-            <!-- Stock -->
-            <div
-                class="flex flex-col w-full gap-y-1 gap-x-4 sm:items-center sm:flex-row"
-            >
-                <InputLabel
-                    for="stock"
-                    value="Stok"
-                    class="text-lg font-bold sm:w-1/5"
-                />
-                <span class="hidden text-sm sm:block">:</span>
-                <TextInput
-                    id="stock"
-                    v-model.number="form.stock"
-                    type="number"
-                    placeholder="Masukkan Stok"
-                    class="block w-full mt-1"
-                    required
-                    autocomplete="stock"
-                    :error="form.errors.stock"
-                    @update:modelValue="form.errors.stock = null"
                 />
             </div>
 
@@ -647,7 +750,7 @@ const openErrorDialog = (message) => {
                             </label>
                         </div>
                     </div>
-                    <PrimaryButton
+                    <!-- <PrimaryButton
                         type="button"
                         class="!px-3 !py-2 text-xs !text-orange-500 bg-yellow-50 hover:bg-yellow-100/80 active:bg-yellow-100/90 focus:bg-yellow-100 focus:ring-yellow-100 outline outline-orange-200"
                         @click="
@@ -655,148 +758,7 @@ const openErrorDialog = (message) => {
                         "
                     >
                         + Tambah Kategori Produk
-                    </PrimaryButton>
-                </div>
-            </div>
-
-            <h2 class="mt-4 text-lg font-semibold">Rincian Produk</h2>
-
-            <!-- Material -->
-            <div
-                class="flex flex-col w-full gap-y-1 gap-x-4 sm:items-center sm:flex-row"
-            >
-                <InputLabel
-                    for="material"
-                    value="Jenis Bahan"
-                    class="text-lg font-bold sm:w-1/5"
-                />
-                <span class="hidden text-sm sm:block">:</span>
-                <TextInput
-                    id="material"
-                    v-model="form.material"
-                    type="text"
-                    placeholder="Masukkan Nama Jenis Bahan"
-                    class="block w-full mt-1"
-                    required
-                    autocomplete="material"
-                    :error="form.errors.material"
-                    @update:modelValue="form.errors.material = null"
-                />
-            </div>
-
-            <!-- Sizes -->
-            <div
-                class="flex flex-col w-full gap-y-1.5 gap-x-4 sm:items-start sm:flex-row"
-            >
-                <InputLabel
-                    for="sizes"
-                    value="Ukuran Produk"
-                    class="text-lg font-bold sm:w-1/5"
-                />
-                <span class="hidden text-sm sm:block">:</span>
-                <div class="flex flex-col items-start w-full gap-3 mt-[1px]">
-                    <div class="grid w-full max-w-sm grid-cols-4 gap-3">
-                        <div
-                            v-for="size in sizes || []"
-                            :key="size.id"
-                            class="flex items-center justify-start"
-                        >
-                            <label
-                                :for="`size-${size.id}`"
-                                class="flex items-center gap-2 cursor-pointer [&>*]:cursor-pointer justify-start"
-                            >
-                                <Checkbox
-                                    :id="`size-${size.id}`"
-                                    :value="size.id.toString()"
-                                    :label="size.name"
-                                    :checked="
-                                        form.sizes
-                                            .map((s) => s.id)
-                                            .includes(size.id)
-                                    "
-                                    @update:checked="
-                                        form.sizes
-                                            .map((s) => s.id)
-                                            .includes(size.id)
-                                            ? (form.sizes = form.sizes.filter(
-                                                  (s) => s.id !== size.id
-                                              ))
-                                            : form.sizes.push(size)
-                                    "
-                                />
-                                <InputLabel
-                                    :for="`size-${size.id}`"
-                                    :value="size.name"
-                                    class="text-sm text-gray-500"
-                                />
-                            </label>
-                        </div>
-                    </div>
-                    <PrimaryButton
-                        type="button"
-                        class="!px-3 !py-2 text-xs !text-orange-500 bg-yellow-50 hover:bg-yellow-100/80 active:bg-yellow-100/90 focus:bg-yellow-100 focus:ring-yellow-100 outline outline-orange-200"
-                        @click="$inertia.visit(route('admin.size.create'))"
-                    >
-                        + Tambah Ukuran Produk
-                    </PrimaryButton>
-                </div>
-            </div>
-
-            <!-- Colors -->
-            <div
-                class="flex flex-col w-full gap-y-1.5 gap-x-4 sm:items-start sm:flex-row"
-            >
-                <InputLabel
-                    for="colors"
-                    value="Warna Produk"
-                    class="text-lg font-bold sm:w-1/5"
-                />
-                <span class="hidden text-sm sm:block">:</span>
-                <div class="flex flex-col items-start w-full gap-3 mt-[1px]">
-                    <div
-                        class="grid w-full grid-cols-2 gap-2 sm:gap-2.5 md:grid-cols-3 lg:grid-cols-4"
-                    >
-                        <div
-                            v-for="color in colors || []"
-                            :key="color.id"
-                            class="flex items-center justify-start"
-                        >
-                            <label
-                                :for="`color-${color.id}`"
-                                class="flex items-center gap-2 cursor-pointer [&>*]:cursor-pointer justify-start"
-                            >
-                                <Checkbox
-                                    :id="`color-${color.id}`"
-                                    :value="color.id.toString()"
-                                    :label="color.name"
-                                    :checked="
-                                        form.colors
-                                            .map((c) => c.id)
-                                            .includes(color.id)
-                                    "
-                                    @update:checked="
-                                        form.colors.includes(color)
-                                            ? (form.colors = form.colors.filter(
-                                                  (c) => c.id !== color.id
-                                              ))
-                                            : form.colors.push(color)
-                                    "
-                                />
-                                <InputLabel
-                                    :for="`color-${color.id}`"
-                                    :value="color.name"
-                                    class="text-sm text-gray-500"
-                                />
-                            </label>
-                        </div>
-                    </div>
-                    <PrimaryButton
-                        type="button"
-                        class="!px-3 !py-2 text-xs !text-orange-500 bg-yellow-50 hover:bg-yellow-100/80 active:bg-yellow-100/90 focus:bg-yellow-100 focus:ring-yellow-100 outline outline-orange-200"
-                        @click="$inertia.visit(route('admin.color.create'))"
-                    >
-                        + Tambah Warna Lain
-                    </PrimaryButton>
+                    </PrimaryButton> -->
                 </div>
             </div>
 
@@ -868,6 +830,82 @@ const openErrorDialog = (message) => {
                 </PrimaryButton>
             </div>
 
+            <!-- Variants -->
+            <div class="flex flex-col items-start w-full gap-2 mt-4">
+                <h2 class="text-lg font-semibold">
+                    Variasi Produk ({{ form.variants.length }})
+                </h2>
+                <div
+                    ref="variantsContainer"
+                    class="grid w-full grid-cols-1 gap-2 lg:grid-cols-2"
+                >
+                    <div
+                        v-for="(variant, index) in form.variants"
+                        :key="index"
+                        class="w-full"
+                    >
+                        <VariantCard
+                            :name="`${variant.motif} - ${variant.color?.name} - ${variant.size?.name}`"
+                            :variant="variant"
+                            :index="index"
+                            @click="variant.showEditForm = true"
+                            @delete="
+                                if (props.product) {
+                                    variant.showDeleteConfirmation = true;
+                                } else {
+                                    form.variants.splice(index, 1);
+                                    if (variant.id) {
+                                        variantsToDelete.push(variant.id);
+                                    }
+                                }
+                            "
+                        />
+                        <DialogModal
+                            :show="variant.showEditForm"
+                            title="Ubah Variasi Produk"
+                            @close="variant.showEditForm = false"
+                        >
+                            <template #content>
+                                <VariantForm
+                                    :isEdit="props.product != null"
+                                    :product="form.data()"
+                                    :variant="variant"
+                                    @submit="
+                                        form.variants[index] = {
+                                            ...$event,
+                                            showEditForm: false,
+                                        }
+                                    "
+                                    @close="variant.showEditForm = false"
+                                    @submitted="
+                                        variant.showEditForm = false;
+                                        openSuccessDialog($event);
+                                        getVariants();
+                                    "
+                                />
+                            </template>
+                        </DialogModal>
+                        <DeleteConfirmationDialog
+                            :title="`Hapus Varian Produk <b>${variant.name}</b>?`"
+                            :show="variant.showDeleteConfirmation"
+                            @close="variant.showDeleteConfirmation = false"
+                            @delete="
+                                variant.showDeleteConfirmation = false;
+                                deleteVariant(variant);
+                            "
+                        />
+                    </div>
+                </div>
+
+                <PrimaryButton
+                    type="button"
+                    class="!px-3 !py-2 text-xs !text-orange-500 bg-yellow-50 hover:bg-yellow-100/80 active:bg-yellow-100/90 focus:bg-yellow-100 focus:ring-yellow-100 outline outline-orange-200 mt-0.5"
+                    @click="openAddVariantForm"
+                >
+                    + Tambah Variasi Produk
+                </PrimaryButton>
+            </div>
+
             <PrimaryButton type="submit" class="mt-4">
                 Simpan Data
             </PrimaryButton>
@@ -888,7 +926,34 @@ const openErrorDialog = (message) => {
             </template>
         </DialogModal>
 
-        <ErrorDialog :show="showErrorDialog" @close="showErrorDialog = false">
+        <DialogModal
+            :show="showAddVariantForm"
+            title="Tambah Variasi Produk"
+            @close="showAddVariantForm = false"
+        >
+            <template #content>
+                <VariantForm
+                    :isEdit="props.product != null"
+                    :product="form.data()"
+                    :variant="null"
+                    @submit="form.variants.push($event)"
+                    @close="showAddVariantForm = false"
+                    @submitted="
+                        showAddVariantForm = false;
+                        openSuccessDialog($event);
+                        getVariants();
+                    "
+                />
+            </template>
+        </DialogModal>
+
+        <SuccessDialog
+            :show="showSuccessDialog"
+            :title="successMessage"
+            @close="closeSuccessDialog"
+        />
+
+        <ErrorDialog :show="showErrorDialog" @close="closeErrorDialog">
             <template #content>
                 <div>
                     <div

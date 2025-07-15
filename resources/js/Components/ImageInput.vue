@@ -22,6 +22,10 @@ const emit = defineEmits(["update:modelValue", "enter", "delete"]);
 
 const imagePath = ref(null);
 
+if (props.modelValue instanceof File) {
+    imagePath.value = URL.createObjectURL(props.modelValue);
+}
+
 var loadFile = function (event) {
     var input = event.target;
     var file = input.files[0];
@@ -34,8 +38,6 @@ var loadFile = function (event) {
 function clearImage() {
     imagePath.value = null;
 }
-
-onUpdated(() => {});
 
 defineExpose({ clearImage });
 </script>
@@ -98,7 +100,7 @@ defineExpose({ clearImage });
                         v-if="props.showDeleteButton"
                         type="button"
                         class="absolute p-[7px] text-gray-300 bg-gray-300/0 rounded-full top-1 right-1 hover:bg-gray-300/20 hover:text-gray-300 group-hover:text-gray-300 transition-all duration-300 ease-in-out opacity-0 group-hover:opacity-100"
-                        @click="
+                        @click.prevent="
                             clearImage();
                             emit('delete');
                         "
