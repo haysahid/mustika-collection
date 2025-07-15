@@ -1,20 +1,17 @@
 <script setup>
-import { ref, onMounted, computed, watch } from "vue";
-import { usePage, useForm } from "@inertiajs/vue3";
+import { ref, onMounted, computed } from "vue";
+import { usePage } from "@inertiajs/vue3";
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-import AdminPagination from "@/Components/AdminPagination.vue";
-import AdminItemAction from "@/Components/AdminItemAction.vue";
-import DeleteConfirmationDialog from "@/Components/DeleteConfirmationDialog.vue";
 import SuccessDialog from "@/Components/SuccessDialog.vue";
 import ErrorDialog from "@/Components/ErrorDialog.vue";
 import Dropdown from "@/Components/Dropdown.vue";
 import TextInput from "@/Components/TextInput.vue";
 import SalesReportTable from "./Report/SalesReportTable.vue";
 import PurchaseReportTable from "./Report/PurchaseReportTable.vue";
-import { router } from "@inertiajs/vue3";
 import axios from "axios";
 import StockReportTable from "./Report/StockReportTable.vue";
+import LoadingDialog from "@/Components/LoadingDialog.vue";
 
 const props = defineProps({
     brands: null,
@@ -81,7 +78,15 @@ const openErrorDialog = (message) => {
 
 const page = usePage();
 
+const printStatus = ref(null);
+
+function isMobileDevice() {
+    return /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+}
+
 function printReport() {
+    printStatus.value = "loading";
+
     const token = `Bearer ${localStorage.getItem("access_token")}`;
 
     const reportType = selectedReportType.value.value;
@@ -107,6 +112,8 @@ function printReport() {
         )
         .then((response) => {
             if (response.data && response.data.result.pdf) {
+                printStatus.value = "success";
+
                 try {
                     // Create blob from base64
                     const byteCharacters = atob(response.data.result.pdf);
@@ -128,26 +135,36 @@ function printReport() {
                         oldIframe.remove();
                     }
 
-                    // Create iframe
-                    const iframe = document.createElement("iframe");
-                    iframe.style.display = "none";
-                    iframe.src = url;
-                    document.body.appendChild(iframe);
+                    if (isMobileDevice()) {
+                        // For mobile devices, open in new tab
+                        window.open(url, "_blank");
+                        return;
+                    } else {
+                        // Create iframe
+                        const iframe = document.createElement("iframe");
+                        iframe.style.display = "none";
+                        iframe.src = url;
+                        document.body.appendChild(iframe);
 
-                    // Print when iframe is loaded
-                    iframe.onload = function () {
-                        iframe.contentWindow.print();
-                    };
+                        // Print when iframe is loaded
+                        iframe.onload = function () {
+                            iframe.contentWindow.print();
+                        };
+                    }
 
+                    // Revoke object URL after printing
                     window.URL.revokeObjectURL(url);
                 } catch (error) {
+                    printStatus.value = "error";
                     openErrorDialog("Gagal mengunduh laporan.");
                 }
             } else {
+                printStatus.value = "error";
                 openErrorDialog("Gagal mengunduh laporan.");
             }
         })
         .catch((error) => {
+            printStatus.value = "error";
             openErrorDialog(
                 error.response?.data?.message ||
                     "Terjadi kesalahan saat mengunduh laporan."
@@ -195,6 +212,7 @@ onMounted(() => {
                 <PrimaryButton
                     type="button"
                     class="bg-yellow-500 hover:bg-yellow-500/80 active:bg-yellow-500/90 focus:bg-yellow-500 focus:ring-yellow-500 max-sm:text-xs max-sm:px-4 max-sm:py-2"
+                    :disabled="printStatus === 'loading'"
                     @click="printReport()"
                 >
                     Cetak Laporan
@@ -543,6 +561,11 @@ onMounted(() => {
                     />
                 </div>
             </div>
+
+            <LoadingDialog
+                :show="printStatus === 'loading'"
+                title="Memproses laporan..."
+            />
 
             <SuccessDialog
                 :show="showSuccessDialog"
