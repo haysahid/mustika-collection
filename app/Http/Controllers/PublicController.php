@@ -53,7 +53,7 @@ class PublicController extends Controller
             'social_links',
         ])->first();
 
-        $limit = $request->input('limit', 10);
+        $limit = $request->input('limit', 12);
         $orderBy = $request->input('order_by', 'created_at');
         $orderDirection = $request->input('order_direction', 'desc');
         $search = $request->input('search');

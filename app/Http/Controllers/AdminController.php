@@ -49,6 +49,11 @@ class AdminController extends Controller
         ]);
     }
 
+    public function index()
+    {
+        return redirect()->route('admin.dashboard');
+    }
+
     public function dashboard()
     {
         $productCount = Product::count();
