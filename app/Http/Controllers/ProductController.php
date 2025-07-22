@@ -196,7 +196,6 @@ class ProductController extends Controller
             if (isset($validated['links'])) {
                 foreach ($request->input('links') as $link) {
                     $product->links()->create([
-                        'name' => $link['name'],
                         'platform_id' => $link['platform_id'],
                         'url' => $link['url'],
                     ]);
