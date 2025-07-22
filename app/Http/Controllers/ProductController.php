@@ -243,7 +243,7 @@ class ProductController extends Controller
             Log::error('Gagal membuat produk: ' . $e);
             DB::rollBack();
             return redirect()->back()
-                ->withErrors(['error' => 'Gagal membuat produk: ' . $e->getMessage()]);
+                ->withErrors(['error' => 'Gagal membuat produk: ' . $e]);
         }
     }
 
@@ -368,7 +368,7 @@ class ProductController extends Controller
             Log::error('Gagal memperbarui produk: ' . $e);
             DB::rollBack();
             return redirect()->back()
-                ->withErrors(['error' => 'Gagal memperbarui produk: ' . $e->getMessage()]);
+                ->withErrors(['error' => 'Gagal memperbarui produk: ' . $e]);
         }
     }
 
@@ -413,7 +413,7 @@ class ProductController extends Controller
             Log::error('Gagal menghapus produk: ' . $e);
             DB::rollBack();
             return redirect()->back()
-                ->withErrors(['error' => 'Gagal menghapus produk: ' . $e->getMessage()]);
+                ->withErrors(['error' => 'Gagal menghapus produk: ' . $e]);
         }
     }
 }
