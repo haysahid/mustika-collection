@@ -240,6 +240,7 @@ class ProductController extends Controller
             return redirect()->route('admin.product')
                 ->with('success', 'Produk berhasil dibuat.');
         } catch (Exception $e) {
+            Log::error('Gagal membuat produk: ' . $e);
             DB::rollBack();
             return redirect()->back()
                 ->withErrors(['error' => 'Gagal membuat produk: ' . $e->getMessage()]);
@@ -364,6 +365,7 @@ class ProductController extends Controller
             return redirect()->route('admin.product')
                 ->with('success', 'Produk berhasil diperbarui.');
         } catch (Exception $e) {
+            Log::error('Gagal memperbarui produk: ' . $e);
             DB::rollBack();
             return redirect()->back()
                 ->withErrors(['error' => 'Gagal memperbarui produk: ' . $e->getMessage()]);
@@ -408,6 +410,7 @@ class ProductController extends Controller
             return redirect()->route('admin.product')
                 ->with('success', 'Produk berhasil dihapus.');
         } catch (Exception $e) {
+            Log::error('Gagal menghapus produk: ' . $e);
             DB::rollBack();
             return redirect()->back()
                 ->withErrors(['error' => 'Gagal menghapus produk: ' . $e->getMessage()]);
