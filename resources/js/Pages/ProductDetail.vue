@@ -229,7 +229,7 @@ const images = computed(() => {
                             >
                                 Deskripsi
                             </h3>
-                            <p class="text-gray-700">
+                            <p class="text-gray-700 whitespace-pre-line">
                                 {{ props.product.description }}
                             </p>
                         </div>

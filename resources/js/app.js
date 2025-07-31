@@ -7,6 +7,7 @@ import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 import { createPinia } from 'pinia'
+import VueApexCharts from "vue3-apexcharts";
 import AOS from 'aos';
 
 // My plugins
@@ -27,7 +28,8 @@ createInertiaApp({
         const app = createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(ZiggyVue)
-            .use(pinia);
+            .use(pinia)
+            .use(VueApexCharts);
 
         app.config.globalProperties.$formatDate = formatDate;
         app.config.globalProperties.$formatCurrency = numberFormatter.formatCurrency;
