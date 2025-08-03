@@ -128,7 +128,7 @@ onMounted(() => {
 
                 <div class="p-4 bg-white rounded-lg shadow">
                     <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-lg font-bold text-gray-700 sm:text-xl">
+                        <h3 class="text-lg font-bold sm:text-xl">
                             Traffic Pengunjung
                         </h3>
                         <div

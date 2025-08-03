@@ -11,7 +11,7 @@ defineProps({
     >
         <div class="flex items-center gap-3.5">
             <slot name="icon"></slot>
-            <h3 class="text-lg font-bold text-gray-700 sm:text-xl">
+            <h3 class="text-lg font-bold text-gray-900 sm:text-xl">
                 {{ title }}
             </h3>
         </div>
